@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/sheet'
 import {
   LayoutGrid, PlusCircle, ListTodo, Gavel, Shield, User,
-  Menu, ChevronDown, GraduationCap, LogOut
+  Menu, ChevronDown, GraduationCap, LogOut, ChevronLeft, ChevronRight
 } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 
@@ -26,10 +26,11 @@ const navItems: { view: ViewMode; label: string; icon: React.ElementType; roles?
   { view: 'profile', label: 'Profile', icon: User },
 ]
 
-function NavContent({ currentView, setCurrentView, setSidebarOpen }: {
+function NavContent({ currentView, setCurrentView, setSidebarOpen, collapsed }: {
   currentView: ViewMode
   setCurrentView: (v: ViewMode) => void
   setSidebarOpen: (v: boolean) => void
+  collapsed?: boolean
 }) {
   const { currentUser } = useAppStore()
 
@@ -39,11 +40,11 @@ function NavContent({ currentView, setCurrentView, setSidebarOpen }: {
 
   return (
     <nav className="flex flex-col gap-1 p-3">
-      <div className="flex items-center gap-2 px-3 py-4 mb-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
+      <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2 px-3'} py-4 mb-2`}>
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
           <GraduationCap className="h-5 w-5" />
         </div>
-        <span className="text-lg font-bold tracking-tight">StudyGig</span>
+        {!collapsed && <span className="text-lg font-bold tracking-tight">StudyGig</span>}
       </div>
       {filteredNav.map(item => {
         const Icon = item.icon
@@ -52,14 +53,15 @@ function NavContent({ currentView, setCurrentView, setSidebarOpen }: {
           <button
             key={item.view}
             onClick={() => { setCurrentView(item.view); setSidebarOpen(false) }}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors w-full text-left ${
+            title={collapsed ? item.label : undefined}
+            className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-3 px-3'} py-2.5 rounded-lg text-sm font-medium transition-all w-full text-left ${
               isActive
                 ? 'bg-primary/10 text-primary'
                 : 'text-muted-foreground hover:bg-muted hover:text-foreground'
             }`}
           >
-            <Icon className="h-4 w-4" />
-            {item.label}
+            <Icon className="h-4 w-4 shrink-0" />
+            {!collapsed && <span className="truncate">{item.label}</span>}
           </button>
         )
       })}
@@ -74,7 +76,11 @@ const roleLabels: Record<string, string> = {
 }
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const { currentUser, currentView, setCurrentView, sidebarOpen, setSidebarOpen } = useAppStore()
+  const { 
+    currentUser, currentView, setCurrentView, 
+    sidebarOpen, setSidebarOpen,
+    sidebarCollapsed, setSidebarCollapsed 
+  } = useAppStore()
 
   const handleSignOut = async () => {
     await signOut({ redirect: false })
@@ -151,8 +157,25 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       <div className="flex flex-1">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:block w-56 border-r bg-muted/30">
-          <NavContent currentView={currentView} setCurrentView={setCurrentView} setSidebarOpen={setSidebarOpen} />
+        <aside 
+          className={`hidden lg:block border-r bg-muted/30 transition-all duration-300 relative group ${
+            sidebarCollapsed ? 'w-[68px]' : 'w-56'
+          }`}
+        >
+          <NavContent 
+            currentView={currentView} 
+            setCurrentView={setCurrentView} 
+            setSidebarOpen={setSidebarOpen} 
+            collapsed={sidebarCollapsed}
+          />
+          
+          {/* Collapse Toggle Button */}
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="absolute -right-3 top-20 h-6 w-6 rounded-full border bg-background flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-muted"
+          >
+            {sidebarCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+          </button>
         </aside>
 
         {/* Main Content */}

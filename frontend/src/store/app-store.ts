@@ -133,6 +133,8 @@ interface AppState {
   // UI
   sidebarOpen: boolean
   setSidebarOpen: (open: boolean) => void
+  sidebarCollapsed: boolean
+  setSidebarCollapsed: (collapsed: boolean) => void
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
 }
@@ -167,6 +169,8 @@ export const useAppStore = create<AppState>((set) => ({
 
   sidebarOpen: false,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
+  sidebarCollapsed: false,
+  setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
   isLoading: false,
   setIsLoading: (loading) => set({ isLoading: loading }),
 }))
