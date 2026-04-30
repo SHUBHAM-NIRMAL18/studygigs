@@ -12,6 +12,11 @@ import {
   Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle
 } from '@/components/ui/sheet'
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle
+} from '@/components/ui/alert-dialog'
+import { useToast } from '@/hooks/use-toast'
+import {
   LayoutGrid, PlusCircle, ListTodo, Gavel, Shield, User,
   Menu, ChevronDown, GraduationCap, LogOut, ChevronLeft, ChevronRight
 } from 'lucide-react'
@@ -81,10 +86,21 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     sidebarOpen, setSidebarOpen,
     sidebarCollapsed, setSidebarCollapsed 
   } = useAppStore()
+  const { toast } = useToast()
+  const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false)
 
   const handleSignOut = async () => {
-    await signOut({ redirect: false })
-    window.location.reload()
+    setShowLogoutConfirm(false)
+    toast({
+      title: 'Logged Out',
+      description: 'You have been successfully logged out.',
+    })
+    
+    // Give the toast a moment to show before reloading
+    setTimeout(async () => {
+      await signOut({ redirect: false })
+      window.location.reload()
+    }, 1000)
   }
 
   return (
@@ -145,7 +161,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={handleSignOut}
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setShowLogoutConfirm(true);
+                }}
                 className="text-destructive focus:text-destructive cursor-pointer"
               >
                 <LogOut className="h-4 w-4 mr-2" /> Sign Out
@@ -154,6 +173,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </DropdownMenu>
         </div>
       </header>
+
+      {/* Logout Confirmation Dialog */}
+      <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You will need to sign back in to access the marketplace and your tasks.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSignOut} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Log Out
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="flex flex-1">
         {/* Desktop Sidebar */}

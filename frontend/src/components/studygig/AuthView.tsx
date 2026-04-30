@@ -10,8 +10,11 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { GraduationCap, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react'
 
+import { useToast } from '@/hooks/use-toast'
+
 export function AuthView() {
   const router = useRouter()
+  const { toast } = useToast()
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [signupName, setSignupName] = useState('')
@@ -44,8 +47,14 @@ export function AuthView() {
       } else if (result.error) {
         setError(result.error)
       } else if (result.ok) {
-        router.refresh()
-        window.location.reload()
+        toast({
+          title: 'Login Successful',
+          description: `Welcome back to StudyGig!`,
+        })
+        setTimeout(() => {
+          router.refresh()
+          window.location.reload()
+        }, 1000)
       }
     } catch {
       setError('Something went wrong. Please try again.')
