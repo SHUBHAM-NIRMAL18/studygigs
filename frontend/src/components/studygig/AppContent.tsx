@@ -13,10 +13,13 @@ import { MyBidsView } from '@/components/studygig/MyBidsView'
 import { AdminView } from '@/components/studygig/AdminView'
 import { ProfileView } from '@/components/studygig/ProfileView'
 
+import { LandingPage } from '@/components/studygig/landing/LandingPage'
+
 export function AppContent() {
   const { data: session, status } = useSession()
   const { currentView, setCurrentUser, setTasks, isAuthenticated, setIsAuthenticated } = useAppStore()
   const [seeded, setSeeded] = useState(false)
+  const [authMode, setAuthMode] = useState<'landing' | 'login' | 'signup'>('landing')
 
   useEffect(() => {
     if (seeded) return
@@ -62,7 +65,10 @@ export function AppContent() {
   }
 
   if (!isAuthenticated || status === 'unauthenticated') {
-    return <AuthView />
+    if (authMode === 'landing') {
+      return <LandingPage onAuthClick={(mode) => setAuthMode(mode)} />
+    }
+    return <AuthView defaultTab={authMode === 'signup' ? 'signup' : 'login'} onBack={() => setAuthMode('landing')} />
   }
 
   const renderView = () => {

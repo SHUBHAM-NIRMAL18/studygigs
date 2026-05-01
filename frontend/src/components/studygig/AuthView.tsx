@@ -8,11 +8,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { GraduationCap, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { GraduationCap, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2, ChevronLeft } from 'lucide-react'
 
 import { useToast } from '@/hooks/use-toast'
 
-export function AuthView() {
+interface AuthViewProps {
+  defaultTab?: 'login' | 'signup'
+  onBack?: () => void
+}
+
+export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [loginEmail, setLoginEmail] = useState('')
@@ -128,19 +133,31 @@ export function AuthView() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/50 p-4">
       <div className="w-full max-w-md">
+        {onBack && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="mb-8 hover:bg-background/50 -ml-2 text-muted-foreground"
+            onClick={onBack}
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Back to Home
+          </Button>
+        )}
+        
         {/* Logo */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary text-primary-foreground mb-3">
+          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary text-primary-foreground mb-3 shadow-xl shadow-primary/20">
             <GraduationCap className="h-8 w-8" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">StudyGig</h1>
           <p className="text-sm text-muted-foreground mt-1">Peer-to-Peer Academic Task Marketplace</p>
         </div>
 
-        <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Sign In</TabsTrigger>
-            <TabsTrigger value="signup">Create Account</TabsTrigger>
+        <Tabs defaultValue={defaultTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/50">
+            <TabsTrigger value="login" className="data-[state=active]:shadow-md">Sign In</TabsTrigger>
+            <TabsTrigger value="signup" className="data-[state=active]:shadow-md">Create Account</TabsTrigger>
           </TabsList>
 
           {/* LOGIN */}
