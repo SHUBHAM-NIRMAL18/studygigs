@@ -1,72 +1,93 @@
 'use client'
 
 import React from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { ShieldCheck, Zap, Users, GraduationCap, DollarSign, Clock } from 'lucide-react'
+import { ShieldCheck, Zap, GraduationCap, DollarSign, Sparkles } from 'lucide-react'
 
 const features = [
   {
-    title: 'Secure Escrow Payments',
+    title: 'Secure Escrow',
+    subtitle: 'Payments, Safety, Trust',
     description: 'Your money is safe. We only release payments when you are 100% satisfied with the work.',
     icon: ShieldCheck,
-    color: 'bg-emerald-500/10 text-emerald-600',
+    gradient: 'from-emerald-400 via-emerald-500 to-teal-600',
+    iconColor: 'text-emerald-500',
   },
   {
-    title: 'Verified Expert Solvers',
+    title: 'Expert Solvers',
+    subtitle: 'Vetted, Proven, Reliable',
     description: 'Work with top-tier students and graduates who have proven expertise in your subjects.',
     icon: GraduationCap,
-    color: 'bg-blue-500/10 text-blue-600',
+    gradient: 'from-blue-400 via-blue-500 to-indigo-600',
+    iconColor: 'text-blue-500',
   },
   {
-    title: 'Instant Task Matching',
-    description: 'Post your task and get competitive bids from qualified solvers within minutes.',
-    icon: Zap,
-    color: 'bg-amber-500/10 text-amber-600',
-  },
-  {
-    title: 'Flexible Budgeting',
+    title: 'Budget Control',
+    subtitle: 'Bidding, Pricing, Saving',
     description: 'Set your own price and choose the bid that best fits your budget and quality needs.',
     icon: DollarSign,
-    color: 'bg-primary/10 text-primary',
+    gradient: 'from-amber-400 via-orange-500 to-amber-600',
+    iconColor: 'text-amber-500',
   },
   {
-    title: '24/7 Quality Support',
-    description: 'Our team is always here to help with dispute resolution and platform assistance.',
-    icon: Clock,
-    color: 'bg-indigo-500/10 text-indigo-600',
-  },
-  {
-    title: 'Collaborative Learning',
-    description: 'Don\'t just get the answer. Learn the process through direct communication with solvers.',
-    icon: Users,
-    color: 'bg-rose-500/10 text-rose-600',
+    title: 'Fast Delivery',
+    subtitle: 'Instant, Matching, Swift',
+    description: 'Post your task and get competitive bids from qualified solvers within minutes.',
+    icon: Zap,
+    gradient: 'from-purple-400 via-purple-500 to-indigo-600',
+    iconColor: 'text-purple-500',
   },
 ]
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-24 bg-muted/30">
+    <section id="features" className="py-32 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Everything You Need to Succeed</h2>
-          <p className="text-lg text-muted-foreground">
+        <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider mb-2">
+            <Sparkles className="h-3 w-3" />
+            <span>Platform Features</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-[#1e1b4b]">Everything You Need to Succeed</h2>
+          <p className="text-lg text-slate-500 font-medium">
             StudyGig provides a secure and efficient platform for peer-to-peer academic collaboration.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="border-none shadow-md hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-8 space-y-4">
-                <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${feature.color}`}>
-                  <feature.icon className="h-6 w-6" />
-                </div>
-                <h3 className="text-xl font-bold">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">
+            <div 
+              key={index} 
+              className="group relative h-[380px] bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-[0_15px_35px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+            >
+              <div className="p-8 pb-0 space-y-3 relative z-10">
+                <h3 className="text-2xl font-extrabold text-[#1e1b4b] tracking-tight">{feature.title}</h3>
+                <p className="text-slate-400 font-bold text-sm tracking-wide uppercase">{feature.subtitle}</p>
+                <p className="text-slate-500 text-sm leading-relaxed pt-2 line-clamp-3">
                   {feature.description}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+
+              {/* Decorative Curved Bottom */}
+              <div className="absolute bottom-0 left-0 right-0 h-40 overflow-hidden">
+                <div 
+                  className={`absolute bottom-[-20px] left-[-10%] w-[120%] h-[120%] rounded-[100%] bg-gradient-to-br ${feature.gradient} opacity-20 transform translate-y-12 transition-transform duration-700 group-hover:translate-y-8`} 
+                />
+                <div 
+                  className={`absolute bottom-[-10px] left-[-5%] w-[110%] h-[100%] rounded-[100%] bg-gradient-to-br ${feature.gradient} transform translate-y-16 transition-transform duration-500 group-hover:translate-y-10`} 
+                />
+                
+                {/* Large Icon Illustration */}
+                <div className="absolute bottom-6 right-8 transition-all duration-500 transform group-hover:scale-110 group-hover:-translate-y-2 group-hover:rotate-6">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-white/20 blur-xl rounded-full" />
+                    <feature.icon className="h-16 w-16 text-white drop-shadow-2xl relative z-10" strokeWidth={1.5} />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Corner Accent */}
+              <div className={`absolute top-6 right-6 h-2 w-2 rounded-full bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+            </div>
           ))}
         </div>
       </div>
