@@ -65,23 +65,69 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
               
               <div className="flex-1 relative">
                 <div className="absolute inset-0 bg-primary/10 blur-[100px] -z-10" />
-                <div className="rounded-2xl border bg-card/50 backdrop-blur-sm p-8 shadow-2xl space-y-6">
-                   <div className="flex items-center gap-3 border-b pb-4">
-                      <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
-                      <div className="space-y-2">
-                        <div className="h-4 w-32 bg-muted rounded animate-pulse" />
-                        <div className="h-3 w-24 bg-muted rounded animate-pulse" />
+                
+                {/* Mock Task Card */}
+                <div className="rounded-2xl border bg-card/80 backdrop-blur-md p-6 shadow-2xl relative transform rotate-2 hover:rotate-0 transition-transform duration-500 hover:shadow-primary/20 cursor-pointer">
+                   {/* Top decorative elements */}
+                   <div className="absolute -top-3 -right-3">
+                     <div className="h-8 w-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg transform rotate-12">
+                       <span className="text-xs font-bold">$</span>
+                     </div>
+                   </div>
+
+                   {/* Header */}
+                   <div className="flex items-center justify-between border-b pb-4 mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-inner">
+                          A
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold">Alex Johnson</div>
+                          <div className="text-[10px] text-muted-foreground uppercase font-semibold">Posted 2 hrs ago</div>
+                        </div>
+                      </div>
+                      <div className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-xs font-bold">
+                        OPEN
                       </div>
                    </div>
-                   <div className="space-y-3">
-                      <div className="h-4 w-full bg-muted rounded animate-pulse" />
-                      <div className="h-4 w-[90%] bg-muted rounded animate-pulse" />
-                      <div className="h-4 w-[80%] bg-muted rounded animate-pulse" />
+                   
+                   {/* Content */}
+                   <div className="space-y-3 mb-6">
+                      <h3 className="text-lg font-bold leading-tight group-hover:text-primary transition-colors">
+                        Advanced Calculus III Assignment Help
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        Need an expert to help solve 10 advanced multivariable calculus problems. Must show step-by-step work. Due by Friday night.
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold border bg-orange-500/10 text-orange-600 border-orange-500/20">MATH</span>
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold border border-muted bg-muted/30">Undergrad</span>
+                      </div>
                    </div>
-                   <div className="flex justify-between items-center pt-4 border-t">
-                      <div className="h-6 w-20 bg-primary/20 rounded animate-pulse" />
-                      <div className="h-10 w-24 bg-primary/80 rounded-full animate-pulse" />
+                   
+                   {/* Footer */}
+                   <div className="flex justify-between items-center pt-4 border-t bg-muted/10 -mx-6 px-6 -mb-6 pb-6 rounded-b-2xl">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-muted-foreground font-semibold uppercase">Budget</span>
+                        <span className="text-base font-extrabold text-primary">$80 – $120</span>
+                      </div>
+                      <button className="h-10 px-6 rounded-full bg-primary text-primary-foreground font-bold text-sm shadow-md hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        Place Bid <ArrowRight className="h-4 w-4" />
+                      </button>
                    </div>
+                </div>
+                
+                {/* Floating Mock Bid Card */}
+                <div className="absolute -bottom-10 -left-6 rounded-xl border bg-card p-4 shadow-xl w-64 transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-6 w-6 rounded-full bg-blue-500 flex items-center justify-center text-[10px] text-white font-bold">S</div>
+                      <span className="text-xs font-bold">SolverPro</span>
+                    </div>
+                    <span className="text-xs font-black text-primary">$95</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">"I have a PhD in Math and can deliver step-by-step solutions by tomorrow."</p>
                 </div>
               </div>
             </div>
