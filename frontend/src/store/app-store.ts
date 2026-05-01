@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type ViewMode = 'marketplace' | 'post-task' | 'task-detail' | 'my-tasks' | 'my-bids' | 'admin' | 'profile'
+export type ViewMode = 'dashboard' | 'marketplace' | 'post-task' | 'task-detail' | 'my-tasks' | 'my-bids' | 'admin' | 'profile'
 
 export interface User {
   id: string
@@ -147,7 +147,7 @@ export const useAppStore = create<AppState>((set) => ({
   isAuthenticated: false,
   setIsAuthenticated: (v) => set({ isAuthenticated: v }),
 
-  currentView: 'marketplace',
+  currentView: 'dashboard',
   setCurrentView: (view) => set({ currentView: view }),
 
   selectedTaskId: null,
