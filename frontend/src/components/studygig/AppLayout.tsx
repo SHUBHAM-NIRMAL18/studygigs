@@ -18,11 +18,12 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import {
   LayoutGrid, PlusCircle, ListTodo, Gavel, Shield, User,
-  Menu, ChevronDown, GraduationCap, LogOut, ChevronLeft, ChevronRight
+  Menu, ChevronDown, GraduationCap, LogOut, ChevronLeft, ChevronRight, LayoutDashboard
 } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 
 const navItems: { view: ViewMode; label: string; icon: React.ElementType; roles?: string[] }[] = [
+  { view: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { view: 'marketplace', label: 'Marketplace', icon: LayoutGrid },
   { view: 'post-task', label: 'Post Task', icon: PlusCircle, roles: ['STUDENT', 'ADMIN'] },
   { view: 'my-tasks', label: 'My Tasks', icon: ListTodo, roles: ['STUDENT', 'ADMIN'] },
@@ -45,12 +46,15 @@ function NavContent({ currentView, setCurrentView, setSidebarOpen, collapsed }: 
 
   return (
     <nav className="flex flex-col gap-1 p-3">
-      <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2 px-3'} py-4 mb-2`}>
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
+      <button 
+        onClick={() => { setCurrentView('dashboard'); setSidebarOpen(false) }}
+        className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2 px-3'} py-4 mb-2 hover:opacity-80 transition-opacity w-full text-left`}
+      >
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/20">
           <GraduationCap className="h-5 w-5" />
         </div>
         {!collapsed && <span className="text-lg font-bold tracking-tight">StudyGig</span>}
-      </div>
+      </button>
       {filteredNav.map(item => {
         const Icon = item.icon
         const isActive = currentView === item.view

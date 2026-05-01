@@ -12,6 +12,7 @@ import { MyTasksView } from '@/components/studygig/MyTasksView'
 import { MyBidsView } from '@/components/studygig/MyBidsView'
 import { AdminView } from '@/components/studygig/AdminView'
 import { ProfileView } from '@/components/studygig/ProfileView'
+import { MainDashboardView } from '@/components/studygig/MainDashboardView'
 
 import { LandingPage } from '@/components/studygig/landing/LandingPage'
 
@@ -73,6 +74,7 @@ export function AppContent() {
 
   const renderView = () => {
     switch (currentView) {
+      case 'dashboard': return <MainDashboardView />
       case 'marketplace': return <MarketplaceView />
       case 'post-task': return <PostTaskView />
       case 'task-detail': return <TaskDetailView />
@@ -80,7 +82,7 @@ export function AppContent() {
       case 'my-bids': return <MyBidsView />
       case 'admin': return <AdminView />
       case 'profile': return <ProfileView />
-      default: return <MarketplaceView />
+      default: return <MainDashboardView />
     }
   }
 
