@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: "Post assignment requirements with budgets, get qualified solvers to bid. Escrow-protected payments, revision rounds, and dispute resolution.",
   keywords: ["StudyGig", "academic marketplace", "assignment help", "peer-to-peer", "escrow", "tutoring"],
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/logo.svg",
   },
 };
 
