@@ -2,29 +2,29 @@ import { Task } from '@/store/app-store'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Clock, DollarSign, MessageSquare, Users } from 'lucide-react'
+import { Clock, DollarSign, MessageSquare, Users, GraduationCap, ChevronRight } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 const categoryColors: Record<string, string> = {
-  MATH: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-  CS: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  SCIENCE: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
-  ENGLISH: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
-  HISTORY: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  BUSINESS: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
-  LAW: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
-  MEDICINE: 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400',
-  OTHER: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400',
+  MATH: 'bg-orange-500/10 text-orange-600 border-orange-500/20',
+  CS: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
+  SCIENCE: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20',
+  ENGLISH: 'bg-pink-500/10 text-pink-600 border-pink-500/20',
+  HISTORY: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
+  BUSINESS: 'bg-violet-500/10 text-violet-600 border-violet-500/20',
+  LAW: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
+  MEDICINE: 'bg-teal-500/10 text-teal-600 border-teal-500/20',
+  OTHER: 'bg-slate-500/10 text-slate-600 border-slate-500/20',
 }
 
 const statusColors: Record<string, string> = {
-  OPEN: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  BIDDING: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  IN_PROGRESS: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  REVIEW: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-  COMPLETED: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  CANCELLED: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  DISPUTED: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
+  OPEN: 'bg-emerald-500/10 text-emerald-600',
+  BIDDING: 'bg-amber-500/10 text-amber-600',
+  IN_PROGRESS: 'bg-blue-500/10 text-blue-600',
+  REVIEW: 'bg-indigo-500/10 text-indigo-600',
+  COMPLETED: 'bg-slate-500/10 text-slate-400',
+  CANCELLED: 'bg-destructive/10 text-destructive',
+  DISPUTED: 'bg-rose-500/10 text-rose-600',
 }
 
 const levelLabels: Record<string, string> = {
@@ -36,69 +36,69 @@ const levelLabels: Record<string, string> = {
 
 export function TaskCard({ task, onClick }: { task: Task; onClick: () => void }) {
   const categoryClass = categoryColors[task.category] || categoryColors.OTHER
-  const statusClass = statusColors[task.status] || 'bg-gray-100 text-gray-700'
+  const statusClass = statusColors[task.status] || 'bg-slate-500/10 text-slate-600'
 
   return (
     <Card
-      className="cursor-pointer hover:shadow-md transition-all duration-200 hover:border-primary/30 group"
+      className="group cursor-pointer border border-muted/60 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/30 overflow-hidden"
       onClick={onClick}
     >
-      <CardContent className="p-4 space-y-3">
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex flex-wrap gap-1.5">
-            <Badge variant="secondary" className={`text-[10px] font-medium ${categoryClass}`}>
+      <CardContent className="p-0">
+        <div className="p-6 space-y-4">
+          {/* Top meta */}
+          <div className="flex items-center justify-between">
+            <Badge variant="outline" className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${categoryClass}`}>
               {task.category}
             </Badge>
-            <Badge variant="outline" className="text-[10px]">
-              {levelLabels[task.academicLevel] || task.academicLevel}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <span className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                <GraduationCap className="h-3 w-3" />
+                {levelLabels[task.academicLevel] || task.academicLevel}
+              </span>
+            </div>
           </div>
-          <Badge variant="secondary" className={`text-[10px] font-medium shrink-0 ${statusClass}`}>
-            {task.status.replace('_', ' ')}
-          </Badge>
+
+          {/* Title & Description */}
+          <div className="space-y-2">
+            <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors line-clamp-2">
+              {task.title}
+            </h3>
+            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+              {task.description}
+            </p>
+          </div>
+
+          {/* Budget pill */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-primary font-bold text-sm">
+            <DollarSign className="h-4 w-4" />
+            <span>${task.budgetMin} – ${task.budgetMax}</span>
+          </div>
         </div>
 
-        {/* Title */}
-        <h3 className="font-semibold text-sm leading-snug group-hover:text-primary transition-colors line-clamp-2">
-          {task.title}
-        </h3>
-
-        {/* Description preview */}
-        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-          {task.description}
-        </p>
-
-        {/* Budget */}
-        <div className="flex items-center gap-1.5 text-sm font-semibold text-primary">
-          <DollarSign className="h-3.5 w-3.5" />
-          ${task.budgetMin} – ${task.budgetMax}
-        </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <Users className="h-3 w-3" />
-              {task._count?.bids || task.bids?.length || 0} bids
-            </span>
-            <span className="flex items-center gap-1">
-              <MessageSquare className="h-3 w-3" />
-              {task._count?.messages || 0}
-            </span>
+        {/* Footer info */}
+        <div className="px-6 py-4 bg-muted/30 border-t flex items-center justify-between">
+          <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <div className="flex -space-x-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="h-5 w-5 rounded-full border-2 border-background bg-muted overflow-hidden">
+                    <Avatar className="h-full w-full">
+                      <AvatarFallback className="text-[8px] bg-primary/10 text-primary">U</AvatarFallback>
+                    </Avatar>
+                  </div>
+                ))}
+              </div>
+              <span className="ml-1">{task._count?.bids || task.bids?.length || 0} Bids</span>
+            </div>
+            
+            <div className="flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5" />
+              <span>{formatDistanceToNow(new Date(task.deadline), { addSuffix: false })} left</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            {task.poster && (
-              <Avatar className="h-4 w-4">
-                <AvatarFallback className="text-[8px]">
-                  {task.poster.avatar || task.poster.name?.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-            )}
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {formatDistanceToNow(new Date(task.deadline), { addSuffix: false })} left
-            </span>
+          
+          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+            <ChevronRight className="h-4 w-4" />
           </div>
         </div>
       </CardContent>
