@@ -50,22 +50,27 @@ export function HeroSection({ onSignUpClick }: HeroSectionProps) {
           </div>
 
           {/* Stats/Trust */}
-          <div className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-8 animate-in fade-in duration-1000 delay-500">
-            <div className="space-y-1">
-              <p className="text-3xl font-bold">10k+</p>
-              <p className="text-sm text-muted-foreground">Active Students</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-3xl font-bold">50k+</p>
-              <p className="text-sm text-muted-foreground">Tasks Completed</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-3xl font-bold">4.9/5</p>
-              <p className="text-sm text-muted-foreground">Average Rating</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-3xl font-bold">100%</p>
-              <p className="text-sm text-muted-foreground">Secure Escrow</p>
+          <div className="mt-12 p-8 rounded-3xl bg-background/40 border border-border/50 backdrop-blur-xl shadow-2xl animate-in fade-in duration-1000 delay-500">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="space-y-2 relative">
+                <p className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-primary to-primary/60">10k+</p>
+                <p className="text-sm font-medium text-muted-foreground">Active Students</p>
+                <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 w-px h-12 bg-border/50"></div>
+              </div>
+              <div className="space-y-2 relative">
+                <p className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-blue-500 to-blue-500/60">50k+</p>
+                <p className="text-sm font-medium text-muted-foreground">Tasks Completed</p>
+                <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 w-px h-12 bg-border/50"></div>
+              </div>
+              <div className="space-y-2 relative">
+                <p className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-indigo-500 to-indigo-500/60">4.9/5</p>
+                <p className="text-sm font-medium text-muted-foreground">Average Rating</p>
+                <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 w-px h-12 bg-border/50"></div>
+              </div>
+              <div className="space-y-2">
+                <p className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-purple-500 to-purple-500/60">100%</p>
+                <p className="text-sm font-medium text-muted-foreground">Secure Escrow</p>
+              </div>
             </div>
           </div>
         </div>
