@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from "@/components/ui/toaster";
+import { Providers } from "./providers";
 
 export default function RootLayout({
   children,
@@ -34,8 +35,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
         suppressHydrationWarning
       >
-        {children}
-        <Toaster />
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
