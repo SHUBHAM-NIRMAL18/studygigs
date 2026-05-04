@@ -68,7 +68,7 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
       } else if (result.ok) {
         toast({ title: 'Success', description: 'Redirecting...' })
         setTimeout(() => {
-          window.location.reload()
+          router.push('/dashboard')
         }, 500)
       }
     } catch {
