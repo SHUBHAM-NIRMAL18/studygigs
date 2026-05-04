@@ -1,7 +1,9 @@
 'use client'
 
 import React from 'react'
-import { useAppStore, ViewMode } from '@/store/app-store'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { useAppStore } from '@/store/app-store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -22,23 +24,23 @@ import {
 } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 
-const navItems: { view: ViewMode; label: string; icon: React.ElementType; roles?: string[] }[] = [
-  { view: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { view: 'marketplace', label: 'Marketplace', icon: LayoutGrid },
-  { view: 'post-task', label: 'Post Task', icon: PlusCircle, roles: ['STUDENT', 'ADMIN'] },
-  { view: 'my-tasks', label: 'My Tasks', icon: ListTodo, roles: ['STUDENT', 'ADMIN'] },
-  { view: 'my-bids', label: 'My Bids', icon: Gavel, roles: ['SOLVER', 'ADMIN'] },
-  { view: 'admin', label: 'Admin Panel', icon: Shield, roles: ['ADMIN'] },
-  { view: 'profile', label: 'Profile', icon: User },
+const navItems: { href: string; label: string; icon: React.ElementType; roles?: string[] }[] = [
+  { href: '/dashboard',   label: 'Dashboard',   icon: LayoutDashboard },
+  { href: '/marketplace', label: 'Marketplace', icon: LayoutGrid },
+  { href: '/post-task',   label: 'Post Task',   icon: PlusCircle,       roles: ['STUDENT', 'ADMIN'] },
+  { href: '/my-tasks',    label: 'My Tasks',    icon: ListTodo,          roles: ['STUDENT', 'ADMIN'] },
+  { href: '/my-bids',     label: 'My Bids',     icon: Gavel,             roles: ['SOLVER', 'ADMIN'] },
+  { href: '/admin',       label: 'Admin Panel', icon: Shield,            roles: ['ADMIN'] },
+  { href: '/profile',     label: 'Profile',     icon: User },
 ]
 
-function NavContent({ currentView, setCurrentView, setSidebarOpen, collapsed }: {
-  currentView: ViewMode
-  setCurrentView: (v: ViewMode) => void
+function NavContent({ setSidebarOpen, collapsed }: {
   setSidebarOpen: (v: boolean) => void
   collapsed?: boolean
 }) {
   const { currentUser } = useAppStore()
+  const pathname = usePathname()
+  const router = useRouter()
 
   const filteredNav = navItems.filter(
     item => !item.roles || (currentUser && item.roles.includes(currentUser.role))
@@ -49,11 +51,11 @@ function NavContent({ currentView, setCurrentView, setSidebarOpen, collapsed }: 
       <div className="space-y-1">
         {filteredNav.map(item => {
           const Icon = item.icon
-          const isActive = currentView === item.view
+          const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
           return (
             <button
-              key={item.view}
-              onClick={() => { setCurrentView(item.view); setSidebarOpen(false) }}
+              key={item.href}
+              onClick={() => { router.push(item.href); setSidebarOpen(false) }}
               title={collapsed ? item.label : undefined}
               className={`group flex items-center ${collapsed ? 'justify-center px-0' : 'gap-3 px-3'} py-3 rounded-xl text-sm font-medium transition-all duration-300 w-full text-left relative overflow-hidden ${
                 isActive
@@ -92,10 +94,11 @@ const roleLabels: Record<string, string> = {
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { 
-    currentUser, currentView, setCurrentView, 
+    currentUser,
     sidebarOpen, setSidebarOpen,
     sidebarCollapsed, setSidebarCollapsed 
   } = useAppStore()
+  const router = useRouter()
   const { toast } = useToast()
   const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false)
 
@@ -129,13 +132,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <SheetHeader className="sr-only">
                 <SheetTitle>Navigation Menu</SheetTitle>
               </SheetHeader>
-              <NavContent currentView={currentView} setCurrentView={setCurrentView} setSidebarOpen={setSidebarOpen} />
+              <NavContent setSidebarOpen={setSidebarOpen} />
             </SheetContent>
           </Sheet>
 
           {/* Branding (Desktop & Mobile) */}
-          <button 
-            onClick={() => setCurrentView('dashboard')}
+          <Link
+            href="/dashboard"
             className="flex items-center gap-3 hover:opacity-80 transition-opacity focus:outline-none"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30">
@@ -145,7 +148,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="font-bold text-xl tracking-tight leading-none">StudyGig</span>
               <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mt-1">Marketplace</span>
             </div>
-          </button>
+          </Link>
 
           <div className="flex-1 flex items-center justify-end md:justify-between ml-auto">
             {/* Search Bar (Hidden on small mobile) */}
@@ -193,7 +196,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => setCurrentView('profile')}
+                    onClick={() => router.push('/profile')}
                     className="cursor-pointer rounded-md py-2.5"
                   >
                     <User className="h-4 w-4 mr-2 text-muted-foreground" /> 
@@ -244,8 +247,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         >
           <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide py-2 relative">
             <NavContent 
-              currentView={currentView} 
-              setCurrentView={setCurrentView} 
               setSidebarOpen={setSidebarOpen} 
               collapsed={sidebarCollapsed}
             />
