@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAppStore, Task } from '@/store/app-store'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -16,7 +17,8 @@ import {
 import { formatDistanceToNow, format } from 'date-fns'
 
 export function MyTasksView() {
-  const { currentUser, setSelectedTaskId, setCurrentView } = useAppStore()
+  const { currentUser, setSelectedTaskId } = useAppStore()
+  const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -49,7 +51,7 @@ export function MyTasksView() {
   const TaskRow = ({ task }: { task: Task }) => (
     <div
       className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 cursor-pointer transition-colors"
-      onClick={() => { setSelectedTaskId(task.id); setCurrentView('task-detail') }}
+      onClick={() => { setSelectedTaskId(task.id); router.push(`/tasks/${task.id}`) }}
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">

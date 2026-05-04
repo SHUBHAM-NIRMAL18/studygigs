@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/app-store'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -17,7 +18,8 @@ import {
 } from 'lucide-react'
 
 export function MainDashboardView() {
-  const { currentUser, tasks, setCurrentView } = useAppStore()
+  const { currentUser, tasks } = useAppStore()
+  const router = useRouter()
 
   // Calculate statistics
   const userTasks = tasks.filter(t => t.posterId === currentUser?.id)
@@ -39,11 +41,11 @@ export function MainDashboardView() {
         </div>
         <div className="flex gap-3">
           {isStudent && (
-            <Button onClick={() => setCurrentView('post-task')} className="rounded-full shadow-lg shadow-primary/20">
+            <Button onClick={() => router.push('/post-task')} className="rounded-full shadow-lg shadow-primary/20">
               <PlusCircle className="h-4 w-4 mr-2" /> Post New Task
             </Button>
           )}
-          <Button variant="outline" onClick={() => setCurrentView('marketplace')} className="rounded-full">
+          <Button variant="outline" onClick={() => router.push('/marketplace')} className="rounded-full">
             Browse Marketplace <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>
@@ -132,7 +134,7 @@ export function MainDashboardView() {
           {activeTasks.length > 0 ? (
             <div className="space-y-4">
               {activeTasks.slice(0, 3).map(task => (
-                <Card key={task.id} className="hover:bg-muted/50 transition-colors cursor-pointer border-muted/50" onClick={() => setCurrentView('my-tasks')}>
+                <Card key={task.id} className="hover:bg-muted/50 transition-colors cursor-pointer border-muted/50" onClick={() => router.push('/my-tasks')}>
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
@@ -158,7 +160,7 @@ export function MainDashboardView() {
                   <p className="font-medium">No active tasks found</p>
                   <p className="text-sm text-muted-foreground">Get started by posting your first assignment or bidding on one.</p>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => isStudent ? setCurrentView('post-task') : setCurrentView('marketplace')}>
+                <Button variant="outline" size="sm" onClick={() => isStudent ? router.push('/post-task') : router.push('/marketplace')}>
                    {isStudent ? 'Create Task' : 'Find Tasks'}
                 </Button>
               </CardContent>
@@ -189,13 +191,13 @@ export function MainDashboardView() {
               <CardTitle className="text-sm font-medium">Quick Settings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1">
-              <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => setCurrentView('profile')}>
+              <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => router.push('/profile')}>
                 Update Portfolio
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => setCurrentView('profile')}>
+              <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => router.push('/profile')}>
                 Payment Methods
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => setCurrentView('profile')}>
+              <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => router.push('/profile')}>
                 Notification Preferences
               </Button>
             </CardContent>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/app-store'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -38,7 +39,8 @@ interface DisputeInfo {
 }
 
 export function AdminView() {
-  const { currentUser, setSelectedTaskId, setCurrentView } = useAppStore()
+  const { currentUser, setSelectedTaskId } = useAppStore()
+  const router = useRouter()
   const { toast } = useToast()
   const [stats, setStats] = useState<Stats | null>(null)
   const [disputes, setDisputes] = useState<DisputeInfo[]>([])

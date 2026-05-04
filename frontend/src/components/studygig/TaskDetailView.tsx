@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAppStore, Task, Bid } from '@/store/app-store'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,7 +22,8 @@ import {
 import { formatDistanceToNow, format } from 'date-fns'
 
 export function TaskDetailView() {
-  const { selectedTaskId, currentUser, setCurrentView, setSelectedTask } = useAppStore()
+  const { selectedTaskId, currentUser, setSelectedTask } = useAppStore()
+  const router = useRouter()
   const { toast } = useToast()
   const [task, setTask] = useState<Task | null>(null)
   const [loading, setLoading] = useState(true)
@@ -54,7 +56,7 @@ export function TaskDetailView() {
   if (loading || !task) {
     return (
       <div className="p-4 md:p-6 max-w-4xl mx-auto">
-        <Button variant="ghost" onClick={() => setCurrentView('marketplace')}>
+        <Button variant="ghost" onClick={() => router.push('/marketplace')}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Back
         </Button>
         <div className="mt-8 text-center text-muted-foreground">Loading task details...</div>
@@ -194,7 +196,7 @@ export function TaskDetailView() {
     <div className="p-4 md:p-6 max-w-4xl mx-auto space-y-5">
       {/* Back button + header */}
       <div className="flex items-start gap-3">
-        <Button variant="ghost" size="icon" onClick={() => setCurrentView('marketplace')} className="mt-1">
+        <Button variant="ghost" size="icon" onClick={() => router.push('/marketplace')} className="mt-1">
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1 min-w-0">

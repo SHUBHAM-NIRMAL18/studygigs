@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/app-store'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -10,7 +11,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 
 export function MarketplaceView() {
-  const { tasks, filters, setFilters, setSelectedTaskId, setCurrentView, isLoading } = useAppStore()
+  const { tasks, filters, setFilters, setSelectedTaskId, isLoading } = useAppStore()
+  const router = useRouter()
 
   const filteredTasks = tasks.filter(task => {
     if (filters.category && task.category !== filters.category) return false
@@ -175,7 +177,7 @@ export function MarketplaceView() {
                       task={task}
                       onClick={() => {
                         setSelectedTaskId(task.id)
-                        setCurrentView('task-detail')
+                        router.push(`/tasks/${task.id}`)
                       }}
                     />
                   ))}
@@ -199,7 +201,7 @@ export function MarketplaceView() {
                       task={task}
                       onClick={() => {
                         setSelectedTaskId(task.id)
-                        setCurrentView('task-detail')
+                        router.push(`/tasks/${task.id}`)
                       }}
                     />
                   ))}

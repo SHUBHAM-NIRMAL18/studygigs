@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAppStore, Bid } from '@/store/app-store'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -21,7 +22,8 @@ const bidStatusColors: Record<string, string> = {
 }
 
 export function MyBidsView() {
-  const { currentUser, setSelectedTaskId, setCurrentView } = useAppStore()
+  const { currentUser, setSelectedTaskId } = useAppStore()
+  const router = useRouter()
   const [bids, setBids] = useState<Bid[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -69,7 +71,7 @@ export function MyBidsView() {
       onClick={() => {
         if (bid.task?.id) {
           setSelectedTaskId(bid.task.id)
-          setCurrentView('task-detail')
+          router.push(`/tasks/${bid.task.id}`)
         }
       }}
     >
@@ -187,7 +189,7 @@ export function MyBidsView() {
             </div>
             <h2 className="text-2xl font-bold mb-2">No bids yet</h2>
             <p className="text-muted-foreground mb-6 max-w-sm">You haven't submitted any proposals yet. Browse the marketplace to find tasks that match your expertise.</p>
-            <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20" onClick={() => setCurrentView('marketplace')}>
+            <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20" onClick={() => router.push('/marketplace')}>
               Browse Available Tasks
             </Button>
           </div>

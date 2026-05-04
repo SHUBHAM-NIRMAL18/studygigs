@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/app-store'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,7 +13,8 @@ import { useToast } from '@/hooks/use-toast'
 import { ArrowLeft, DollarSign, Clock } from 'lucide-react'
 
 export function PostTaskView() {
-  const { currentUser, setCurrentView, setTasks } = useAppStore()
+  const { currentUser, setTasks } = useAppStore()
+  const router = useRouter()
   const { toast } = useToast()
   const [submitting, setSubmitting] = useState(false)
 
@@ -52,7 +54,7 @@ export function PostTaskView() {
         .then(res => res.json())
         .then(data => setTasks(data.tasks || []))
         .catch(() => {})
-      setCurrentView('marketplace')
+      router.push('/marketplace')
     } catch {
       toast({ title: 'Error', description: 'Failed to post task', variant: 'destructive' })
     } finally {
@@ -63,7 +65,7 @@ export function PostTaskView() {
   return (
     <div className="p-4 md:p-6 max-w-2xl mx-auto space-y-5">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => setCurrentView('marketplace')}>
+        <Button variant="ghost" size="icon" onClick={() => router.push('/marketplace')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -149,7 +151,7 @@ export function PostTaskView() {
 
           {/* Submit */}
           <div className="flex gap-3 pt-2">
-            <Button variant="outline" onClick={() => setCurrentView('marketplace')}>Cancel</Button>
+            <Button variant="outline" onClick={() => router.push('/marketplace')}>Cancel</Button>
             <Button onClick={handleSubmit} disabled={submitting}>
               {submitting ? 'Posting...' : 'Post Task'}
             </Button>
