@@ -14,7 +14,7 @@ interface LandingPageProps {
 
 export function LandingPage({ onAuthClick }: LandingPageProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <PublicHeader 
         onLoginClick={() => onAuthClick('login')} 
         onSignUpClick={() => onAuthClick('signup')} 

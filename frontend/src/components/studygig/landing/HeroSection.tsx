@@ -10,7 +10,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ onSignUpClick }: HeroSectionProps) {
   return (
-    <section className="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
+    <section className="relative overflow-hidden pt-10 pb-20 lg:pt-20 lg:pb-32 bg-gradient-to-b from-indigo-50/50 to-white">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px] animate-pulse" />
