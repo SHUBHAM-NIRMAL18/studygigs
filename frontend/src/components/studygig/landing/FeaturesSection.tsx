@@ -47,8 +47,8 @@ export function FeaturesSection() {
             <Sparkles className="h-3 w-3" />
             <span>Platform Features</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-[#1e1b4b]">Everything You Need to Succeed</h2>
-          <p className="text-lg text-slate-500 font-medium">
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-[#1e1b4b]">Everything You Need to Succeed</h2>
+          <p className="text-base text-slate-500 font-medium">
             StudyGig provides a secure and efficient platform for peer-to-peer academic collaboration.
           </p>
         </div>
@@ -57,12 +57,12 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="group relative h-[380px] bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-[0_15px_35px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+              className="group relative h-[360px] bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-[0_15px_35px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2 cursor-default"
             >
-              <div className="p-8 pb-0 space-y-3 relative z-10">
-                <h3 className="text-2xl font-extrabold text-[#1e1b4b] tracking-tight">{feature.title}</h3>
-                <p className="text-slate-400 font-bold text-sm tracking-wide uppercase">{feature.subtitle}</p>
-                <p className="text-slate-500 text-sm leading-relaxed pt-2 line-clamp-3">
+              <div className="p-8 pb-0 space-y-2 relative z-10">
+                <h3 className="text-xl font-extrabold text-[#1e1b4b] tracking-tight">{feature.title}</h3>
+                <p className="text-slate-400 font-bold text-[10px] tracking-wide uppercase">{feature.subtitle}</p>
+                <p className="text-slate-500 text-[13px] leading-relaxed pt-1 line-clamp-3">
                   {feature.description}
                 </p>
               </div>

@@ -30,34 +30,34 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row items-center gap-12">
               <div className="flex-1 space-y-6">
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">How StudyGig Works</h2>
-                <div className="space-y-8 mt-10">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">How StudyGig Works</h2>
+                <div className="space-y-6 mt-8">
                   <div className="flex gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">1</div>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold">1</div>
                     <div>
-                      <h3 className="font-bold text-xl text-foreground">Post Your Task</h3>
-                      <p className="text-muted-foreground mt-1">Describe your assignment, set your deadline, and choose your budget range.</p>
+                      <h3 className="font-bold text-lg text-foreground">Post Your Task</h3>
+                      <p className="text-sm text-muted-foreground mt-0.5">Describe your assignment, set your deadline, and choose your budget range.</p>
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">2</div>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold">2</div>
                     <div>
-                      <h3 className="font-bold text-xl text-foreground">Receive & Review Bids</h3>
-                      <p className="text-muted-foreground mt-1">Qualified solvers will bid on your task. Check their profiles, ratings, and reviews.</p>
+                      <h3 className="font-bold text-lg text-foreground">Receive & Review Bids</h3>
+                      <p className="text-sm text-muted-foreground mt-0.5">Qualified solvers will bid on your task. Check their profiles, ratings, and reviews.</p>
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">3</div>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold">3</div>
                     <div>
-                      <h3 className="font-bold text-xl text-foreground">Deposit into Escrow</h3>
-                      <p className="text-muted-foreground mt-1">Accept a bid and deposit the payment into our secure escrow. Money is only released when work is done.</p>
+                      <h3 className="font-bold text-lg text-foreground">Deposit into Escrow</h3>
+                      <p className="text-sm text-muted-foreground mt-0.5">Accept a bid and deposit the payment into our secure escrow. Money is only released when work is done.</p>
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">4</div>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold">4</div>
                     <div>
-                      <h3 className="font-bold text-xl text-foreground">Get Quality Work</h3>
-                      <p className="text-muted-foreground mt-1">Collaborate with your solver, request revisions if needed, and finalize the task!</p>
+                      <h3 className="font-bold text-lg text-foreground">Get Quality Work</h3>
+                      <p className="text-sm text-muted-foreground mt-0.5">Collaborate with your solver, request revisions if needed, and finalize the task!</p>
                     </div>
                   </div>
                 </div>
@@ -92,28 +92,28 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
                    </div>
                    
                    {/* Content */}
-                   <div className="space-y-3 mb-6">
-                      <h3 className="text-lg font-bold leading-tight group-hover:text-primary transition-colors">
+                   <div className="space-y-2 mb-6">
+                      <h3 className="text-base font-bold leading-tight group-hover:text-primary transition-colors">
                         Advanced Calculus III Assignment Help
                       </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
+                      <p className="text-[13px] text-muted-foreground line-clamp-2">
                         Need an expert to help solve 10 advanced multivariable calculus problems. Must show step-by-step work. Due by Friday night.
                       </p>
                       
                       <div className="flex flex-wrap gap-2 pt-1">
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold border bg-orange-500/10 text-orange-600 border-orange-500/20">MATH</span>
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold border border-muted bg-muted/30">Undergrad</span>
+                        <span className="px-2 py-0.5 rounded-md text-[9px] font-bold border bg-orange-500/10 text-orange-600 border-orange-500/20">MATH</span>
+                        <span className="px-2 py-0.5 rounded-md text-[9px] font-bold border border-muted bg-muted/30">Undergrad</span>
                       </div>
                    </div>
                    
                    {/* Footer */}
                    <div className="flex justify-between items-center pt-4 border-t bg-muted/10 -mx-6 px-6 -mb-6 pb-6 rounded-b-2xl">
                       <div className="flex flex-col">
-                        <span className="text-[10px] text-muted-foreground font-semibold uppercase">Budget</span>
-                        <span className="text-base font-extrabold text-primary">$80 – $120</span>
+                        <span className="text-[9px] text-muted-foreground font-semibold uppercase">Budget</span>
+                        <span className="text-sm font-extrabold text-primary">$80 – $120</span>
                       </div>
-                      <button className="h-10 px-6 rounded-full bg-primary text-primary-foreground font-bold text-sm shadow-md hover:bg-primary/90 transition-colors flex items-center gap-2">
-                        Place Bid <ArrowRight className="h-4 w-4" />
+                      <button className="h-9 px-5 rounded-full bg-primary text-primary-foreground font-bold text-xs shadow-md hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        Place Bid <ArrowRight className="h-3 w-3" />
                       </button>
                    </div>
                 </div>
@@ -152,13 +152,13 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
               </div>
               
               <div className="space-y-4">
-                <h2 className="text-4xl md:text-7xl font-black tracking-tight text-white drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
                   Ready to boost your <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-amber-500 underline decoration-yellow-500/30">
                     grades?
                   </span>
                 </h2>
-                <p className="text-xl md:text-2xl text-white font-medium max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+                <p className="text-lg md:text-xl text-white font-medium max-w-2xl mx-auto leading-relaxed drop-shadow-md">
                   Join thousands of students who are already using StudyGig to simplify their academic life.
                 </p>
               </div>
@@ -167,10 +167,10 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
                 <Button 
                   size="lg" 
                   variant="secondary" 
-                  className="h-14 md:h-16 px-10 md:px-14 text-lg md:text-xl rounded-full font-black shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:scale-105 transition-all bg-white text-primary hover:bg-yellow-400 hover:text-black border-4 border-transparent hover:border-white/20"
+                  className="h-12 md:h-14 px-8 md:px-12 text-base md:text-lg rounded-full font-black shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:scale-105 transition-all bg-white text-primary hover:bg-yellow-400 hover:text-black border-4 border-transparent hover:border-white/20"
                   onClick={() => onAuthClick('signup')}
                 >
-                  Get Started for Free <ArrowRight className="ml-2 h-6 w-6" />
+                  Get Started for Free <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
            </div>

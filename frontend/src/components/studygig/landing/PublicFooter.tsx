@@ -80,7 +80,7 @@ export function PublicFooter() {
 
           {/* Links */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">Product</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">Product</h4>
             <ul className="space-y-2 text-sm text-muted-foreground font-medium">
               <li><a href="#features" className="hover:text-primary transition-colors">Features</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Marketplace</a></li>
@@ -90,7 +90,7 @@ export function PublicFooter() {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">Company</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">Company</h4>
             <ul className="space-y-2 text-sm text-muted-foreground font-medium">
               <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Careers</a></li>
@@ -100,7 +100,7 @@ export function PublicFooter() {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">Legal</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">Legal</h4>
             <ul className="space-y-2 text-sm text-muted-foreground font-medium">
               <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>

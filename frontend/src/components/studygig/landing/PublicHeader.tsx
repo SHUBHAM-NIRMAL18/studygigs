@@ -30,17 +30,17 @@ export function PublicHeader({ onLoginClick, onSignUpClick }: PublicHeaderProps)
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+        <nav className="hidden md:flex items-center gap-6 text-xs font-medium">
           <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">Features</a>
           <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">How it Works</a>
           <a href="#testimonials" className="text-muted-foreground hover:text-primary transition-colors">Success Stories</a>
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" className="hidden sm:inline-flex" onClick={onLoginClick}>
+          <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-xs" onClick={onLoginClick}>
             Log In
           </Button>
-          <Button className="rounded-full px-6 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all" onClick={onSignUpClick}>
+          <Button size="sm" className="rounded-full px-5 text-xs shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all" onClick={onSignUpClick}>
             Get Started
           </Button>
 
