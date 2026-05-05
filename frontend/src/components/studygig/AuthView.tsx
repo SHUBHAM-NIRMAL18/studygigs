@@ -66,7 +66,11 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
       } else if (result.error) {
         setError(result.error)
       } else if (result.ok) {
-        toast({ title: 'Success', description: 'Redirecting...' })
+        toast({ 
+          title: 'Login Successful!', 
+          description: 'Taking you to your dashboard...',
+          variant: 'success'
+        })
         setTimeout(() => {
           router.push('/dashboard')
         }, 500)
