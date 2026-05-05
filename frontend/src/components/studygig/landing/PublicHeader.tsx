@@ -19,7 +19,7 @@ interface PublicHeaderProps {
 export function PublicHeader({ onLoginClick, onSignUpClick }: PublicHeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-16 items-center justify-between px-6 md:px-8">
         <div className="flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
             <GraduationCap className="h-6 w-6" />
@@ -30,17 +30,17 @@ export function PublicHeader({ onLoginClick, onSignUpClick }: PublicHeaderProps)
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-medium">
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">Features</a>
           <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">How it Works</a>
           <a href="#testimonials" className="text-muted-foreground hover:text-primary transition-colors">Success Stories</a>
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-xs" onClick={onLoginClick}>
+          <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-sm" onClick={onLoginClick}>
             Log In
           </Button>
-          <Button size="sm" className="rounded-full px-5 text-xs shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all" onClick={onSignUpClick}>
+          <Button size="sm" className="rounded-full px-5 text-sm shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all" onClick={onSignUpClick}>
             Get Started
           </Button>
 

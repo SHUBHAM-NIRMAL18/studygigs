@@ -27,7 +27,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
         
         {/* How It Works (Quick Preview) */}
         <section id="how-it-works" className="py-24">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-6 md:px-12">
             <div className="flex flex-col lg:flex-row items-center gap-12">
               <div className="flex-1 space-y-6">
                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">How StudyGig Works</h2>
@@ -145,7 +145,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
               <GraduationCap className="h-[600px] w-[600px]" />
            </div>
            
-           <div className="container mx-auto px-4 relative z-10 text-center space-y-10">
+           <div className="container mx-auto px-6 md:px-12 relative z-10 text-center space-y-10">
               <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xs font-bold uppercase tracking-widest shadow-xl">
                  <Sparkles className="h-4 w-4 text-yellow-400" />
                  <span>Join the Revolution</span>

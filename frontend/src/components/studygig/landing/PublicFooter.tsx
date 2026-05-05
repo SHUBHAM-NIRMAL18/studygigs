@@ -51,7 +51,7 @@ export function PublicFooter() {
         }
       `}</style>
 
-      <div className="container mx-auto px-4 py-12 lg:py-16 relative z-10">
+      <div className="container mx-auto px-6 md:px-12 py-12 lg:py-16 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-2 space-y-6">

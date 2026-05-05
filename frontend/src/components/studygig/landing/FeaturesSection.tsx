@@ -41,7 +41,7 @@ const features = [
 export function FeaturesSection() {
   return (
     <section id="features" className="py-32 bg-white overflow-hidden">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6 md:px-12">
         <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles className="h-3 w-3" />
