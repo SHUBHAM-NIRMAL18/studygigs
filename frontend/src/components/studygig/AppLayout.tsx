@@ -105,8 +105,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const handleSignOut = async () => {
     setShowLogoutConfirm(false)
     toast({
-      title: 'Logged Out',
-      description: 'You have been successfully logged out.',
+      title: 'Signed Out Successfully',
+      description: 'See you again soon!',
+      variant: 'success',
     })
     
     // Give the toast a moment to show before reloading
