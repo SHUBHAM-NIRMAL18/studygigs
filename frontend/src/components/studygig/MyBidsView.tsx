@@ -67,7 +67,7 @@ export function MyBidsView() {
 
   const BidRow = ({ bid }: { bid: Bid }) => (
     <div
-      className="group flex items-center justify-between p-4 md:p-5 mb-3 rounded-2xl border border-muted/60 bg-card/50 backdrop-blur-sm hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 hover:border-primary/30 cursor-pointer transition-all duration-300"
+      className="group flex items-center justify-between p-3 md:p-4 mb-2 rounded-xl border border-muted/60 bg-card/50 backdrop-blur-sm hover:shadow-md hover:shadow-primary/5 hover:border-primary/30 cursor-pointer transition-all duration-300"
       onClick={() => {
         if (bid.task?.id) {
           setSelectedTaskId(bid.task.id)
@@ -76,38 +76,38 @@ export function MyBidsView() {
       }}
     >
       <div className="flex-1 min-w-0 pr-4">
-        <div className="flex items-center gap-3 mb-2">
-          <Badge variant="outline" className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${bidStatusColors[bid.status] || ''}`}>
+        <div className="flex items-center gap-3 mb-1">
+          <Badge variant="outline" className={`text-[9px] font-black px-2 py-0.5 rounded-md border ${bidStatusColors[bid.status] || ''}`}>
             {bid.status}
           </Badge>
-          <span className="text-xs text-muted-foreground font-medium flex items-center gap-1">
+          <span className="text-[10px] text-muted-foreground font-bold flex items-center gap-1 uppercase tracking-wider">
             <Clock className="h-3 w-3" />
             {formatDistanceToNow(new Date(bid.createdAt), { addSuffix: true })}
           </span>
         </div>
         
-        <h3 className="text-base md:text-lg font-bold truncate group-hover:text-primary transition-colors">
+        <h3 className="text-sm md:text-base font-black truncate group-hover:text-primary transition-colors tracking-tight">
           {bid.task?.title || 'Unknown Task'}
         </h3>
         
-        <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
+        <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5 font-medium italic">
           "{bid.message}"
         </p>
         
-        <div className="flex items-center gap-4 mt-3">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs">
-            <DollarSign className="h-3.5 w-3.5" />
+        <div className="flex items-center gap-4 mt-2">
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-primary/5 text-primary font-black text-[11px] border border-primary/10">
+            <DollarSign className="h-3 w-3" />
             <span>${bid.proposedPrice}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <Hourglass className="h-3.5 w-3.5" />
-            <span>{bid.deliveryDays} Days Delivery</span>
+          <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+            <Hourglass className="h-3 w-3" />
+            <span>{bid.deliveryDays} DAYS</span>
           </div>
         </div>
       </div>
       
-      <div className="hidden sm:flex h-10 w-10 shrink-0 rounded-full bg-muted items-center justify-center text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-        <ChevronRight className="h-5 w-5" />
+      <div className="hidden sm:flex h-8 w-8 shrink-0 rounded-lg bg-muted/50 items-center justify-center text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+        <ChevronRight className="h-4 w-4" />
       </div>
     </div>
   )
@@ -115,62 +115,62 @@ export function MyBidsView() {
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6">
       {/* Header section with glass effect */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-background to-background border p-6 md:p-8 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-background to-background border p-5 md:p-6 shadow-sm">
         <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-          <Gavel className="h-24 w-24" />
+          <Gavel className="h-16 w-16" />
         </div>
-        <div className="relative z-10 space-y-2 max-w-2xl">
-          <Badge variant="secondary" className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border-primary/20 text-[10px] font-semibold uppercase tracking-wider">
-            Solver Dashboard
+        <div className="relative z-10 space-y-1 max-w-2xl">
+          <Badge variant="secondary" className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary border-primary/20 text-[9px] font-bold uppercase tracking-wider">
+            SOLVER DASHBOARD
           </Badge>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight">
             My <span className="text-primary">Proposals</span>
           </h1>
-          <p className="text-base text-muted-foreground leading-relaxed max-w-xl">
-            Track the status of your bids, manage active proposals, and monitor your potential earnings all in one place.
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-xl font-medium">
+            Manage your active bids and monitor potential earnings.
           </p>
         </div>
       </div>
 
       {/* Premium Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border-none shadow-sm bg-gradient-to-br from-card to-muted/20">
-          <CardContent className="p-5 flex flex-col justify-center items-center text-center space-y-2">
-            <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-1">
-              <Activity className="h-5 w-5" />
+        <Card className="border border-border/50 shadow-sm bg-gradient-to-br from-card to-muted/20 hover:shadow-md transition-shadow">
+          <CardContent className="p-4 flex flex-col justify-center items-center text-center space-y-2">
+            <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+              <Activity className="h-4 w-4" />
             </div>
-            <div className="text-3xl font-extrabold">{bids.length}</div>
-            <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Total Bids</div>
+            <div className="text-2xl font-black">{bids.length}</div>
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Bids</div>
           </CardContent>
         </Card>
         
-        <Card className="border-none shadow-sm bg-gradient-to-br from-amber-500/5 to-amber-500/10">
-          <CardContent className="p-5 flex flex-col justify-center items-center text-center space-y-2">
-            <div className="h-10 w-10 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center mb-1">
-              <Hourglass className="h-5 w-5" />
+        <Card className="border border-border/50 shadow-sm bg-gradient-to-br from-amber-500/5 to-amber-500/10 hover:shadow-md transition-shadow">
+          <CardContent className="p-4 flex flex-col justify-center items-center text-center space-y-2">
+            <div className="h-8 w-8 rounded-lg bg-amber-500/20 text-amber-600 flex items-center justify-center">
+              <Hourglass className="h-4 w-4" />
             </div>
-            <div className="text-3xl font-extrabold text-amber-600">{pendingBids.length}</div>
-            <div className="text-xs font-medium text-amber-600/70 uppercase tracking-wider">Pending</div>
+            <div className="text-2xl font-black text-amber-600">{pendingBids.length}</div>
+            <div className="text-[10px] font-bold text-amber-600/70 uppercase tracking-widest">Pending</div>
           </CardContent>
         </Card>
         
-        <Card className="border-none shadow-sm bg-gradient-to-br from-emerald-500/5 to-emerald-500/10">
-          <CardContent className="p-5 flex flex-col justify-center items-center text-center space-y-2">
-            <div className="h-10 w-10 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center mb-1">
-              <CheckCircle className="h-5 w-5" />
+        <Card className="border border-border/50 shadow-sm bg-gradient-to-br from-emerald-500/5 to-emerald-500/10 hover:shadow-md transition-shadow">
+          <CardContent className="p-4 flex flex-col justify-center items-center text-center space-y-2">
+            <div className="h-8 w-8 rounded-lg bg-emerald-500/20 text-emerald-600 flex items-center justify-center">
+              <CheckCircle className="h-4 w-4" />
             </div>
-            <div className="text-3xl font-extrabold text-emerald-600">{acceptedBids.length}</div>
-            <div className="text-xs font-medium text-emerald-600/70 uppercase tracking-wider">Accepted</div>
+            <div className="text-2xl font-black text-emerald-600">{acceptedBids.length}</div>
+            <div className="text-[10px] font-bold text-emerald-600/70 uppercase tracking-widest">Accepted</div>
           </CardContent>
         </Card>
         
-        <Card className="border-none shadow-sm bg-gradient-to-br from-primary/5 to-primary/10">
-          <CardContent className="p-5 flex flex-col justify-center items-center text-center space-y-2">
-            <div className="h-10 w-10 rounded-full bg-primary/20 text-primary flex items-center justify-center mb-1">
-              <TrendingUp className="h-5 w-5" />
+        <Card className="border border-border/50 shadow-sm bg-gradient-to-br from-primary/5 to-primary/10 hover:shadow-md transition-shadow">
+          <CardContent className="p-4 flex flex-col justify-center items-center text-center space-y-2">
+            <div className="h-8 w-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center">
+              <TrendingUp className="h-4 w-4" />
             </div>
-            <div className="text-3xl font-extrabold text-primary">${totalValue}</div>
-            <div className="text-xs font-medium text-primary/70 uppercase tracking-wider">Active Value</div>
+            <div className="text-2xl font-black text-primary">${totalValue}</div>
+            <div className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">Active Value</div>
           </CardContent>
         </Card>
       </div>
