@@ -44,14 +44,14 @@ export function TaskCard({ task, onClick }: { task: Task; onClick: () => void })
       onClick={onClick}
     >
       <CardContent className="p-0">
-        <div className="p-6 space-y-4">
+        <div className="p-4 space-y-3">
           {/* Top meta */}
           <div className="flex items-center justify-between">
-            <Badge variant="outline" className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${categoryClass}`}>
+            <Badge variant="outline" className={`px-1.5 py-0 rounded-md text-[9px] font-black border ${categoryClass} uppercase tracking-widest`}>
               {task.category}
             </Badge>
             <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+              <span className="flex items-center gap-1 text-[9px] font-black text-muted-foreground uppercase tracking-widest">
                 <GraduationCap className="h-3 w-3" />
                 {levelLabels[task.academicLevel] || task.academicLevel}
               </span>
@@ -59,46 +59,46 @@ export function TaskCard({ task, onClick }: { task: Task; onClick: () => void })
           </div>
 
           {/* Title & Description */}
-          <div className="space-y-2">
-            <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors line-clamp-2">
+          <div className="space-y-1">
+            <h3 className="font-black text-base leading-tight group-hover:text-primary transition-colors line-clamp-2 tracking-tight">
               {task.title}
             </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+            <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed font-medium">
               {task.description}
             </p>
           </div>
 
           {/* Budget pill */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/5 border border-primary/10 text-primary font-bold text-sm">
-            <DollarSign className="h-4 w-4" />
+          <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/5 border border-primary/10 text-primary font-black text-xs uppercase tracking-tighter">
+            <DollarSign className="h-3 w-3" />
             <span>${task.budgetMin} – ${task.budgetMax}</span>
           </div>
         </div>
 
         {/* Footer info */}
-        <div className="px-6 py-4 bg-muted/30 border-t flex items-center justify-between">
-          <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <div className="flex -space-x-2">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="h-5 w-5 rounded-full border-2 border-background bg-muted overflow-hidden">
+        <div className="px-4 py-3 bg-muted/30 border-t flex items-center justify-between">
+          <div className="flex items-center gap-3 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+            <div className="flex items-center gap-1">
+              <div className="flex -space-x-1.5">
+                {[1, 2].map(i => (
+                  <div key={i} className="h-4 w-4 rounded-full border-2 border-background bg-muted overflow-hidden">
                     <Avatar className="h-full w-full">
-                      <AvatarFallback className="text-[8px] bg-primary/10 text-primary">U</AvatarFallback>
+                      <AvatarFallback className="text-[6px] bg-primary/10 text-primary font-black">U</AvatarFallback>
                     </Avatar>
                   </div>
                 ))}
               </div>
-              <span className="ml-1">{task._count?.bids || task.bids?.length || 0} Bids</span>
+              <span className="ml-1 tracking-tighter">{task._count?.bids || task.bids?.length || 0} BIDS</span>
             </div>
             
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              <span>{formatDistanceToNow(new Date(task.deadline), { addSuffix: false })} left</span>
+            <div className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              <span className="tracking-tighter">{formatDistanceToNow(new Date(task.deadline), { addSuffix: false })} LEFT</span>
             </div>
           </div>
           
-          <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-            <ChevronRight className="h-4 w-4" />
+          <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+            <ChevronRight className="h-3.5 w-3.5" />
           </div>
         </div>
       </CardContent>
@@ -109,7 +109,7 @@ export function TaskCard({ task, onClick }: { task: Task; onClick: () => void })
 export function StatusBadge({ status }: { status: string }) {
   const statusClass = statusColors[status] || 'bg-gray-100 text-gray-700'
   return (
-    <Badge variant="secondary" className={`text-xs font-medium ${statusClass}`}>
+    <Badge variant="secondary" className={`text-[9px] font-black uppercase tracking-widest rounded-md px-2 py-0.5 ${statusClass}`}>
       {status.replace(/_/g, ' ')}
     </Badge>
   )
@@ -118,7 +118,7 @@ export function StatusBadge({ status }: { status: string }) {
 export function CategoryBadge({ category }: { category: string }) {
   const categoryClass = categoryColors[category] || categoryColors.OTHER
   return (
-    <Badge variant="secondary" className={`text-xs font-medium ${categoryClass}`}>
+    <Badge variant="secondary" className={`text-[9px] font-black uppercase tracking-widest rounded-md px-2 py-0.5 ${categoryClass}`}>
       {category}
     </Badge>
   )
@@ -126,7 +126,7 @@ export function CategoryBadge({ category }: { category: string }) {
 
 export function LevelBadge({ level }: { level: string }) {
   return (
-    <Badge variant="outline" className="text-xs">
+    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest rounded-md px-2 py-0.5 border-border/50">
       {levelLabels[level] || level}
     </Badge>
   )

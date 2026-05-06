@@ -195,55 +195,87 @@ export function TaskDetailView() {
   return (
     <div className="p-4 md:p-6 max-w-4xl mx-auto space-y-5">
       {/* Back button + header */}
-      <div className="flex items-start gap-3">
-        <Button variant="ghost" size="icon" onClick={() => router.push('/marketplace')} className="mt-1">
-          <ArrowLeft className="h-4 w-4" />
+      <div className="flex flex-col gap-2">
+        <Button variant="ghost" size="sm" onClick={() => router.push('/marketplace')} className="w-fit h-7 rounded-lg hover:bg-primary/5 hover:text-primary transition-all px-2 -ml-2 text-[10px] font-bold uppercase tracking-wider">
+          <ArrowLeft className="h-3 w-3 mr-1.5" /> Back to Marketplace
         </Button>
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 mb-1">
-            <StatusBadge status={task.status} />
-            <CategoryBadge category={task.category} />
-            <LevelBadge level={task.academicLevel} />
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-2">
+          <div className="space-y-1 flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <StatusBadge status={task.status} />
+              <CategoryBadge category={task.category} />
+              <LevelBadge level={task.academicLevel} />
+            </div>
+            <h1 className="text-xl md:text-2xl font-black tracking-tighter leading-tight text-slate-950 dark:text-white">
+              {task.title}
+            </h1>
           </div>
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight">{task.title}</h1>
+          <div className="flex flex-col items-end shrink-0">
+            <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">BUDGET</div>
+            <div className="text-xl font-black text-primary">${task.budgetMin} – ${task.budgetMax}</div>
+          </div>
         </div>
       </div>
 
       {/* Task overview */}
-      <Card>
-        <CardContent className="p-4 space-y-4">
-          <p className="text-sm whitespace-pre-wrap leading-relaxed">{task.description}</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="flex items-center gap-2 text-sm">
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-              <span className="font-semibold">${task.budgetMin} – ${task.budgetMax}</span>
+      <Card className="border border-border/50 shadow-lg shadow-slate-200/40 dark:shadow-none overflow-hidden rounded-2xl">
+        <CardContent className="p-0">
+          <div className="p-4 md:p-5 space-y-4">
+            <div className="space-y-2">
+              <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">DESCRIPTION</div>
+              <p className="text-xs md:text-sm whitespace-pre-wrap leading-relaxed font-medium text-slate-700 dark:text-slate-300">
+                {task.description}
+              </p>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <Clock className="h-4 w-4 text-muted-foreground" />
-              <span>Due {format(new Date(task.deadline), 'MMM d, yyyy')}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <Users className="h-4 w-4 text-muted-foreground" />
-              <span>{task.bids?.length || 0} bids</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <Shield className="h-4 w-4 text-muted-foreground" />
-              <span>{(task.platformFee * 100).toFixed(0)}% fee</span>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="space-y-0.5">
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">DEADLINE</p>
+                <p className="text-[11px] font-black flex items-center gap-1.5">
+                  <Clock className="h-3 w-3 text-primary" /> {format(new Date(task.deadline), 'MMM d, yyyy')}
+                </p>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">BIDS</p>
+                <p className="text-[11px] font-black flex items-center gap-1.5">
+                  <Users className="h-3 w-3 text-primary" /> {task.bids?.length || 0}
+                </p>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">ESCROW</p>
+                <p className="text-[11px] font-black flex items-center gap-1.5">
+                  <Shield className="h-3 w-3 text-primary" /> {(task.platformFee * 100).toFixed(0)}% FEE
+                </p>
+              </div>
+              <div className="space-y-0.5 text-right md:text-left">
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">SECURITY</p>
+                <p className="text-[11px] font-black text-emerald-600 uppercase tracking-tight">PROTECTED</p>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2 pt-2 border-t">
-            <Avatar className="h-7 w-7">
-              <AvatarFallback className="text-xs">{task.poster?.avatar || task.poster?.name?.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-sm font-medium">{task.poster?.name}</p>
-              <p className="text-xs text-muted-foreground">Posted {formatDistanceToNow(new Date(task.createdAt), { addSuffix: true })}</p>
+          
+          <div className="px-4 md:px-5 py-3 bg-slate-50 dark:bg-slate-900/50 border-t flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Avatar className="h-7 w-7 border-2 border-white shadow-sm">
+                <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-black">
+                  {task.poster?.avatar || task.poster?.name?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">POSTER</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-xs font-black tracking-tight">{task.poster?.name}</p>
+                  {task.poster?.rating && (
+                    <div className="flex items-center gap-0.5 text-amber-500 font-black text-[9px] bg-amber-500/10 px-1 py-0.5 rounded-md">
+                      <Star className="h-2.5 w-2.5 fill-amber-500" /> {task.poster.rating}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-            {task.poster?.rating ? (
-              <Badge variant="outline" className="text-xs ml-auto">
-                <Star className="h-3 w-3 mr-0.5 fill-yellow-400 text-yellow-400" /> {task.poster.rating}
-              </Badge>
-            ) : null}
+            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+              {formatDistanceToNow(new Date(task.createdAt), { addSuffix: true })}
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -267,16 +299,16 @@ export function TaskDetailView() {
       )}
 
       {/* Main content tabs */}
-      <Tabs defaultValue="bids">
-        <TabsList className="w-full justify-start">
-          <TabsTrigger value="bids" className="gap-1.5">
-            <Users className="h-3.5 w-3.5" /> Bids ({task.bids?.length || 0})
+      <Tabs defaultValue="bids" className="w-full">
+        <TabsList className="w-full h-10 justify-start bg-slate-100/50 dark:bg-slate-900/50 p-1 rounded-lg">
+          <TabsTrigger value="bids" className="gap-2 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm font-black text-[9px] uppercase tracking-widest">
+            <Users className="h-3 w-3" /> PROPOSALS ({task.bids?.length || 0})
           </TabsTrigger>
-          <TabsTrigger value="deliverables" className="gap-1.5">
-            <FileText className="h-3.5 w-3.5" /> Deliverables ({task.deliverables?.length || 0})
+          <TabsTrigger value="deliverables" className="gap-2 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm font-black text-[9px] uppercase tracking-widest">
+            <FileText className="h-3 w-3" /> WORK ({task.deliverables?.length || 0})
           </TabsTrigger>
-          <TabsTrigger value="messages" className="gap-1.5">
-            <MessageSquare className="h-3.5 w-3.5" /> Messages ({task.messages?.length || 0})
+          <TabsTrigger value="messages" className="gap-2 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm font-black text-[9px] uppercase tracking-widest">
+            <MessageSquare className="h-3 w-3" /> CHAT ({task.messages?.length || 0})
           </TabsTrigger>
         </TabsList>
 
@@ -344,30 +376,38 @@ export function TaskDetailView() {
             <div className="space-y-2">
               <h3 className="text-sm font-semibold text-muted-foreground">Pending Bids ({pendingBids.length})</h3>
               {pendingBids.map(bid => (
-                <Card key={bid.id}>
+                <Card key={bid.id} className="border border-border/50 shadow-sm hover:shadow-md transition-shadow rounded-2xl overflow-hidden">
                   <CardContent className="p-4">
-                    <div className="flex items-start gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="text-xs">{bid.solver?.avatar || bid.solver?.name?.charAt(0)}</AvatarFallback>
+                    <div className="flex items-start gap-4">
+                      <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+                        <AvatarFallback className="text-xs bg-primary/10 text-primary font-bold">{bid.solver?.avatar || bid.solver?.name?.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-medium text-sm">{bid.solver?.name}</span>
-                          <Badge variant="outline" className="text-xs">
-                            <Star className="h-3 w-3 mr-0.5 fill-yellow-400 text-yellow-400" /> {bid.solver?.rating}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">{bid.solver?.completedTasks} done</Badge>
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                          <span className="font-black text-sm tracking-tight">{bid.solver?.name}</span>
+                          <div className="flex items-center gap-0.5 text-amber-500 font-bold text-[10px] bg-amber-500/10 px-1.5 py-0.5 rounded-md">
+                            <Star className="h-2.5 w-2.5 fill-amber-500" /> {bid.solver?.rating}
+                          </div>
+                          <Badge variant="outline" className="text-[9px] font-bold uppercase tracking-wider">{bid.solver?.completedTasks} DONE</Badge>
                           {bid.solver?.onTimeRate ? (
-                            <Badge variant="outline" className="text-xs">{(bid.solver.onTimeRate * 100).toFixed(0)}% on-time</Badge>
+                            <Badge variant="outline" className="text-[9px] font-bold uppercase tracking-wider">{(bid.solver.onTimeRate * 100).toFixed(0)}% ON-TIME</Badge>
                           ) : null}
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{bid.message}</p>
-                        <div className="flex items-center gap-3 mt-2">
-                          <span className="font-semibold text-sm">${bid.proposedPrice}</span>
-                          <span className="text-xs text-muted-foreground">{bid.deliveryDays} days</span>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 font-medium leading-relaxed italic">"{bid.message}"</p>
+                        <div className="flex items-center justify-between mt-3">
+                          <div className="flex items-center gap-4">
+                            <div className="flex flex-col">
+                              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">OFFER PRICE</span>
+                              <span className="font-black text-primary text-base">${bid.proposedPrice}</span>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">EST. DELIVERY</span>
+                              <span className="font-black text-sm uppercase">{bid.deliveryDays} DAYS</span>
+                            </div>
+                          </div>
                           {isPoster && (task.status === 'OPEN' || task.status === 'BIDDING') && (
-                            <Button size="sm" variant="default" className="ml-auto" onClick={() => handleAcceptBid(bid.id)} disabled={submitting}>
-                              Accept Bid
+                            <Button size="sm" className="rounded-lg font-bold text-[10px] h-9 px-4" onClick={() => handleAcceptBid(bid.id)} disabled={submitting}>
+                              ACCEPT PROPOSAL
                             </Button>
                           )}
                         </div>

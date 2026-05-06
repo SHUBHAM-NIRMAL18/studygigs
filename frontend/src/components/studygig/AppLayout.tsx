@@ -57,7 +57,7 @@ function NavContent({ setSidebarOpen, collapsed }: {
               key={item.href}
               onClick={() => { router.push(item.href); setSidebarOpen(false) }}
               title={collapsed ? item.label : undefined}
-              className={`group flex items-center ${collapsed ? 'justify-center px-0' : 'gap-3 px-3'} py-3 rounded-xl text-sm font-medium transition-all duration-300 w-full text-left relative overflow-hidden ${
+              className={`group flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2.5'} py-2 rounded-lg text-[11px] font-bold transition-all duration-300 w-full text-left relative overflow-hidden ${
                 isActive
                   ? 'text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] transform scale-[1.02]'
                   : 'text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5'
@@ -73,11 +73,11 @@ function NavContent({ setSidebarOpen, collapsed }: {
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-gradient-to-b from-primary to-blue-500 rounded-r-full z-10 shadow-[0_0_12px_rgba(0,0,0,0.5)]" />
               )}
               
-              <div className={`relative z-10 flex items-center justify-center p-1.5 rounded-lg transition-all duration-300 ${isActive ? 'bg-white/10 shadow-inner' : 'group-hover:bg-background'}`}>
-                <Icon className={`h-4 w-4 shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110 group-hover:text-primary'}`} />
+              <div className={`relative z-10 flex items-center justify-center p-1 rounded-md transition-all duration-300 ${isActive ? 'bg-white/10 shadow-inner' : 'group-hover:bg-background'}`}>
+                <Icon className={`h-3.5 w-3.5 shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110 group-hover:text-primary'}`} />
               </div>
               
-              {!collapsed && <span className="truncate z-10 font-semibold tracking-wide">{item.label}</span>}
+              {!collapsed && <span className="truncate z-10 font-black tracking-widest uppercase text-[10px]">{item.label}</span>}
             </button>
           )
         })}
@@ -140,14 +140,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           {/* Branding (Desktop & Mobile) */}
           <Link
             href="/dashboard"
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity focus:outline-none"
+            className="flex items-center gap-2.5 hover:opacity-80 transition-opacity focus:outline-none"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30">
-              <GraduationCap className="h-6 w-6" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30">
+              <GraduationCap className="h-5 w-5" />
             </div>
             <div className="hidden sm:flex flex-col text-left">
-              <span className="font-bold text-xl tracking-tight leading-none">StudyGig</span>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mt-1">Marketplace</span>
+              <span className="font-black text-lg tracking-tighter leading-none">StudyGig</span>
+              <span className="text-[9px] text-muted-foreground uppercase tracking-widest font-black mt-0.5">PLATFORM</span>
             </div>
           </Link>
 
