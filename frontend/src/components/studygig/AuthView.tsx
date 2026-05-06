@@ -130,10 +130,10 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
   }
 
   return (
-    <div className="h-screen w-full flex flex-col md:flex-row bg-[#020205] overflow-hidden">
+    <div className="h-screen w-full flex flex-col md:flex-row bg-slate-50 overflow-hidden">
       
       {/* LEFT: Branding */}
-      <div className="hidden md:flex relative w-1/2 flex-col justify-center px-16 lg:px-24 bg-[#030308] border-r border-white/5">
+      <div className="hidden md:flex relative w-1/2 flex-col justify-center px-16 lg:px-24 bg-white border-r border-slate-200">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,_rgba(147,51,234,0.1)_0%,_transparent_50%)]" />
           <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_70%,_rgba(59,130,246,0.1)_0%,_transparent_50%)]" />
@@ -142,7 +142,7 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
         {onBack && (
           <button 
             onClick={onBack}
-            className="absolute top-10 left-16 flex items-center gap-2 text-white/40 hover:text-white transition-all text-xs font-bold uppercase tracking-widest z-20 group"
+            className="absolute top-10 left-16 flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-all text-xs font-bold uppercase tracking-widest z-20 group"
           >
             <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
             Home
@@ -159,19 +159,19 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
             <GraduationCap className="h-9 w-9 text-black" />
           </div>
           
-          <h1 className="text-6xl font-black text-white leading-[0.9] tracking-tighter mb-6">
+          <h1 className="text-6xl font-black text-slate-950 leading-[0.9] tracking-tighter mb-6">
             ACHIEVE <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">GREATNESS.</span>
           </h1>
           
-          <p className="text-white/40 text-lg max-w-sm mb-10 leading-relaxed font-medium">
+          <p className="text-slate-500 text-lg max-w-sm mb-10 leading-relaxed font-medium">
             Connect with verified experts and master your academic journey with the world's most secure marketplace.
           </p>
 
-          <div className="flex gap-8 opacity-60">
-            <ShieldCheck className="h-6 w-6 text-white" />
-            <Sparkles className="h-6 w-6 text-white" />
-            <Zap className="h-6 w-6 text-white" />
+          <div className="flex gap-8 opacity-40">
+            <ShieldCheck className="h-6 w-6 text-slate-900" />
+            <Sparkles className="h-6 w-6 text-slate-900" />
+            <Zap className="h-6 w-6 text-slate-900" />
           </div>
         </motion.div>
       </div>
@@ -195,16 +195,16 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
             onValueChange={(v) => setActiveTab(v as any)} 
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-2 p-1 bg-white/[0.04] backdrop-blur-md rounded-xl mb-6 border border-white/10">
+            <TabsList className="grid w-full grid-cols-2 p-1 bg-slate-200/50 backdrop-blur-md rounded-xl mb-6 border border-slate-200">
               <TabsTrigger 
                 value="login" 
-                className="rounded-lg py-2.5 text-xs font-black transition-all data-[state=active]:bg-white data-[state=active]:text-black text-white/80"
+                className="rounded-lg py-2.5 text-xs font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary text-slate-600"
               >
                 SIGN IN
               </TabsTrigger>
               <TabsTrigger 
                 value="signup" 
-                className="rounded-lg py-2.5 text-xs font-black transition-all data-[state=active]:bg-white data-[state=active]:text-black text-white/80"
+                className="rounded-lg py-2.5 text-xs font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary text-slate-600"
               >
                 JOIN NOW
               </TabsTrigger>
@@ -218,12 +218,12 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <Card className="bg-white/[0.02] border-white/10 shadow-2xl rounded-3xl overflow-hidden backdrop-blur-3xl">
+                <Card className="bg-white border-slate-200 shadow-2xl rounded-3xl overflow-hidden">
                   <CardHeader className="pt-8 pb-4 text-center">
-                    <CardTitle className="text-2xl font-black text-white">
+                    <CardTitle className="text-2xl font-black text-slate-950">
                       {activeTab === 'login' ? 'Welcome Back' : 'Get Started'}
                     </CardTitle>
-                    <CardDescription className="text-white/20 text-xs">
+                    <CardDescription className="text-slate-400 text-xs">
                       {activeTab === 'login' ? 'Login to your account' : 'Join our expert community'}
                     </CardDescription>
                   </CardHeader>
@@ -238,18 +238,18 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                     {activeTab === 'login' ? (
                       <form onSubmit={handleLogin} className="space-y-4">
                         <div className="space-y-1">
-                          <Label className="text-[10px] font-black text-white/40 uppercase ml-1">Email</Label>
+                          <Label className="text-[10px] font-black text-slate-400 uppercase ml-1">Email</Label>
                           <Input
                             type="email"
                             placeholder="name@university.edu"
                             value={loginEmail}
                             onChange={(e) => setLoginEmail(e.target.value)}
-                            className="bg-white/[0.05] border-white/10 rounded-xl h-12 text-white text-sm"
+                            className="bg-slate-50 border-slate-200 rounded-xl h-12 text-slate-950 text-sm"
                           />
                         </div>
                         <div className="space-y-1">
                           <div className="flex justify-between items-center">
-                            <Label className="text-[10px] font-black text-white/40 uppercase ml-1">Password</Label>
+                            <Label className="text-[10px] font-black text-slate-400 uppercase ml-1">Password</Label>
                             <button type="button" className="text-[10px] text-purple-400 font-bold">FORGOT?</button>
                           </div>
                           <div className="relative">
@@ -258,12 +258,12 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                               placeholder="••••••••"
                               value={loginPassword}
                               onChange={(e) => setLoginPassword(e.target.value)}
-                              className="bg-white/[0.05] border-white/10 rounded-xl h-12 text-white pr-12 text-sm"
+                              className="bg-slate-50 border-slate-200 rounded-xl h-12 text-slate-950 pr-12 text-sm"
                             />
                             <button
                               type="button"
                               onClick={() => setShowPassword(!showPassword)}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20"
+                              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"
                             >
                               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                             </button>
@@ -272,7 +272,7 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                         <Button 
                           type="submit" 
                           disabled={loading}
-                          className="w-full h-12 bg-white text-black hover:bg-white/90 font-black text-xs rounded-xl mt-2"
+                          className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-black text-xs rounded-xl mt-2"
                         >
                           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'SIGN IN'}
                         </Button>
@@ -285,7 +285,7 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                             onClick={() => setSignupRole('STUDENT')}
                             className={cn(
                               "py-2 rounded-lg border-2 text-[10px] font-black transition-all",
-                              signupRole === 'STUDENT' ? "bg-white text-black border-white" : "bg-white/5 text-white/40 border-white/5"
+                              signupRole === 'STUDENT' ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-400 border-slate-200"
                             )}
                           >
                             STUDENT
@@ -295,7 +295,7 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                             onClick={() => setSignupRole('SOLVER')}
                             className={cn(
                               "py-2 rounded-lg border-2 text-[10px] font-black transition-all",
-                              signupRole === 'SOLVER' ? "bg-white text-black border-white" : "bg-white/5 text-white/40 border-white/5"
+                              signupRole === 'SOLVER' ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-400 border-slate-200"
                             )}
                           >
                             SOLVER
@@ -305,14 +305,14 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                           placeholder="Full Name"
                           value={signupName}
                           onChange={(e) => setSignupName(e.target.value)}
-                          className="bg-white/[0.05] border-white/10 h-11 text-white rounded-xl text-sm"
+                          className="bg-slate-50 border-slate-200 h-11 text-slate-950 rounded-xl text-sm"
                         />
                         <Input
                           type="email"
                           placeholder="Email Address"
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
-                          className="bg-white/[0.05] border-white/10 h-11 text-white rounded-xl text-sm"
+                          className="bg-slate-50 border-slate-200 h-11 text-slate-950 rounded-xl text-sm"
                         />
                         <div className="grid grid-cols-2 gap-2">
                           <Input
@@ -320,20 +320,20 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                             placeholder="Password"
                             value={signupPassword}
                             onChange={(e) => setSignupPassword(e.target.value)}
-                            className="bg-white/[0.05] border-white/10 h-11 text-white rounded-xl text-sm"
+                            className="bg-slate-50 border-slate-200 h-11 text-slate-950 rounded-xl text-sm"
                           />
                           <Input
                             type="password"
                             placeholder="Confirm"
                             value={signupConfirm}
                             onChange={(e) => setSignupConfirm(e.target.value)}
-                            className="bg-white/[0.05] border-white/10 h-11 text-white rounded-xl text-sm"
+                            className="bg-slate-50 border-slate-200 h-11 text-slate-950 rounded-xl text-sm"
                           />
                         </div>
                         <Button 
                           type="submit" 
                           disabled={loading}
-                          className="w-full h-12 bg-white text-black hover:bg-white/90 font-black text-xs rounded-xl mt-2"
+                          className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-black text-xs rounded-xl mt-2"
                         >
                           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'CREATE ACCOUNT'}
                         </Button>
@@ -341,7 +341,7 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                     )}
                   </CardContent>
                   <div className="py-4 bg-white/[0.02] border-t border-white/5 text-center">
-                     <p className="text-[8px] text-white/10 uppercase tracking-[0.5em] font-black">Secure • Private • Academic</p>
+                     <p className="text-[8px] text-slate-300 uppercase tracking-[0.5em] font-black">Secure • Private • Academic</p>
                   </div>
                 </Card>
               </motion.div>
