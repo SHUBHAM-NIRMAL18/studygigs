@@ -44,38 +44,38 @@ export function MarketplaceView() {
   return (
     <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header section with glass effect */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-background to-background border p-6 md:p-8 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-background to-background border p-5 md:p-6 shadow-sm">
         <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-          <Sparkles className="h-24 w-24" />
+          <Sparkles className="h-16 w-16" />
         </div>
-        <div className="relative z-10 space-y-2 max-w-2xl">
-          <Badge variant="secondary" className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border-primary/20 text-[10px] font-semibold uppercase tracking-wider">
-            Explore Opportunities
+        <div className="relative z-10 space-y-1 max-w-2xl">
+          <Badge variant="secondary" className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary border-primary/20 text-[9px] font-bold uppercase tracking-wider">
+            EXPLORE OPPORTUNITIES
           </Badge>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight">
             Academic <span className="text-primary">Marketplace</span>
           </h1>
-          <p className="text-base text-muted-foreground leading-relaxed max-w-xl">
-            Connect with expert solvers and get the academic support you need. Browse tasks, compare bids, and achieve excellence.
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-xl font-medium">
+            Connect with expert solvers and get the support you need.
           </p>
         </div>
       </div>
 
       {/* Control Bar */}
-      <div className="sticky top-[4.5rem] z-30 flex flex-col md:flex-row gap-4 p-4 rounded-2xl bg-background/80 backdrop-blur-md border shadow-sm items-center">
+      <div className="sticky top-[4.5rem] z-30 flex flex-col md:flex-row gap-3 p-3 rounded-xl bg-background/80 backdrop-blur-md border shadow-sm items-center">
         <div className="relative flex-1 w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search for subjects, assignments, or keywords..."
-            className="h-12 pl-12 pr-4 rounded-xl border-none bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all text-base"
+            placeholder="Search tasks..."
+            className="h-10 pl-10 pr-4 rounded-lg border-none bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all text-sm font-medium"
             value={filters.search}
             onChange={(e) => setFilters({ search: e.target.value })}
           />
         </div>
         
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           <Select value={filters.category} onValueChange={(v) => setFilters({ category: v === 'ALL' ? '' : v })}>
-            <SelectTrigger className="h-12 w-full md:w-[160px] rounded-xl bg-muted/50 border-none px-4 font-medium hover:bg-muted transition-colors">
+            <SelectTrigger className="h-10 w-full md:w-[140px] rounded-lg bg-muted/50 border-none px-3 text-xs font-bold hover:bg-muted transition-colors uppercase tracking-tight">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent className="rounded-xl border-muted/50 shadow-xl">
@@ -91,9 +91,9 @@ export function MarketplaceView() {
               <SelectItem value="OTHER">Other</SelectItem>
             </SelectContent>
           </Select>
-
+ 
           <Select value={filters.academicLevel} onValueChange={(v) => setFilters({ academicLevel: v === 'ALL' ? '' : v })}>
-            <SelectTrigger className="h-12 w-full md:w-[140px] rounded-xl bg-muted/50 border-none px-4 font-medium hover:bg-muted transition-colors">
+            <SelectTrigger className="h-10 w-full md:w-[120px] rounded-lg bg-muted/50 border-none px-3 text-xs font-bold hover:bg-muted transition-colors uppercase tracking-tight">
               <SelectValue placeholder="Level" />
             </SelectTrigger>
             <SelectContent className="rounded-xl border-muted/50 shadow-xl">
@@ -104,9 +104,9 @@ export function MarketplaceView() {
               <SelectItem value="PHD">PhD</SelectItem>
             </SelectContent>
           </Select>
-
+ 
           <Select value={filters.sortBy} onValueChange={(v) => setFilters({ sortBy: v })}>
-            <SelectTrigger className="h-12 w-full md:w-[160px] rounded-xl bg-muted/50 border-none px-4 font-medium hover:bg-muted transition-colors">
+            <SelectTrigger className="h-10 w-full md:w-[140px] rounded-lg bg-muted/50 border-none px-3 text-xs font-bold hover:bg-muted transition-colors uppercase tracking-tight">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent className="rounded-xl border-muted/50 shadow-xl">
@@ -116,14 +116,14 @@ export function MarketplaceView() {
               <SelectItem value="deadline">Deadline: Soonest</SelectItem>
             </SelectContent>
           </Select>
-
+ 
           {hasFilters && (
             <Button 
               variant="outline" 
-              className="h-12 px-6 rounded-xl border-dashed hover:bg-destructive/5 hover:text-destructive hover:border-destructive/30 transition-all"
+              className="h-10 px-4 rounded-lg border-dashed hover:bg-destructive/5 hover:text-destructive hover:border-destructive/30 transition-all text-xs font-bold"
               onClick={clearFilters}
             >
-              Reset <X className="ml-2 h-4 w-4" />
+              RESET <X className="ml-1 h-3 w-3" />
             </Button>
           )}
         </div>
@@ -170,7 +170,7 @@ export function MarketplaceView() {
                     <Badge variant="secondary" className="rounded-full px-2.5">{openTasks.length}</Badge>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {openTasks.map(task => (
                     <TaskCard
                       key={task.id}
@@ -194,7 +194,7 @@ export function MarketplaceView() {
                     <Badge variant="outline" className="rounded-full px-2.5 text-muted-foreground/70">{otherTasks.length}</Badge>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-80">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-80">
                   {otherTasks.map(task => (
                     <TaskCard
                       key={task.id}
