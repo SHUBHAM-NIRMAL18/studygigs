@@ -69,7 +69,7 @@ export function TaskCard({ task, onClick }: { task: Task; onClick: () => void })
           </div>
 
           {/* Budget pill */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-primary font-bold text-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/5 border border-primary/10 text-primary font-bold text-sm">
             <DollarSign className="h-4 w-4" />
             <span>${task.budgetMin} – ${task.budgetMax}</span>
           </div>
@@ -97,7 +97,7 @@ export function TaskCard({ task, onClick }: { task: Task; onClick: () => void })
             </div>
           </div>
           
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+          <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             <ChevronRight className="h-4 w-4" />
           </div>
         </div>

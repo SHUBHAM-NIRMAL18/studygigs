@@ -189,7 +189,7 @@ export function MyBidsView() {
             </div>
             <h2 className="text-2xl font-bold mb-2">No bids yet</h2>
             <p className="text-muted-foreground mb-6 max-w-sm">You haven't submitted any proposals yet. Browse the marketplace to find tasks that match your expertise.</p>
-            <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20" onClick={() => router.push('/marketplace')}>
+            <Button size="lg" className="rounded-md px-8 shadow-lg shadow-primary/20" onClick={() => router.push('/marketplace')}>
               Browse Available Tasks
             </Button>
           </div>

@@ -41,11 +41,11 @@ export function MainDashboardView() {
         </div>
         <div className="flex gap-3">
           {isStudent && (
-            <Button onClick={() => router.push('/post-task')} className="rounded-full shadow-lg shadow-primary/20">
+            <Button onClick={() => router.push('/post-task')} className="rounded-md shadow-lg shadow-primary/20">
               <PlusCircle className="h-4 w-4 mr-2" /> Post New Task
             </Button>
           )}
-          <Button variant="outline" onClick={() => router.push('/marketplace')} className="rounded-full">
+          <Button variant="outline" onClick={() => router.push('/marketplace')} className="rounded-md">
             Browse Marketplace <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>

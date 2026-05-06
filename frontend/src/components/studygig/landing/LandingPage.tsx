@@ -112,7 +112,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
                         <span className="text-[9px] text-muted-foreground font-semibold uppercase">Budget</span>
                         <span className="text-sm font-extrabold text-primary">$80 – $120</span>
                       </div>
-                      <button className="h-9 px-5 rounded-full bg-primary text-primary-foreground font-bold text-xs shadow-md hover:bg-primary/90 transition-colors flex items-center gap-2">
+                      <button className="h-9 px-5 rounded-md bg-primary text-primary-foreground font-bold text-xs shadow-md hover:bg-primary/90 transition-colors flex items-center gap-2">
                         Place Bid <ArrowRight className="h-3 w-3" />
                       </button>
                    </div>
@@ -146,7 +146,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
            </div>
            
            <div className="container mx-auto px-6 md:px-12 relative z-10 text-center space-y-10">
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xs font-bold uppercase tracking-widest shadow-xl">
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xs font-bold uppercase tracking-widest shadow-xl">
                  <Sparkles className="h-4 w-4 text-yellow-400" />
                  <span>Join the Revolution</span>
               </div>
@@ -167,7 +167,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
                 <Button 
                   size="lg" 
                   variant="secondary" 
-                  className="h-12 md:h-14 px-8 md:px-12 text-base md:text-lg rounded-full font-black shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:scale-105 transition-all bg-white text-primary hover:bg-yellow-400 hover:text-black border-4 border-transparent hover:border-white/20"
+                  className="h-12 md:h-14 px-8 md:px-12 text-base md:text-lg rounded-md font-black shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:scale-105 transition-all bg-white text-primary hover:bg-yellow-400 hover:text-black border-4 border-transparent hover:border-white/20"
                   onClick={() => onAuthClick('signup')}
                 >
                   Get Started for Free <ArrowRight className="ml-2 h-5 w-5" />

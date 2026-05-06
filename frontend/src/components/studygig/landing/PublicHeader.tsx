@@ -40,7 +40,7 @@ export function PublicHeader({ onLoginClick, onSignUpClick }: PublicHeaderProps)
           <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-sm" onClick={onLoginClick}>
             Log In
           </Button>
-          <Button size="sm" className="rounded-full px-5 text-sm shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all" onClick={onSignUpClick}>
+          <Button size="sm" className="rounded-md px-5 text-sm shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all" onClick={onSignUpClick}>
             Get Started
           </Button>
 

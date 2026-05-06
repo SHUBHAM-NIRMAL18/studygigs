@@ -157,7 +157,7 @@ export function MarketplaceView() {
               <h2 className="text-2xl font-bold">No results found</h2>
               <p className="text-muted-foreground max-w-sm">We couldn't find any tasks matching your current filters. Try broadening your search or resetting the filters.</p>
             </div>
-            <Button size="lg" onClick={clearFilters} className="rounded-full px-8">Clear all filters</Button>
+            <Button size="lg" onClick={clearFilters} className="rounded-md px-8">Clear all filters</Button>
           </div>
         ) : (
           <>

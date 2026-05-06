@@ -125,7 +125,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           {/* Mobile menu */}
           <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
             <SheetTrigger asChild className="lg:hidden">
-              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-muted/80">
+              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-md hover:bg-muted/80">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
@@ -164,7 +164,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
             <div className="flex items-center gap-2 sm:gap-4 ml-auto">
               {/* Notification Bell */}
-              <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-full hover:bg-muted/80 hidden sm:inline-flex">
+              <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-md hover:bg-muted/80 hidden sm:inline-flex">
                 <Bell className="h-5 w-5 text-muted-foreground" />
                 <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive border-2 border-background" />
               </Button>
@@ -172,7 +172,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               {/* User menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-10 gap-2 pl-2 pr-3 rounded-full hover:bg-muted/80 border border-transparent hover:border-border transition-all">
+                  <Button variant="ghost" className="h-10 gap-2 pl-2 pr-3 rounded-md hover:bg-muted/80 border border-transparent hover:border-border transition-all">
                     <Avatar className="h-7 w-7 border border-border shadow-sm">
                       <AvatarFallback className="text-xs bg-primary/10 text-primary font-semibold">
                         {currentUser?.avatar || currentUser?.name?.charAt(0) || '?'}
@@ -260,7 +260,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           {/* Collapse Toggle Button */}
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="absolute -right-3 top-24 h-6 w-6 rounded-full border border-border bg-background flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-muted hover:scale-110 z-20"
+            className="absolute -right-3 top-24 h-6 w-6 rounded-md border border-border bg-background flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-muted hover:scale-110 z-20"
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {sidebarCollapsed ? <ChevronRight className="h-3 w-3 text-muted-foreground" /> : <ChevronLeft className="h-3 w-3 text-muted-foreground" />}

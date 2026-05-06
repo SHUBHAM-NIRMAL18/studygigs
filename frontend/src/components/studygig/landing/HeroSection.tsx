@@ -20,7 +20,7 @@ export function HeroSection({ onSignUpClick }: HeroSectionProps) {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/20 text-xs font-medium animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/5 border border-primary/20 text-xs font-medium animate-in fade-in slide-in-from-bottom-4 duration-700">
             <Zap className="h-3.5 w-3.5" />
             <span>The #1 Academic Task Marketplace</span>
           </div>
@@ -41,10 +41,10 @@ export function HeroSection({ onSignUpClick }: HeroSectionProps) {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-16 duration-700 delay-300">
-            <Button size="lg" className="h-12 px-8 text-base rounded-full shadow-xl shadow-primary/30 hover:scale-105 transition-transform" onClick={onSignUpClick}>
+            <Button size="lg" className="h-12 px-8 text-base rounded-md shadow-xl shadow-primary/30 hover:scale-105 transition-transform" onClick={onSignUpClick}>
               Post Your First Task <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button size="lg" variant="outline" className="h-12 px-8 text-base rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/80 transition-all">
+            <Button size="lg" variant="outline" className="h-12 px-8 text-base rounded-md bg-background/50 backdrop-blur-sm hover:bg-background/80 transition-all">
               Browse Marketplace
             </Button>
           </div>
