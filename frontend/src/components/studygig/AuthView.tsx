@@ -19,7 +19,9 @@ import {
   ChevronLeft,
   ShieldCheck,
   Zap,
-  Sparkles
+  Sparkles,
+  BookOpen,
+  Briefcase
 } from 'lucide-react'
 
 import { useToast } from '@/hooks/use-toast'
@@ -279,26 +281,48 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                       </form>
                     ) : (
                       <form onSubmit={handleSignup} className="space-y-3">
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-2 gap-3 mb-2">
                           <button
                             type="button"
                             onClick={() => setSignupRole('STUDENT')}
                             className={cn(
-                              "py-2 rounded-lg border-2 text-[10px] font-black transition-all",
-                              signupRole === 'STUDENT' ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-400 border-slate-200"
+                              "relative flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all group",
+                              signupRole === 'STUDENT' 
+                                ? "border-primary bg-primary/5 shadow-sm" 
+                                : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
                             )}
                           >
-                            STUDENT
+                            {signupRole === 'STUDENT' && (
+                              <div className="absolute top-2 right-2">
+                                <CheckCircle2 className="h-3 w-3 text-primary" />
+                              </div>
+                            )}
+                            <div className={cn("p-2 rounded-full mb-2 transition-colors", signupRole === 'STUDENT' ? "bg-primary text-white" : "bg-slate-100 text-slate-400 group-hover:text-slate-500")}>
+                              <BookOpen className="h-5 w-5" />
+                            </div>
+                            <span className={cn("text-[11px] font-black uppercase tracking-wider mb-0.5", signupRole === 'STUDENT' ? "text-primary" : "text-slate-600")}>Student</span>
+                            <span className={cn("text-[9px] text-center font-medium leading-tight", signupRole === 'STUDENT' ? "text-primary/70" : "text-slate-400")}>I need help with tasks</span>
                           </button>
                           <button
                             type="button"
                             onClick={() => setSignupRole('SOLVER')}
                             className={cn(
-                              "py-2 rounded-lg border-2 text-[10px] font-black transition-all",
-                              signupRole === 'SOLVER' ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-400 border-slate-200"
+                              "relative flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all group",
+                              signupRole === 'SOLVER' 
+                                ? "border-primary bg-primary/5 shadow-sm" 
+                                : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
                             )}
                           >
-                            SOLVER
+                            {signupRole === 'SOLVER' && (
+                              <div className="absolute top-2 right-2">
+                                <CheckCircle2 className="h-3 w-3 text-primary" />
+                              </div>
+                            )}
+                            <div className={cn("p-2 rounded-full mb-2 transition-colors", signupRole === 'SOLVER' ? "bg-primary text-white" : "bg-slate-100 text-slate-400 group-hover:text-slate-500")}>
+                              <Briefcase className="h-5 w-5" />
+                            </div>
+                            <span className={cn("text-[11px] font-black uppercase tracking-wider mb-0.5", signupRole === 'SOLVER' ? "text-primary" : "text-slate-600")}>Solver</span>
+                            <span className={cn("text-[9px] text-center font-medium leading-tight", signupRole === 'SOLVER' ? "text-primary/70" : "text-slate-400")}>I want to earn money</span>
                           </button>
                         </div>
                         <Input
