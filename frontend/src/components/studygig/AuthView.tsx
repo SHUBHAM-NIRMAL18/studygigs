@@ -156,9 +156,12 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
           animate={{ opacity: 1, x: 0 }}
           className="relative z-10"
         >
-          {/* Solid White Logo with Black Icon */}
-          <div className="h-16 w-16 rounded-2xl bg-white flex items-center justify-center mb-10 shadow-[0_0_40px_rgba(255,255,255,0.15)]">
-            <GraduationCap className="h-9 w-9 text-black" />
+          <div className="flex items-center gap-4 mb-10">
+            {/* Solid White Logo with Black Icon */}
+            <div className="h-16 w-16 rounded-2xl bg-white flex items-center justify-center shadow-[0_0_40px_rgba(255,255,255,0.15)]">
+              <GraduationCap className="h-9 w-9 text-black" />
+            </div>
+            <span className="text-3xl font-black tracking-tight text-slate-950">StudyGig</span>
           </div>
           
           <h1 className="text-6xl font-black text-slate-950 leading-[0.9] tracking-tighter mb-6">
@@ -186,10 +189,11 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
           className="w-full max-w-[460px] m-auto shrink-0"
         >
           {/* Logo for mobile */}
-          <div className="md:hidden flex justify-center mb-8">
+          <div className="md:hidden flex items-center justify-center gap-3 mb-8">
              <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center shadow-lg">
                 <GraduationCap className="h-7 w-7 text-black" />
              </div>
+             <span className="text-2xl font-black tracking-tight text-slate-900">StudyGig</span>
           </div>
 
           <Tabs 
