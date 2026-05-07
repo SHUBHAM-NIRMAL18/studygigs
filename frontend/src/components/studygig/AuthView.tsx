@@ -179,11 +179,11 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
       </div>
 
       {/* RIGHT: Auth Container */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-6 lg:p-12">
+      <div className="w-full md:w-1/2 h-full overflow-y-auto flex flex-col p-6 lg:p-12">
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-[400px]"
+          className="w-full max-w-[460px] m-auto shrink-0"
         >
           {/* Logo for mobile */}
           <div className="md:hidden flex justify-center mb-8">
@@ -194,8 +194,12 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
 
           <Tabs 
             value={activeTab} 
-            onValueChange={(v) => setActiveTab(v as any)} 
-            className="w-full"
+            onValueChange={(v) => {
+              setActiveTab(v as any)
+              setError('')
+              setSuccess('')
+            }} 
+            className="w-full flex flex-col min-h-[460px]"
           >
             <TabsList className="grid w-full grid-cols-2 p-1 bg-slate-200/50 backdrop-blur-md rounded-xl mb-6 border border-slate-200">
               <TabsTrigger 
@@ -231,11 +235,20 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                   </CardHeader>
                   
                   <CardContent className="px-8 pb-8 space-y-4">
-                    {error && (
-                      <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold text-center">
-                        {error}
-                      </div>
-                    )}
+                    <AnimatePresence initial={false}>
+                      {error && (
+                        <motion.div 
+                          initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                          exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold text-center">
+                            {error}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
 
                     {activeTab === 'login' ? (
                       <form onSubmit={handleLogin} className="space-y-4">
@@ -325,19 +338,21 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                             <span className={cn("text-[9px] text-center font-medium leading-tight", signupRole === 'SOLVER' ? "text-primary/70" : "text-slate-400")}>I want to earn money</span>
                           </button>
                         </div>
-                        <Input
-                          placeholder="Full Name"
-                          value={signupName}
-                          onChange={(e) => setSignupName(e.target.value)}
-                          className="bg-slate-50 border-slate-200 h-11 text-slate-950 rounded-xl text-sm"
-                        />
-                        <Input
-                          type="email"
-                          placeholder="Email Address"
-                          value={signupEmail}
-                          onChange={(e) => setSignupEmail(e.target.value)}
-                          className="bg-slate-50 border-slate-200 h-11 text-slate-950 rounded-xl text-sm"
-                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <Input
+                            placeholder="Full Name"
+                            value={signupName}
+                            onChange={(e) => setSignupName(e.target.value)}
+                            className="bg-slate-50 border-slate-200 h-11 text-slate-950 rounded-xl text-sm"
+                          />
+                          <Input
+                            type="email"
+                            placeholder="Email Address"
+                            value={signupEmail}
+                            onChange={(e) => setSignupEmail(e.target.value)}
+                            className="bg-slate-50 border-slate-200 h-11 text-slate-950 rounded-xl text-sm"
+                          />
+                        </div>
                         <div className="grid grid-cols-2 gap-2">
                           <Input
                             type="password"
