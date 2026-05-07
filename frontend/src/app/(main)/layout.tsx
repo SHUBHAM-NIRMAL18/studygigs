@@ -26,7 +26,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             setIsAuthenticated(true)
           }
         })
-        .catch(() => {})
+        .catch(() => { })
     }
   }, [status, session, router, setCurrentUser, setIsAuthenticated])
 
@@ -35,7 +35,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     fetch('/api/tasks?limit=100')
       .then(res => res.json())
       .then(data => setTasks(data.tasks || []))
-      .catch(() => {})
+      .catch(() => { })
   }, [isAuthenticated, setTasks])
 
   if (status === 'loading' || !isAuthenticated) {
