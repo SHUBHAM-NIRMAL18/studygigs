@@ -31,7 +31,7 @@ export function PublicHeader({ onLoginClick, onSignUpClick }: PublicHeaderProps)
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <a href="/explore" className="text-primary font-bold hover:text-primary/80 transition-colors">Explore Tasks</a>
+          <a href="/explore" className="text-muted-foreground hover:text-primary transition-colors">Explore Tasks</a>
           <a href="/#features" className="text-muted-foreground hover:text-primary transition-colors">Features</a>
           <a href="/#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">How it Works</a>
           <a href="/#testimonials" className="text-muted-foreground hover:text-primary transition-colors">Success Stories</a>
@@ -60,7 +60,7 @@ export function PublicHeader({ onLoginClick, onSignUpClick }: PublicHeaderProps)
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-6 mt-8">
-                <a href="/explore" className="text-lg font-bold text-primary hover:text-primary/80 transition-colors">Explore Tasks</a>
+                <a href="/explore" className="text-lg font-medium hover:text-primary transition-colors">Explore Tasks</a>
                 <a href="/#features" className="text-lg font-medium hover:text-primary transition-colors">Features</a>
                 <a href="/#how-it-works" className="text-lg font-medium hover:text-primary transition-colors">How it Works</a>
                 <a href="/#testimonials" className="text-lg font-medium hover:text-primary transition-colors">Success Stories</a>
