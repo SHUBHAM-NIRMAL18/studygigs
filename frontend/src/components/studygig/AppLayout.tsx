@@ -222,19 +222,26 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Logout Confirmation Dialog */}
       <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
-            <AlertDialogDescription>
-              You will need to sign back in to access the marketplace and your tasks.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSignOut} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+        <AlertDialogContent className="max-w-[340px] rounded-[2rem] border-slate-200/50 bg-white/95 backdrop-blur-2xl shadow-2xl p-0 overflow-hidden">
+          <div className="p-8 pb-6 text-center">
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-5 shadow-sm border border-slate-100/50">
+              <LogOut className="h-6 w-6 text-emerald-500" />
+            </div>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-xl font-black text-slate-950 tracking-tight text-center">Sign Out?</AlertDialogTitle>
+              <AlertDialogDescription className="text-slate-500 text-[13px] font-medium leading-relaxed mt-2 text-center px-2">
+                Are you sure you want to end your session?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+          </div>
+          <div className="flex gap-3 p-6 pt-0">
+            <AlertDialogCancel className="flex-1 h-10 rounded-xl border-slate-200 text-slate-500 font-bold text-[10px] hover:bg-slate-50 transition-all uppercase tracking-widest mt-0">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleSignOut} className="flex-1 h-10 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 font-bold text-[10px] transition-all uppercase tracking-widest shadow-lg shadow-emerald-500/20">
               Log Out
             </AlertDialogAction>
-          </AlertDialogFooter>
+          </div>
         </AlertDialogContent>
       </AlertDialog>
 
