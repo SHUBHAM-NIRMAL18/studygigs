@@ -20,7 +20,7 @@ export function Toaster() {
         const isSuccess = props.variant === 'success'
 
         return (
-          <Toast key={id} {...props}>
+          <Toast key={id} duration={3500} {...props}>
             <div className="flex gap-4">
               {isSuccess && (
                 <div className="h-10 w-10 shrink-0 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
