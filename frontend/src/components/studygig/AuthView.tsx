@@ -119,6 +119,11 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
       }
 
       setSuccess('Account created!')
+      toast({
+        title: 'Account Created!',
+        description: 'Welcome to StudyGig. Setting up your workspace...',
+        variant: 'success'
+      })
       await signIn('credentials', {
         email: normalizedEmail,
         password: signupPassword,
