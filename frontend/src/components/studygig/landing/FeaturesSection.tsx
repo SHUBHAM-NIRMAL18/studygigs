@@ -1,96 +1,110 @@
 'use client'
 
 import React from 'react'
+import { motion } from 'framer-motion'
 import { ShieldCheck, Zap, GraduationCap, DollarSign, Sparkles } from 'lucide-react'
 
 const features = [
   {
     title: 'Secure Escrow',
-    subtitle: 'Payments, Safety, Trust',
-    description: 'Your money is safe. We only release payments when you are 100% satisfied with the work.',
+    subtitle: 'Safety First',
+    description: 'Your funds are held securely and only released when you approve the final delivery.',
     icon: ShieldCheck,
-    gradient: 'from-emerald-400 via-emerald-500 to-teal-600',
-    iconColor: 'text-emerald-500',
+    color: 'text-emerald-500',
+    bg: 'bg-emerald-500/10',
   },
   {
     title: 'Expert Solvers',
-    subtitle: 'Vetted, Proven, Reliable',
-    description: 'Work with top-tier students and graduates who have proven expertise in your subjects.',
+    subtitle: 'Vetted Talent',
+    description: 'Connect with verified top-tier students and subject matter experts globally.',
     icon: GraduationCap,
-    gradient: 'from-blue-400 via-blue-500 to-indigo-600',
-    iconColor: 'text-blue-500',
+    color: 'text-blue-500',
+    bg: 'bg-blue-500/10',
   },
   {
     title: 'Budget Control',
-    subtitle: 'Bidding, Pricing, Saving',
-    description: 'Set your own price and choose the bid that best fits your budget and quality needs.',
+    subtitle: 'Fair Pricing',
+    description: 'Set your budget and choose from competitive bids that match your requirements.',
     icon: DollarSign,
-    gradient: 'from-amber-400 via-orange-500 to-amber-600',
-    iconColor: 'text-amber-500',
+    color: 'text-amber-500',
+    bg: 'bg-amber-500/10',
   },
   {
-    title: 'Fast Delivery',
-    subtitle: 'Instant, Matching, Swift',
-    description: 'Post your task and get competitive bids from qualified solvers within minutes.',
+    title: 'Rapid Delivery',
+    subtitle: 'Always On Time',
+    description: 'Need it fast? Get high-quality results within your tightest deadlines.',
     icon: Zap,
-    gradient: 'from-purple-400 via-purple-500 to-indigo-600',
-    iconColor: 'text-purple-500',
+    color: 'text-purple-500',
+    bg: 'bg-purple-500/10',
   },
 ]
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-32 bg-white overflow-hidden">
-      <div className="container mx-auto px-6 md:px-12">
-        <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider mb-2">
-            <Sparkles className="h-3 w-3" />
-            <span>Platform Features</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-[#1e1b4b]">Everything You Need to Succeed</h2>
-          <p className="text-base text-slate-500 font-medium">
-            StudyGig provides a secure and efficient platform for peer-to-peer academic collaboration.
-          </p>
+    <section id="features" className="py-20 lg:py-28 relative">
+      <div className="container mx-auto px-6">
+        <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Platform Excellence</span>
+          </motion.div>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-5xl font-black tracking-tight"
+          >
+            Everything You Need <br />
+            <span className="text-gradient">To Succeed Academically</span>
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-lg text-muted-foreground font-medium"
+          >
+            StudyGig combines security, quality, and speed to provide the ultimate marketplace for academic tasks.
+          </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <div 
+            <motion.div 
               key={index} 
-              className="group relative h-[360px] bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-[0_15px_35px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2 cursor-default"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 + 0.3 }}
+              whileHover={{ y: -10 }}
+              className="group relative p-8 rounded-3xl glass-card hover:bg-accent/5 transition-all duration-500"
             >
-              <div className="p-8 pb-0 space-y-2 relative z-10">
-                <h3 className="text-xl font-extrabold text-[#1e1b4b] tracking-tight">{feature.title}</h3>
-                <p className="text-slate-400 font-bold text-[10px] tracking-wide uppercase">{feature.subtitle}</p>
-                <p className="text-slate-500 text-[13px] leading-relaxed pt-1 line-clamp-3">
+              <div className={`h-14 w-14 rounded-2xl ${feature.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
+                <feature.icon className={`h-7 w-7 ${feature.color}`} />
+              </div>
+              
+              <div className="space-y-3">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">{feature.subtitle}</p>
+                <h3 className="text-xl font-bold">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
               </div>
-
-              {/* Decorative Curved Bottom */}
-              <div className="absolute bottom-0 left-0 right-0 h-40 overflow-hidden">
-                <div 
-                  className={`absolute bottom-[-20px] left-[-10%] w-[120%] h-[120%] rounded-[100%] bg-gradient-to-br ${feature.gradient} opacity-20 transform translate-y-12 transition-transform duration-700 group-hover:translate-y-8`} 
-                />
-                <div 
-                  className={`absolute bottom-[-10px] left-[-5%] w-[110%] h-[100%] rounded-[100%] bg-gradient-to-br ${feature.gradient} transform translate-y-16 transition-transform duration-500 group-hover:translate-y-10`} 
-                />
-                
-                {/* Large Icon Illustration */}
-                <div className="absolute bottom-6 right-8 transition-all duration-500 transform group-hover:scale-110 group-hover:-translate-y-2 group-hover:rotate-6">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-white/20 blur-xl rounded-full" />
-                    <feature.icon className="h-16 w-16 text-white drop-shadow-2xl relative z-10" strokeWidth={1.5} />
-                  </div>
-                </div>
-              </div>
               
-              {/* Corner Accent */}
-              <div className={`absolute top-6 right-6 h-2 w-2 rounded-full bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-            </div>
+              <div className="absolute bottom-6 right-8 opacity-0 group-hover:opacity-10 transition-opacity duration-500">
+                <feature.icon className="h-24 w-24" />
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
     </section>
   )
 }
+
