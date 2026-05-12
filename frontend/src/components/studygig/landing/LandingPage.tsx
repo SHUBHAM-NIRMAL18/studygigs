@@ -30,7 +30,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
         <FeaturesSection />
         
         {/* How It Works (Quick Preview) */}
-        <section id="how-it-works" className="py-20 lg:py-28 relative overflow-hidden">
+        <section id="how-it-works" className="py-12 lg:py-20 relative overflow-hidden">
           <div className="container mx-auto px-6">
             <div className="flex flex-col lg:flex-row items-center gap-16">
               <div className="flex-1 space-y-10">
@@ -144,7 +144,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 lg:py-32 relative overflow-hidden">
+        <section className="py-16 lg:py-24 relative overflow-hidden">
            <div className="container mx-auto px-6 relative z-10 text-center space-y-12">
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}

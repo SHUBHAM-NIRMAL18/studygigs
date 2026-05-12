@@ -32,7 +32,7 @@ interface HeroSectionProps {
 export function HeroSection({ onSignUpClick }: HeroSectionProps) {
 
   return (
-    <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
+    <section className="relative pt-12 pb-12 lg:pt-20 lg:pb-16 overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
         <motion.div 
           variants={containerVariants}

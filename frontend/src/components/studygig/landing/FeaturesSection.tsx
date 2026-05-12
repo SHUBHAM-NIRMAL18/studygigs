@@ -41,9 +41,9 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-20 lg:py-28 relative">
+    <section id="features" className="py-12 lg:py-20 relative">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
+        <div className="text-center max-w-3xl mx-auto mb-12 space-y-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
