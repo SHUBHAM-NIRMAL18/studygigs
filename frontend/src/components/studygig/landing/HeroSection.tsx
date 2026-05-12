@@ -1,80 +1,126 @@
 'use client'
 
 import React from 'react'
+import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, CheckCircle2, Star, Users, Zap } from 'lucide-react'
+import { ArrowRight, Zap, Star, ShieldCheck, Sparkles } from 'lucide-react'
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.3,
+    },
+  },
+}
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+  },
+}
 
 interface HeroSectionProps {
   onSignUpClick: () => void
 }
 
 export function HeroSection({ onSignUpClick }: HeroSectionProps) {
-  return (
-    <section className="relative overflow-hidden pt-10 pb-20 lg:pt-20 lg:pb-32 bg-slate-50">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
 
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+  return (
+    <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
+      <div className="container mx-auto px-6 relative z-10">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-5xl mx-auto text-center space-y-10"
+        >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/5 border border-primary/20 text-xs font-medium animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <Zap className="h-3.5 w-3.5" />
-            <span>The #1 Academic Task Marketplace</span>
-          </div>
+          <motion.div variants={itemVariants} className="flex justify-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-primary/20 text-xs font-semibold tracking-wide text-primary shadow-[0_0_20px_oklch(var(--primary)_/_0.1)]">
+              <Sparkles className="h-3.5 w-3.5 fill-primary/20" />
+              <span className="uppercase">Empowering Academic Excellence</span>
+            </div>
+          </motion.div>
 
           {/* Headline */}
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight lg:leading-[1.1] animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-            Master Your Studies with <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-indigo-600">
-              Expert Peer Support
-            </span>
-          </h1>
+          <motion.h1 
+            variants={itemVariants}
+            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] text-foreground"
+          >
+            Your Academic <br />
+            <span className="text-gradient">Success, Simplified.</span>
+          </motion.h1>
 
           {/* Subheadline */}
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-12 duration-700 delay-200">
-            Post your assignments, set your budget, and collaborate with top-performing students. 
-            Secure escrow payments, quality guaranteed, and 24/7 support.
-          </p>
+          <motion.p 
+            variants={itemVariants}
+            className="text-lg md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium"
+          >
+            The premium marketplace where ambitious students meet expert solvers. 
+            Post tasks, secure escrow, and elevate your grades with peer-to-peer excellence.
+          </motion.p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-16 duration-700 delay-300">
-            <Button size="lg" className="h-12 px-8 text-base rounded-md shadow-xl shadow-primary/30 hover:scale-105 transition-transform" onClick={onSignUpClick}>
-              Post Your First Task <ArrowRight className="ml-2 h-4 w-4" />
+          <motion.div 
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4"
+          >
+            <Button 
+              size="lg" 
+              className="h-16 px-10 text-lg rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-[0_20px_40px_-12px_oklch(var(--primary)_/_0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all group"
+              onClick={onSignUpClick}
+            >
+              Get Started Now 
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button size="lg" variant="outline" className="h-12 px-8 text-base rounded-md bg-background/50 backdrop-blur-sm hover:bg-background/80 transition-all">
-              Browse Marketplace
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="h-16 px-10 text-lg rounded-2xl glass hover:bg-accent/50 border-border/50 text-foreground font-bold transition-all"
+            >
+              How it works
             </Button>
-          </div>
+          </motion.div>
 
-          {/* Stats/Trust */}
-          <div className="mt-12 p-6 rounded-3xl bg-background/40 border border-border/50 backdrop-blur-xl shadow-2xl animate-in fade-in duration-1000 delay-500">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div className="space-y-1 relative">
-                <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-primary to-primary/60">10k+</p>
-                <p className="text-xs font-medium text-muted-foreground">Active Students</p>
-                <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 w-px h-10 bg-border/50"></div>
+          {/* Trust Indicators */}
+          <motion.div 
+            variants={itemVariants}
+            className="pt-16 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-70"
+          >
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-muted flex items-center justify-center text-[10px] font-bold">
+                    {String.fromCharCode(64 + i)}
+                  </div>
+                ))}
               </div>
-              <div className="space-y-1 relative">
-                <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-blue-500 to-blue-500/60">50k+</p>
-                <p className="text-xs font-medium text-muted-foreground">Tasks Completed</p>
-                <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 w-px h-10 bg-border/50"></div>
-              </div>
-              <div className="space-y-1 relative">
-                <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-indigo-500 to-indigo-500/60">4.9/5</p>
-                <p className="text-xs font-medium text-muted-foreground">Average Rating</p>
-                <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 w-px h-10 bg-border/50"></div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-purple-500 to-purple-500/60">100%</p>
-                <p className="text-xs font-medium text-muted-foreground">Secure Escrow</p>
-              </div>
+              <span className="text-xs font-bold uppercase tracking-widest">10k+ Students</span>
             </div>
-          </div>
-        </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex text-yellow-500">
+                {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="h-4 w-4 fill-current" />)}
+              </div>
+              <span className="text-xs font-bold uppercase tracking-widest">4.9/5 Rating</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <ShieldCheck className="h-6 w-6 text-primary" />
+              <span className="text-xs font-bold uppercase tracking-widest">Secure Escrow</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <Zap className="h-6 w-6 text-indigo-500" />
+              <span className="text-xs font-bold uppercase tracking-widest">Fast Delivery</span>
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   )
 }
+
