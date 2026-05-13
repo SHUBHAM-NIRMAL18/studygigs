@@ -39,6 +39,8 @@ next-env.d.ts
 *.sqlite
 *.sqlite3
 prisma/db/
+generated-client/
+src/lib/generated-client/
 
 # ===========================
 # Logs
