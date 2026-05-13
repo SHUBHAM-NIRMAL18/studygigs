@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../frontend/src/lib/generated-client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  name             String
+  password         String
+  avatar           String?
+  bio              String?
+  role             String    @default("STUDENT") // STUDENT, SOLVER, ADMIN
+  rating           Float     @default(0)
+  completedTasks   Int       @default(0)
+  totalEarnings    Float     @default(0)
+  onTimeRate       Float     @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
+  postedTasks       Task[]        @relation("PostedTasks")
+  bids              Bid[]         @relation("SolverBids")
+  deliverables      Deliverable[] @relation("SolverDeliverables")
+  sentMessages      Message[]     @relation("SentMessages")
+  givenReviews      Review[]      @relation("GivenReviews")
+  receivedReviews   Review[]      @relation("ReceivedReviews")
+  initiatedDisputes Dispute[]     @relation("InitiatorDisputes")
+}
+
+model Task {
+  id            String   @id @default(cuid())
+  posterId      String
+  title         String
+  description   String
+  category      String // MATH, SCIENCE, CS, ENGLISH, HISTORY, BUSINESS, LAW, MEDICINE, OTHER
+  academicLevel String // HIGH_SCHOOL, UNDERGRAD, GRAD, PHD
+  budgetMin     Float
+  budgetMax     Float
+  deadline      DateTime
+  status        String   @default("OPEN") // OPEN, BIDDING, IN_PROGRESS, REVIEW, COMPLETED, CANCELLED, DISPUTED
+  acceptedBidId String?  @unique
+  revisionCount Int      @default(0)
+  platformFee   Float    @default(0.12)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  poster       User          @relation("PostedTasks", fields: [posterId], references: [id])
+  acceptedBid  Bid?          @relation("AcceptedBid", fields: [acceptedBidId], references: [id])
+  bids         Bid[]         @relation("TaskBids")
+  deliverables Deliverable[] @relation("TaskDeliverables")
+  reviews      Review[]      @relation("TaskReviews")
+  disputes     Dispute[]     @relation("TaskDisputes")
+  messages     Message[]     @relation("TaskMessages")
+}
+
+model Bid {
+  id            String   @id @default(cuid())
+  taskId        String
+  solverId      String
+  proposedPrice Float
+  deliveryDays  Int
+  message       String
+  status        String   @default("PENDING") // PENDING, ACCEPTED, REJECTED, WITHDRAWN
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  task         Task  @relation("TaskBids", fields: [taskId], references: [id])
+  solver       User  @relation("SolverBids", fields: [solverId], references: [id])
+  acceptedTask Task? @relation("AcceptedBid")
+}
+
+model Deliverable {
+  id        String   @id @default(cuid())
+  taskId    String
+  solverId  String
+  content   String
+  version   Int      @default(1)
+  status    String   @default("SUBMITTED") // SUBMITTED, REVISION_REQUESTED, APPROVED, REJECTED
+  createdAt DateTime @default(now())
+
+  task   Task @relation("TaskDeliverables", fields: [taskId], references: [id])
+  solver User @relation("SolverDeliverables", fields: [solverId], references: [id])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  taskId     String
+  reviewerId String
+  revieweeId String
+  rating     Int
+  comment    String
+  createdAt  DateTime @default(now())
+
+  task     Task @relation("TaskReviews", fields: [taskId], references: [id])
+  reviewer User @relation("GivenReviews", fields: [reviewerId], references: [id])
+  reviewee User @relation("ReceivedReviews", fields: [revieweeId], references: [id])
+}
+
+model Dispute {
+  id          String   @id @default(cuid())
+  taskId      String
+  initiatorId String
+  reason      String
+  status      String   @default("OPEN") // OPEN, UNDER_REVIEW, RESOLVED, CLOSED
+  resolution  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  task      Task @relation("TaskDisputes", fields: [taskId], references: [id])
+  initiator User @relation("InitiatorDisputes", fields: [initiatorId], references: [id])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  taskId    String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  task   Task @relation("TaskMessages", fields: [taskId], references: [id])
+  sender User @relation("SentMessages", fields: [senderId], references: [id])
+}
