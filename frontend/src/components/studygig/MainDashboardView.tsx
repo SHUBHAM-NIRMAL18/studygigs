@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/app-store'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { 
-  Clock, 
-  CheckCircle2, 
-  DollarSign, 
+import {
+  Clock,
+  CheckCircle2,
+  DollarSign,
   AlertCircle,
   PlusCircle,
   ArrowRight,
@@ -25,7 +25,7 @@ export function MainDashboardView() {
   // Calculate statistics
   const userTasks = tasks.filter(t => t.posterId === currentUser?.id)
   const activeTasks = userTasks.filter(t => t.status === 'OPEN' || t.status === 'ASSIGNED')
-  
+
   // Role-based logic
   const isStudent = currentUser?.role === 'STUDENT'
   const isSolver = currentUser?.role === 'SOLVER'
@@ -44,7 +44,7 @@ export function MainDashboardView() {
   }
 
   return (
-    <motion.div 
+    <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -66,18 +66,18 @@ export function MainDashboardView() {
         </div>
         <div className="flex gap-4">
           {isStudent && (
-            <Button 
+            <Button
               size="lg"
-              onClick={() => router.push('/post-task')} 
+              onClick={() => router.push('/post-task')}
               className="rounded-2xl shadow-xl shadow-primary/20 bg-primary h-14 px-8 font-black text-sm"
             >
               <PlusCircle className="h-5 w-5 mr-2" /> Post Task
             </Button>
           )}
-          <Button 
+          <Button
             size="lg"
-            variant="outline" 
-            onClick={() => router.push('/marketplace')} 
+            variant="outline"
+            onClick={() => router.push('/marketplace')}
             className="rounded-2xl glass h-14 px-8 font-black text-sm"
           >
             Browse Marketplace <ArrowRight className="h-5 w-5 ml-2" />
@@ -124,9 +124,9 @@ export function MainDashboardView() {
           {activeTasks.length > 0 ? (
             <div className="grid gap-4">
               {activeTasks.slice(0, 4).map(task => (
-                <Card 
-                  key={task.id} 
-                  className="glass-card group hover:bg-accent/5 transition-all cursor-pointer border-white/5" 
+                <Card
+                  key={task.id}
+                  className="glass-card group hover:bg-accent/5 transition-all cursor-pointer border-white/5"
                   onClick={() => router.push('/my-tasks')}
                 >
                   <CardContent className="p-4 flex items-center justify-between">
@@ -156,11 +156,11 @@ export function MainDashboardView() {
                   <p className="text-xl font-bold">No active tasks found</p>
                   <p className="text-muted-foreground max-w-xs mx-auto">Get started by posting your first assignment or bidding on one.</p>
                 </div>
-                <Button 
+                <Button
                   className="rounded-xl font-black text-xs h-10 px-6 mt-4"
                   onClick={() => isStudent ? router.push('/post-task') : router.push('/marketplace')}
                 >
-                   {isStudent ? 'CREATE TASK' : 'FIND TASKS'}
+                  {isStudent ? 'CREATE TASK' : 'FIND TASKS'}
                 </Button>
               </CardContent>
             </Card>
@@ -197,10 +197,10 @@ export function MainDashboardView() {
                 { label: 'Payment Methods', link: '/profile' },
                 { label: 'Notification Preferences', link: '/profile' },
               ].map((item, i) => (
-                <Button 
+                <Button
                   key={i}
-                  variant="ghost" 
-                  className="w-full justify-start text-[11px] font-black h-12 rounded-xl hover:bg-primary/10 hover:text-primary transition-all px-4 uppercase tracking-widest" 
+                  variant="ghost"
+                  className="w-full justify-start text-[11px] font-black h-12 rounded-xl hover:bg-primary/10 hover:text-primary transition-all px-4 uppercase tracking-widest"
                   onClick={() => router.push(item.link)}
                 >
                   {item.label}

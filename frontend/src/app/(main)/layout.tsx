@@ -9,7 +9,7 @@ import { useAppStore } from '@/store/app-store'
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const { setCurrentUser, setIsAuthenticated, isAuthenticated, setTasks } = useAppStore()
+  const { setCurrentUser, setIsAuthenticated, isAuthenticated, setTasks, setIsLoading } = useAppStore()
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -32,11 +32,17 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     if (!isAuthenticated) return
+    setIsLoading(true)
     fetch('/api/tasks?limit=100')
       .then(res => res.json())
-      .then(data => setTasks(data.tasks || []))
-      .catch(() => { })
-  }, [isAuthenticated, setTasks])
+      .then(data => {
+        setTasks(data.tasks || [])
+        setIsLoading(false)
+      })
+      .catch(() => {
+        setIsLoading(false)
+      })
+  }, [isAuthenticated, setTasks, setIsLoading])
 
   if (status === 'loading' || !isAuthenticated) {
     return (
