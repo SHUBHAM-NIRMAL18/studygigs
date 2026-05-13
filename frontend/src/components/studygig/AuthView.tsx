@@ -36,6 +36,8 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>(defaultTab)
+  const [isForgotPassword, setIsForgotPassword] = useState(false)
+  const [forgotEmail, setForgotEmail] = useState('')
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [signupName, setSignupName] = useState('')
@@ -47,6 +49,39 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+    if (!forgotEmail) {
+      setError('Please enter your email')
+      return
+    }
+    setLoading(true)
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail.trim().toLowerCase() })
+      })
+      if (res.ok) {
+        setSuccess('Reset link sent to your email!')
+        toast({
+          title: 'Email Sent!',
+          description: 'If an account exists, you will receive a reset link shortly.',
+          variant: 'success'
+        })
+      } else {
+        const data = await res.json()
+        setError(data.error || 'Request failed')
+      }
+    } catch {
+      setError('Error occurred')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -205,6 +240,7 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
             value={activeTab} 
             onValueChange={(v) => {
               setActiveTab(v as any)
+              setIsForgotPassword(false)
               setError('')
               setSuccess('')
             }} 
@@ -260,47 +296,82 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                     </AnimatePresence>
 
                     {activeTab === 'login' ? (
-                      <form onSubmit={handleLogin} className="space-y-4">
-                        <div className="space-y-1">
-                          <Label className="text-[10px] font-black text-slate-400 uppercase ml-1">Email</Label>
-                          <Input
-                            type="email"
-                            placeholder="name@university.edu"
-                            value={loginEmail}
-                            onChange={(e) => setLoginEmail(e.target.value)}
-                            className="bg-slate-50 border-slate-200 rounded-xl h-12 text-slate-950 text-sm"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <div className="flex justify-between items-center">
-                            <Label className="text-[10px] font-black text-slate-400 uppercase ml-1">Password</Label>
-                            <button type="button" className="text-[10px] text-purple-400 font-bold">FORGOT?</button>
-                          </div>
-                          <div className="relative">
+                      isForgotPassword ? (
+                        <form onSubmit={handleForgotPassword} className="space-y-4">
+                          <div className="space-y-1">
+                            <Label className="text-[10px] font-black text-slate-400 uppercase ml-1">Account Email</Label>
                             <Input
-                              type={showPassword ? 'text' : 'password'}
-                              placeholder="••••••••"
-                              value={loginPassword}
-                              onChange={(e) => setLoginPassword(e.target.value)}
-                              className="bg-slate-50 border-slate-200 rounded-xl h-12 text-slate-950 pr-12 text-sm"
+                              type="email"
+                              placeholder="name@university.edu"
+                              value={forgotEmail}
+                              onChange={(e) => setForgotEmail(e.target.value)}
+                              className="bg-slate-50 border-slate-200 rounded-xl h-12 text-slate-950 text-sm"
                             />
-                            <button
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"
-                            >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
                           </div>
-                        </div>
-                        <Button 
-                          type="submit" 
-                          disabled={loading}
-                          className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-black text-xs rounded-xl mt-2"
-                        >
-                          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'SIGN IN'}
-                        </Button>
-                      </form>
+                          <Button 
+                            type="submit" 
+                            disabled={loading}
+                            className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-black text-xs rounded-xl mt-2"
+                          >
+                            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'SEND RESET LINK'}
+                          </Button>
+                          <button 
+                            type="button" 
+                            onClick={() => setIsForgotPassword(false)}
+                            className="w-full text-[10px] text-slate-400 font-bold uppercase tracking-widest hover:text-primary transition-colors mt-2"
+                          >
+                            Back to Sign In
+                          </button>
+                        </form>
+                      ) : (
+                        <form onSubmit={handleLogin} className="space-y-4">
+                          <div className="space-y-1">
+                            <Label className="text-[10px] font-black text-slate-400 uppercase ml-1">Email</Label>
+                            <Input
+                              type="email"
+                              placeholder="name@university.edu"
+                              value={loginEmail}
+                              onChange={(e) => setLoginEmail(e.target.value)}
+                              className="bg-slate-50 border-slate-200 rounded-xl h-12 text-slate-950 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center">
+                              <Label className="text-[10px] font-black text-slate-400 uppercase ml-1">Password</Label>
+                              <button 
+                                type="button" 
+                                onClick={() => setIsForgotPassword(true)}
+                                className="text-[10px] text-purple-400 font-bold hover:underline"
+                              >
+                                FORGOT?
+                              </button>
+                            </div>
+                            <div className="relative">
+                              <Input
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="••••••••"
+                                value={loginPassword}
+                                onChange={(e) => setLoginPassword(e.target.value)}
+                                className="bg-slate-50 border-slate-200 rounded-xl h-12 text-slate-950 pr-12 text-sm"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"
+                              >
+                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              </button>
+                            </div>
+                          </div>
+                          <Button 
+                            type="submit" 
+                            disabled={loading}
+                            className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-black text-xs rounded-xl mt-2"
+                          >
+                            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'SIGN IN'}
+                          </Button>
+                        </form>
+                      )
                     ) : (
                       <form onSubmit={handleSignup} className="space-y-3">
                         <div className="grid grid-cols-2 gap-3 mb-2">
