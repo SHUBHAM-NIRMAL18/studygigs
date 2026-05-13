@@ -57,17 +57,17 @@ function NavContent({ setSidebarOpen, collapsed }: {
             key={item.href}
             onClick={() => { router.push(item.href); setSidebarOpen(false) }}
             className={`group relative flex items-center ${collapsed ? 'justify-center px-0' : 'gap-3 px-4'} py-3 rounded-2xl transition-all duration-300 ${isActive
-                ? 'text-primary'
-                : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+              ? 'text-primary'
+              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
               }`}
           >
             {isActive && (
-              <motion.div 
+              <motion.div
                 layoutId="nav-active"
                 className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-2xl z-0"
               />
             )}
-            
+
             <div className={`relative z-10 flex items-center justify-center transition-all duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110 group-hover:text-primary'}`}>
               <Icon className="h-5 w-5 shrink-0" />
             </div>
@@ -75,12 +75,12 @@ function NavContent({ setSidebarOpen, collapsed }: {
             {!collapsed && (
               <span className="relative z-10 font-bold text-sm tracking-tight">{item.label}</span>
             )}
-            
+
             {isActive && !collapsed && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="absolute right-4 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_oklch(var(--primary)_/_0.5)]" 
+                className="absolute right-4 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_oklch(var(--primary)_/_0.5)]"
               />
             )}
           </button>
@@ -133,10 +133,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <SheetContent side="left" className="w-80 p-0 glass border-r-border/40">
               <SheetHeader className="p-6 border-b border-border/40">
                 <div className="flex items-center gap-3">
-                   <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20">
-                     <GraduationCap className="h-6 w-6" />
-                   </div>
-                   <span className="font-black text-xl tracking-tight">StudyGig</span>
+                  <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20">
+                    <GraduationCap className="h-6 w-6" />
+                  </div>
+                  <span className="font-black text-xl tracking-tight">StudyGig</span>
                 </div>
               </SheetHeader>
               <NavContent setSidebarOpen={setSidebarOpen} />
