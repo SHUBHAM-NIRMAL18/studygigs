@@ -25,12 +25,18 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
       />
       
       <main>
-        <HeroSection onSignUpClick={() => onAuthClick('signup')} />
-        
-        <FeaturesSection />
+        <section className="relative">
+          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none -z-10" />
+          <HeroSection onSignUpClick={() => onAuthClick('signup')} />
+        </section>
+
+        <section className="bg-white border-y border-slate-100 relative z-10">
+          <FeaturesSection />
+        </section>
         
         {/* How It Works (Quick Preview) */}
-        <section id="how-it-works" className="py-12 lg:py-20 relative overflow-hidden">
+        <section id="how-it-works" className="py-12 lg:py-24 relative overflow-hidden bg-slate-50/50">
+          <div className="absolute inset-0 bg-grid-slate-200 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
           <div className="container mx-auto px-6">
             <div className="flex flex-col lg:flex-row items-center gap-16">
               <div className="flex-1 space-y-10">
@@ -144,7 +150,8 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
         </section>
 
         {/* Final CTA */}
-        <section className="py-16 lg:py-24 relative overflow-hidden">
+        <section className="py-20 lg:py-32 relative overflow-hidden bg-primary/5 border-t border-primary/10">
+           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/20 blur-[120px] -z-10 rounded-full" />
            <div className="container mx-auto px-6 relative z-10 text-center space-y-12">
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
