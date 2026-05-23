@@ -132,12 +132,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </SheetTrigger>
             <SheetContent side="left" className="w-80 p-0 glass border-r-border/40">
               <SheetHeader className="p-6 border-b border-border/40">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20">
+                <Link
+                  href="/"
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-3 hover:opacity-80 transition-all group"
+                >
+                  <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform">
                     <GraduationCap className="h-6 w-6" />
                   </div>
                   <span className="font-black text-xl tracking-tight">StudyGig</span>
-                </div>
+                </Link>
               </SheetHeader>
               <NavContent setSidebarOpen={setSidebarOpen} />
             </SheetContent>
