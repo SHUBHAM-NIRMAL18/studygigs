@@ -38,6 +38,10 @@ export function AppContent() {
           if (currentUser) {
             setCurrentUser(currentUser)
             setIsAuthenticated(true)
+          } else {
+            console.warn('Authenticated user session not found in database. Signing out...')
+            setIsAuthenticated(false)
+            import('next-auth/react').then(({ signOut }) => signOut({ callbackUrl: '/' }))
           }
         })
         .catch(() => {})

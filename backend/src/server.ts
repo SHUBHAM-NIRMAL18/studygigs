@@ -29,6 +29,12 @@ app.use(cors({
 // Body parsing
 app.use(express.json());
 
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`[BACKEND] ${req.method} ${req.path}`);
+  next();
+});
+
 // Global API Gateway enforcement
 app.use(requireGateway);
 

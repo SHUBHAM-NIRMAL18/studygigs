@@ -24,6 +24,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           if (currentUser) {
             setCurrentUser(currentUser)
             setIsAuthenticated(true)
+          } else {
+            console.warn('Authenticated user session not found in database. Signing out...')
+            setIsAuthenticated(false)
+            import('next-auth/react').then(({ signOut }) => signOut({ callbackUrl: '/login' }))
           }
         })
         .catch(() => { })
