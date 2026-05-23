@@ -33,6 +33,7 @@ export interface Task {
   platformFee: number
   createdAt: string
   updatedAt: string
+  attachments?: string | null
   poster?: User
   bids?: Bid[]
   deliverables?: Deliverable[]
@@ -62,6 +63,7 @@ export interface Deliverable {
   content: string
   version: number
   status: string
+  attachments?: string | null
   createdAt: string
   solver?: User
 }
@@ -94,6 +96,7 @@ export interface Message {
   taskId: string
   senderId: string
   content: string
+  attachments?: string | null
   createdAt: string
   sender?: User
 }
