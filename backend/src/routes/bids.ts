@@ -1,14 +1,16 @@
 import { Router } from 'express';
 import { db } from '../db';
+import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
 // POST /api/bids
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { taskId, solverId, proposedPrice, deliveryDays, message } = req.body;
+    const { taskId, proposedPrice, deliveryDays, message } = req.body;
+    const solverId = req.user!.id;
 
-    if (!taskId || !solverId || !proposedPrice || !deliveryDays || !message) {
+    if (!taskId || !proposedPrice || !deliveryDays || !message) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -47,18 +49,32 @@ router.post('/', async (req, res) => {
 });
 
 // PATCH /api/bids/:id
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { status } = req.body;
 
     if (!status || !['ACCEPTED', 'REJECTED', 'WITHDRAWN'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
     }
 
-    const bid = await db.bid.findUnique({ where: { id } });
+    const bid = await db.bid.findUnique({
+      where: { id },
+      include: { task: true }
+    });
     if (!bid) {
       return res.status(404).json({ error: 'Bid not found' });
+    }
+
+    // Authorization checks
+    if (status === 'ACCEPTED' || status === 'REJECTED') {
+      if (bid.task.posterId !== req.user!.id && req.user!.role !== 'ADMIN') {
+        return res.status(403).json({ error: 'Forbidden: You do not own the task associated with this bid' });
+      }
+    } else if (status === 'WITHDRAWN') {
+      if (bid.solverId !== req.user!.id && req.user!.role !== 'ADMIN') {
+        return res.status(403).json({ error: 'Forbidden: You did not submit this bid' });
+      }
     }
 
     if (status === 'ACCEPTED') {
