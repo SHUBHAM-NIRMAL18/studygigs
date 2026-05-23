@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 import { requireGateway, requireAuth } from './middleware/auth';
 
 // Import routes
@@ -14,10 +16,18 @@ import disputesRouter from './routes/disputes';
 import messagesRouter from './routes/messages';
 import reviewsRouter from './routes/reviews';
 import seedRouter from './routes/seed';
+import uploadRouter from './routes/upload';
 
 dotenv.config();
 
 const app = express();
+
+// Serve uploads folder statically
+const uploadDir = path.resolve(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+app.use('/uploads', express.static(uploadDir));
 const PORT = process.env.PORT || 5000;
 
 // Enable CORS
@@ -43,6 +53,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/stats', statsRouter);
 app.use('/api/seed', seedRouter);
+app.use('/api/upload', uploadRouter);
 
 // Authenticated routes
 app.use('/api/tasks', tasksRouter);
