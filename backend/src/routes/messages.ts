@@ -1,15 +1,34 @@
 import { Router } from 'express';
 import { db } from '../db';
+import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
 // POST /api/messages
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { taskId, senderId, content } = req.body;
+    const { taskId, content } = req.body;
+    const senderId = req.user!.id;
 
-    if (!taskId || !senderId || !content) {
+    if (!taskId || !content) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Verify task exists and sender is either poster, accepted solver, or admin
+    const task = await db.task.findUnique({
+      where: { id: taskId },
+      include: { acceptedBid: true }
+    });
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    const posterId = task.posterId;
+    const solverId = task.acceptedBid?.solverId;
+
+    if (senderId !== posterId && senderId !== solverId && req.user!.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Forbidden: You are not a participant in this task' });
     }
 
     const message = await db.message.create({
