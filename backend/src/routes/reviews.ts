@@ -1,20 +1,76 @@
 import { Router } from 'express';
 import { db } from '../db';
+import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
 // POST /api/reviews
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { taskId, reviewerId, revieweeId, rating, comment } = req.body;
+    const { taskId, revieweeId, rating, comment } = req.body;
+    const reviewerId = req.user!.id;
 
-    if (!taskId || !reviewerId || !revieweeId || !rating || !comment) {
+    if (!taskId || !revieweeId || !rating || !comment) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const ratingInt = parseInt(rating);
     if (ratingInt < 1 || ratingInt > 5) {
       return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+    }
+
+    // Verify task exists and is completed
+    const task = await db.task.findUnique({
+      where: { id: taskId },
+      include: { acceptedBid: true }
+    });
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    if (task.status !== 'COMPLETED') {
+      return res.status(400).json({ error: 'Task must be completed before leaving a review' });
+    }
+
+    const posterId = task.posterId;
+    const solverId = task.acceptedBid?.solverId;
+
+    if (!solverId) {
+      return res.status(400).json({ error: 'No solver accepted for this task' });
+    }
+
+    // Check if current user is participant or admin
+    if (reviewerId !== posterId && reviewerId !== solverId && req.user!.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Forbidden: You are not a participant in this task' });
+    }
+
+    // Determine and validate expected reviewee
+    if (reviewerId === posterId) {
+      if (revieweeId !== solverId) {
+        return res.status(400).json({ error: 'Reviewee must be the solver of the task' });
+      }
+    } else if (reviewerId === solverId) {
+      if (revieweeId !== posterId) {
+        return res.status(400).json({ error: 'Reviewee must be the poster of the task' });
+      }
+    } else {
+      // Admin is posting: just ensure reviewee is a participant
+      if (revieweeId !== posterId && revieweeId !== solverId) {
+        return res.status(400).json({ error: 'Reviewee must be a participant of the task' });
+      }
+    }
+
+    // Check if the user has already left a review on this task
+    const existingReview = await db.review.findFirst({
+      where: {
+        taskId,
+        reviewerId
+      }
+    });
+
+    if (existingReview) {
+      return res.status(400).json({ error: 'You have already submitted a review for this task' });
     }
 
     const review = await db.review.create({
