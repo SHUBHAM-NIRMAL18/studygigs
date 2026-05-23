@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
 import { GraduationCap, Github, Twitter, Linkedin, Facebook } from 'lucide-react'
 
 export function PublicFooter() {
@@ -55,12 +56,12 @@ export function PublicFooter() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-2 space-y-6">
-            <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity w-fit">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
                 <GraduationCap className="h-6 w-6" />
               </div>
               <span className="text-xl font-bold tracking-tight">StudyGig</span>
-            </div>
+            </Link>
             
             <div className="flex items-center gap-4">
               <a href="#" className="h-9 w-9 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
