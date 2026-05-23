@@ -139,12 +139,12 @@ router.get('/:id', async (req, res) => {
     }
 
     const posterId = task.posterId;
-    const acceptedBid = task.bids.find(b => b.status === 'ACCEPTED');
+    const acceptedBid = task.bids.find((b: any) => b.status === 'ACCEPTED');
 
     // Confidential bidding filter
     let filteredBids = task.bids;
     if (requesterRole !== 'ADMIN' && posterId !== requesterId) {
-      filteredBids = task.bids.filter(bid => 
+      filteredBids = task.bids.filter((bid: any) => 
         bid.solverId === requesterId || bid.status === 'ACCEPTED'
       );
     }
