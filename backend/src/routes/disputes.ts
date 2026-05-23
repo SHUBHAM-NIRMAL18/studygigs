@@ -1,15 +1,34 @@
 import { Router } from 'express';
 import { db } from '../db';
+import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
 // POST /api/disputes
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { taskId, initiatorId, reason } = req.body;
+    const { taskId, reason } = req.body;
+    const initiatorId = req.user!.id;
 
-    if (!taskId || !initiatorId || !reason) {
+    if (!taskId || !reason) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Verify task exists and initiator is either poster or solver
+    const task = await db.task.findUnique({
+      where: { id: taskId },
+      include: { acceptedBid: true }
+    });
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    const posterId = task.posterId;
+    const solverId = task.acceptedBid?.solverId;
+
+    if (initiatorId !== posterId && initiatorId !== solverId && req.user!.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Forbidden: You are not a participant in this task' });
     }
 
     const dispute = await db.dispute.create({
@@ -27,10 +46,14 @@ router.post('/', async (req, res) => {
 });
 
 // PATCH /api/disputes/:id
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { status, resolution } = req.body;
+
+    if (req.user!.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Forbidden: Only administrators can resolve disputes' });
+    }
 
     if (!status || !['UNDER_REVIEW', 'RESOLVED', 'CLOSED'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
