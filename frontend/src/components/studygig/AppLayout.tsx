@@ -20,7 +20,8 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import {
   Home, Globe, FilePlus, ClipboardList, Gavel, Shield, User,
-  Menu, ChevronDown, GraduationCap, LogOut, ChevronLeft, ChevronRight, Bell, Search, Sparkles
+  Menu, ChevronDown, GraduationCap, LogOut, ChevronLeft, ChevronRight, Bell, Search, Sparkles,
+  FileText
 } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -39,7 +40,7 @@ function NavContent({ setSidebarOpen, collapsed }: {
   setSidebarOpen: (v: boolean) => void
   collapsed?: boolean
 }) {
-  const { currentUser } = useAppStore()
+  const { currentUser, selectedTask } = useAppStore()
   const pathname = usePathname()
   const router = useRouter()
 
@@ -47,43 +48,80 @@ function NavContent({ setSidebarOpen, collapsed }: {
     item => !item.roles || (currentUser && item.roles.includes(currentUser.role))
   )
 
+  // Determine active task ID and the appropriate parent navigation link
+  const isTaskPage = pathname.startsWith('/tasks/')
+  const taskMatches = pathname.match(/^\/tasks\/([^/]+)/)
+  const activeTaskId = taskMatches ? taskMatches[1] : null
+
+  const isMyTask = selectedTask && currentUser && selectedTask.posterId === currentUser.id
+  const isMyBid = selectedTask && currentUser && selectedTask.bids?.some(b => b.solverId === currentUser.id)
+
+  let parentHref = '/marketplace'
+  if (isMyTask) {
+    parentHref = '/my-tasks'
+  } else if (isMyBid) {
+    parentHref = '/my-bids'
+  }
+
   return (
     <nav className="flex flex-col gap-1 p-2">
       {filteredNav.map(item => {
         const Icon = item.icon
-        const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+        const isDirectActive = pathname === item.href || pathname.startsWith(item.href + '/')
+        const isParentActive = isTaskPage && item.href === parentHref
+        const isActive = isDirectActive || isParentActive
+
+        const taskTitle = selectedTask && selectedTask.id === activeTaskId
+          ? (selectedTask.title.length > 20 ? selectedTask.title.slice(0, 20) + '...' : selectedTask.title)
+          : 'Task Details'
+
         return (
-          <button
-            key={item.href}
-            onClick={() => { router.push(item.href); setSidebarOpen(false) }}
-            className={`group relative flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-3.5'} py-2.5 rounded-xl transition-all duration-300 ${isActive
-              ? 'text-primary font-bold'
-              : 'text-muted-foreground hover:text-foreground hover:bg-accent/40'
-              }`}
-          >
-            {isActive && (
+          <div key={item.href} className="flex flex-col">
+            <button
+              onClick={() => { router.push(item.href); setSidebarOpen(false) }}
+              className={`group relative flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-3.5'} py-2.5 rounded-xl transition-all duration-300 ${isActive
+                ? 'text-primary font-bold'
+                : 'text-muted-foreground hover:text-foreground hover:bg-accent/40'
+                }`}
+            >
+              {isActive && (
+                <motion.div
+                  layoutId="nav-active"
+                  className="absolute inset-0 bg-primary/8 border border-primary/10 rounded-xl z-0"
+                />
+              )}
+
+              <div className={`relative z-10 flex items-center justify-center transition-all duration-300 ${isActive ? 'scale-105' : 'group-hover:scale-105 group-hover:text-primary'}`}>
+                <Icon className="h-4.5 w-4.5 shrink-0" />
+              </div>
+
+              {!collapsed && (
+                <span className="relative z-10 font-display font-bold text-xs uppercase tracking-wider">{item.label}</span>
+              )}
+
+              {isActive && !collapsed && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="absolute right-3.5 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_oklch(var(--primary)_/_0.5)]"
+                />
+              )}
+            </button>
+
+            {/* Sub-item for active task detail pages */}
+            {isParentActive && !collapsed && (
               <motion.div
-                layoutId="nav-active"
-                className="absolute inset-0 bg-primary/8 border border-primary/10 rounded-xl z-0"
-              />
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-1 ml-4 pl-3 border-l border-[#6B4226]/20 flex flex-col gap-1 z-10"
+              >
+                <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-[#FAF7F0] border border-[#A0643A]/10 text-xs font-bold text-[#6B4226]">
+                  <FileText className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate max-w-[140px]">{taskTitle}</span>
+                </div>
+              </motion.div>
             )}
-
-            <div className={`relative z-10 flex items-center justify-center transition-all duration-300 ${isActive ? 'scale-105' : 'group-hover:scale-105 group-hover:text-primary'}`}>
-              <Icon className="h-4.5 w-4.5 shrink-0" />
-            </div>
-
-            {!collapsed && (
-              <span className="relative z-10 font-display font-bold text-xs uppercase tracking-wider">{item.label}</span>
-            )}
-
-            {isActive && !collapsed && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="absolute right-3.5 h-1 w-1 rounded-full bg-primary shadow-[0_0_8px_oklch(var(--primary)_/_0.5)]"
-              />
-            )}
-          </button>
+          </div>
         )
       })}
     </nav>
