@@ -7,7 +7,7 @@ const router = Router();
 // POST /api/deliverables
 router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { taskId, content } = req.body;
+    const { taskId, content, attachments } = req.body;
     const solverId = req.user!.id;
 
     if (!taskId || !content) {
@@ -29,13 +29,19 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
     // Get current version count
     const existingCount = await db.deliverable.count({ where: { taskId } });
 
+    let attachmentsStr: string | null = null;
+    if (attachments) {
+      attachmentsStr = typeof attachments === 'string' ? attachments : JSON.stringify(attachments);
+    }
+
     const deliverable = await db.deliverable.create({
       data: {
         taskId,
         solverId,
         content,
         version: existingCount + 1,
-        status: 'SUBMITTED'
+        status: 'SUBMITTED',
+        attachments: attachmentsStr
       },
       include: {
         solver: { select: { id: true, name: true, avatar: true } }

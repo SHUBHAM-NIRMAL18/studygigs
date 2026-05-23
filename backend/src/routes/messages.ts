@@ -7,7 +7,7 @@ const router = Router();
 // POST /api/messages
 router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { taskId, content } = req.body;
+    const { taskId, content, attachments } = req.body;
     const senderId = req.user!.id;
 
     if (!taskId || !content) {
@@ -31,8 +31,13 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
       return res.status(403).json({ error: 'Forbidden: You are not a participant in this task' });
     }
 
+    let attachmentsStr: string | null = null;
+    if (attachments) {
+      attachmentsStr = typeof attachments === 'string' ? attachments : JSON.stringify(attachments);
+    }
+
     const message = await db.message.create({
-      data: { taskId, senderId, content },
+      data: { taskId, senderId, content, attachments: attachmentsStr },
       include: {
         sender: { select: { id: true, name: true, avatar: true } }
       }

@@ -74,11 +74,16 @@ router.get('/', async (req, res) => {
 // POST /api/tasks
 router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { title, description, category, academicLevel, budgetMin, budgetMax, deadline } = req.body;
+    const { title, description, category, academicLevel, budgetMin, budgetMax, deadline, attachments } = req.body;
     const posterId = req.user!.id;
 
     if (!title || !description || !category || !academicLevel || !budgetMin || !budgetMax || !deadline) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    let attachmentsStr: string | null = null;
+    if (attachments) {
+      attachmentsStr = typeof attachments === 'string' ? attachments : JSON.stringify(attachments);
     }
 
     const task = await db.task.create({
@@ -91,7 +96,8 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
         budgetMin: parseFloat(budgetMin),
         budgetMax: parseFloat(budgetMax),
         deadline: new Date(deadline),
-        platformFee: 0.12
+        platformFee: 0.12,
+        attachments: attachmentsStr
       },
       include: {
         poster: { select: { id: true, name: true, avatar: true, rating: true } },
@@ -110,6 +116,9 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id as string;
+    const requesterId = req.headers['x-user-id'] as string | undefined;
+    const requesterRole = req.headers['x-user-role'] as string | undefined;
+
     const task = await db.task.findUnique({
       where: { id },
       include: {
@@ -128,7 +137,33 @@ router.get('/:id', async (req, res) => {
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
-    return res.json(task);
+
+    const posterId = task.posterId;
+    const acceptedBid = task.bids.find(b => b.status === 'ACCEPTED');
+
+    // Confidential bidding filter
+    let filteredBids = task.bids;
+    if (requesterRole !== 'ADMIN' && posterId !== requesterId) {
+      filteredBids = task.bids.filter(bid => 
+        bid.solverId === requesterId || bid.status === 'ACCEPTED'
+      );
+    }
+
+    // Private chat visibility filter
+    const isParticipant = 
+      requesterRole === 'ADMIN' ||
+      posterId === requesterId ||
+      (acceptedBid && acceptedBid.solverId === requesterId);
+
+    const filteredMessages = isParticipant ? task.messages : [];
+
+    const responseTask = {
+      ...task,
+      bids: filteredBids,
+      messages: filteredMessages
+    };
+
+    return res.json(responseTask);
   } catch (error) {
     console.error('Get task error:', error);
     return res.status(500).json({ error: 'Failed to fetch task' });
