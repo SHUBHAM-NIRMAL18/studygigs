@@ -1,6 +1,6 @@
 # StudyGig 🎓
 
-A full-stack freelance task marketplace platform for students — built with **Next.js 15**, **Prisma**, **SQLite**, and **NextAuth**.
+A decoupled freelance task marketplace platform for students — built with **Next.js 15** (Frontend UI & API Gateway Proxy), **Express.js** (Backend API), **Prisma**, **MySQL**, and **NextAuth**.
 
 Students can post tasks, bid on work, manage deliverables, resolve disputes, and track everything through a clean dashboard.
 
@@ -10,17 +10,12 @@ Students can post tasks, bid on work, manage deliverables, resolve disputes, and
 
 ```
 studygig/
-├── backend/          # Prisma schema & database configuration
-│   └── prisma/
-│       └── schema.prisma
+├── package.json      # Monorepo scripts (concurrent dev servers)
+├── backend/          # Node.js / Express backend server
+│   ├── prisma/       # Prisma schema & migrations (MySQL)
+│   └── src/          # Express route handlers & middlewares
 └── frontend/         # Next.js 15 App Router application
-    ├── src/
-    │   ├── app/      # Pages & API routes
-    │   ├── components/
-    │   ├── hooks/
-    │   ├── lib/
-    │   ├── store/
-    │   └── types/
+    ├── src/          # Pages, layouts, & gateway proxy middleware
     └── public/
 ```
 
@@ -29,7 +24,8 @@ studygig/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- [Bun](https://bun.sh/) (recommended) or Node.js 18+
+- [Node.js](https://nodejs.org/) (18+)
+- [MySQL Server](https://www.mysql.com/) (e.g., via XAMPP, Docker, or native installer)
 - Git
 
 ### 1. Clone the repository
@@ -39,35 +35,49 @@ git clone https://github.com/SHUBHAM-NIRMAL18/studygigs.git
 cd studygigs
 ```
 
-### 2. Setup the Frontend
+### 2. Configure Environment Variables
 
-```bash
-cd frontend
-bun install        # or: npm install
-```
+Create database named `studygig` in your MySQL database server (e.g., via phpMyAdmin).
 
-### 3. Configure Environment Variables
-
-Create a `.env` file inside `frontend/`:
+Create a `.env` file inside `backend/`:
 
 ```env
-DATABASE_URL="file:../backend/prisma/db/custom.db"
-NEXTAUTH_SECRET="your-secret-here"
+DATABASE_URL="mysql://root:@localhost:3306/studygig"
+PORT=5000
+```
+*(Adjust username and password in the connection string if your MySQL configuration differs).*
+
+Create a `.env.local` file inside `frontend/`:
+
+```env
+NEXTAUTH_SECRET="your-development-secret-here"
 NEXTAUTH_URL="http://localhost:3000"
+BACKEND_URL="http://localhost:5000"
+GATEWAY_SECRET="studygig-gateway-secret"
+```
+
+### 3. Install Dependencies
+
+Install all project dependencies (root, backend, and frontend) in one command:
+
+```bash
+npm run install:all
 ```
 
 ### 4. Setup the Database
 
+Apply the database migrations to your MySQL instance:
+
 ```bash
-# From inside frontend/
-bun run db:push       # Push schema to DB
-bun run db:generate   # Generate Prisma client
+npm run db:migrate
 ```
 
 ### 5. Run the Development Server
 
+Start both the frontend and the Express backend concurrently:
+
 ```bash
-bun run dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -78,25 +88,28 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4 |
-| UI Components | shadcn/ui + Radix UI |
-| ORM | Prisma |
-| Database | SQLite (dev) |
-| Auth | NextAuth.js v4 |
-| State | Zustand |
-| Forms | React Hook Form + Zod |
-| Animations | Framer Motion |
+| **Frontend Framework** | Next.js 15 (App Router) |
+| **Backend API** | Express.js (Node.js/TypeScript) |
+| **Language** | TypeScript |
+| **Styling** | Tailwind CSS v4 |
+| **UI Components** | shadcn/ui + Radix UI |
+| **ORM** | Prisma |
+| **Database** | MySQL (dev/prod) |
+| **Auth** | NextAuth.js v4 |
+| **State** | Zustand |
+| **Forms** | React Hook Form + Zod |
+| **Animations** | Framer Motion |
 
 ---
 
-## 📡 API Routes
+## 📡 API Routes (Proxied to Port 5000)
 
 | Route | Methods | Description |
 |---|---|---|
 | `/api/auth/signup` | POST | Register a new user |
-| `/api/auth/[...nextauth]` | GET, POST | NextAuth handler |
+| `/api/auth/authorize` | POST | NextAuth credential verification |
+| `/api/auth/forgot-password` | POST | Initiates password reset |
+| `/api/auth/reset-password` | POST | Completes password reset |
 | `/api/tasks` | GET, POST | List / create tasks |
 | `/api/tasks/[id]` | GET, PATCH, DELETE | Task detail operations |
 | `/api/bids` | GET, POST | List / create bids |
