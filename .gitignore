@@ -39,6 +39,7 @@ next-env.d.ts
 *.sqlite
 *.sqlite3
 *.sql
+!**/migrations/**/*.sql
 prisma/db/
 generated-client/
 src/lib/generated-client/
