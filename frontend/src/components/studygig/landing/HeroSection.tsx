@@ -2,28 +2,27 @@
 
 import React from 'react'
 import { motion, Variants } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { ArrowRight, Zap, Star, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowRight, Star, ShieldCheck, Zap, Users } from 'lucide-react'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.3,
-    },
+    transition: { staggerChildren: 0.12, delayChildren: 0.15 },
   },
 }
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-  },
+  hidden:   { opacity: 0, y: 32 },
+  visible:  { opacity: 1, y: 0, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] } },
 }
+
+const stats = [
+  { icon: <Users className="h-5 w-5 text-[#8B5E3C]" />,    value: '10,000+', label: 'Students' },
+  { icon: <Star  className="h-5 w-5 text-[#C4874F]" />,    value: '4.9 / 5', label: 'Avg Rating' },
+  { icon: <ShieldCheck className="h-5 w-5 text-[#6B8E4E]" />, value: '100%',  label: 'Secure Escrow' },
+  { icon: <Zap className="h-5 w-5 text-[#8B5E3C]" />,      value: '< 24 h',  label: 'Avg Delivery' },
+]
 
 interface HeroSectionProps {
   onSignUpClick: () => void
@@ -31,101 +30,107 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onSignUpClick, isAuthenticated }: HeroSectionProps) {
-
   return (
-    <section className="relative pt-12 pb-12 lg:pt-20 lg:pb-16 overflow-hidden">
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div 
+    <section
+      className="relative overflow-hidden"
+      style={{ background: 'linear-gradient(160deg, #FAF7F0 0%, #F5EBD8 55%, #FAF7F0 100%)' }}
+    >
+      {/* Decorative warm circle blobs — solid, no blur */}
+      <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full opacity-30 pointer-events-none"
+        style={{ background: 'radial-gradient(circle, #D4A97A 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 -left-24 w-[380px] h-[380px] rounded-full opacity-20 pointer-events-none"
+        style={{ background: 'radial-gradient(circle, #C4874F 0%, transparent 70%)' }} />
+
+      {/* Warm dot pattern */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-30"
+        style={{
+          backgroundImage: 'radial-gradient(circle, #8B5E3C 1.2px, transparent 1.2px)',
+          backgroundSize: '28px 28px',
+        }}
+      />
+
+      <div className="container mx-auto px-6 relative z-10 pt-20 pb-24 md:pt-28 md:pb-32">
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-5xl mx-auto text-center space-y-10"
+          className="max-w-5xl mx-auto text-center"
         >
-          {/* Badge */}
-          <motion.div variants={itemVariants} className="flex justify-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-primary/20 text-xs font-semibold tracking-wide text-primary shadow-[0_0_20px_oklch(var(--primary)_/_0.1)]">
-              <Sparkles className="h-3.5 w-3.5 fill-primary/20" />
-              <span className="uppercase">Empowering Academic Excellence</span>
+          {/* Pill badge */}
+          <motion.div variants={itemVariants} className="flex justify-center mb-8">
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#6B4226]/10 border border-[#8B5E3C]/25 text-[#6B4226] text-xs font-bold uppercase tracking-[0.15em]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#8B5E3C] animate-pulse" />
+              The #1 Academic Task Marketplace
             </div>
           </motion.div>
 
           {/* Headline */}
-          <motion.h1 
+          <motion.h1
             variants={itemVariants}
-            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] text-foreground"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.93] text-[#2C1810] mb-6"
           >
-            Your Academic <br />
-            <span className="text-gradient">Success, Simplified.</span>
+            Your Academic
+            <br />
+            <span className="text-gradient">Success,</span>
+            {' '}Simplified.
           </motion.h1>
 
           {/* Subheadline */}
-          <motion.p 
+          <motion.p
             variants={itemVariants}
-            className="text-lg md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium"
+            className="text-lg md:text-xl text-[#5C3D2A]/65 max-w-2xl mx-auto leading-relaxed font-medium mb-12"
           >
-            The premium marketplace where ambitious students meet expert solvers. 
-            Post tasks, secure escrow, and elevate your grades with peer-to-peer excellence.
+            The premium marketplace where ambitious students meet expert solvers.
+            Post tasks, secure escrow payments, and elevate your grades — peer‑to‑peer excellence.
           </motion.p>
 
           {/* CTAs */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20"
           >
-            <Button 
-              size="lg" 
-              className="h-16 px-10 text-lg rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-[0_20px_40px_-12px_oklch(var(--primary)_/_0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all group"
+            <button
+              className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl text-base font-bold text-[#FAF7F0] btn-brown"
               onClick={isAuthenticated ? () => window.location.href = '/dashboard' : onSignUpClick}
             >
-              {isAuthenticated ? 'Go to Dashboard' : 'Get Started Now'} 
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="h-16 px-10 text-lg rounded-2xl glass hover:bg-accent/50 border-border/50 text-foreground font-bold transition-all"
+              {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <button
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-[#5C3D2A] border-2 border-[#8B5E3C]/40 bg-transparent hover:bg-[#6B4226]/8 hover:border-[#8B5E3C]/70 transition-all duration-300"
               onClick={() => {
-                const el = document.getElementById('how-it-works');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                const el = document.getElementById('how-it-works')
+                if (el) el.scrollIntoView({ behavior: 'smooth' })
               }}
             >
-              How it works
-            </Button>
+              See How It Works
+            </button>
           </motion.div>
 
-          {/* Trust Indicators */}
-          <motion.div 
+          {/* Stats row */}
+          <motion.div
             variants={itemVariants}
-            className="pt-16 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-70"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
           >
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-muted flex items-center justify-center text-[10px] font-bold">
-                    {String.fromCharCode(64 + i)}
-                  </div>
-                ))}
+            {stats.map((stat, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center gap-2 py-5 px-4 rounded-2xl bg-white border border-[#D4A97A]/30 shadow-sm shadow-[#6B4226]/6 hover:shadow-md hover:border-[#C4874F]/50 hover:-translate-y-1 transition-all duration-300"
+              >
+                {stat.icon}
+                <span className="text-2xl font-black text-[#2C1810]">{stat.value}</span>
+                <span className="text-xs font-semibold text-[#8B5E3C]/70 uppercase tracking-wider">{stat.label}</span>
               </div>
-              <span className="text-xs font-bold uppercase tracking-widest">10k+ Students</span>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex text-yellow-500">
-                {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-              </div>
-              <span className="text-xs font-bold uppercase tracking-widest">4.9/5 Rating</span>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <ShieldCheck className="h-6 w-6 text-primary" />
-              <span className="text-xs font-bold uppercase tracking-widest">Secure Escrow</span>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <Zap className="h-6 w-6 text-indigo-500" />
-              <span className="text-xs font-bold uppercase tracking-widest">Fast Delivery</span>
-            </div>
+            ))}
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Section bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, #F9F4EB)' }} />
     </section>
   )
 }
-
