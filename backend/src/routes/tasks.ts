@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { db } from '../db';
+import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
@@ -71,11 +72,12 @@ router.get('/', async (req, res) => {
 });
 
 // POST /api/tasks
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { posterId, title, description, category, academicLevel, budgetMin, budgetMax, deadline } = req.body;
+    const { title, description, category, academicLevel, budgetMin, budgetMax, deadline } = req.body;
+    const posterId = req.user!.id;
 
-    if (!posterId || !title || !description || !category || !academicLevel || !budgetMin || !budgetMax || !deadline) {
+    if (!title || !description || !category || !academicLevel || !budgetMin || !budgetMax || !deadline) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -107,7 +109,7 @@ router.post('/', async (req, res) => {
 // GET /api/tasks/:id
 router.get('/:id', async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const task = await db.task.findUnique({
       where: { id },
       include: {
@@ -134,10 +136,20 @@ router.get('/:id', async (req, res) => {
 });
 
 // PATCH /api/tasks/:id
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { status, acceptedBidId } = req.body;
+
+    // Check ownership
+    const existingTask = await db.task.findUnique({ where: { id } });
+    if (!existingTask) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    if (existingTask.posterId !== req.user!.id && req.user!.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Forbidden: You do not own this task' });
+    }
 
     const updateData: Record<string, any> = {};
     if (status) updateData.status = status;
