@@ -11,7 +11,9 @@ export default function TaskDetailPage() {
 
   useEffect(() => {
     if (params?.id) {
-      setSelectedTaskId(params.id as string)
+      const parts = (params.id as string).split('-')
+      const taskRealId = parts[parts.length - 1]
+      setSelectedTaskId(taskRealId)
     }
   }, [params?.id, setSelectedTaskId])
 

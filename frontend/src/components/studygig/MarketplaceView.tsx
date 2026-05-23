@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/app-store'
+import { getTaskPath } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -177,7 +178,7 @@ export function MarketplaceView() {
                       task={task}
                       onClick={() => {
                         setSelectedTaskId(task.id)
-                        router.push(`/tasks/${task.id}`)
+                        router.push(getTaskPath(task))
                       }}
                     />
                   ))}
@@ -201,7 +202,7 @@ export function MarketplaceView() {
                       task={task}
                       onClick={() => {
                         setSelectedTaskId(task.id)
-                        router.push(`/tasks/${task.id}`)
+                        router.push(getTaskPath(task))
                       }}
                     />
                   ))}

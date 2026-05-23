@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppStore, Bid } from '@/store/app-store'
+import { getTaskPath } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -69,9 +70,9 @@ export function MyBidsView() {
     <div
       className="group flex items-center justify-between p-3 md:p-4 mb-2 rounded-xl border border-muted/60 bg-card/50 backdrop-blur-sm hover:shadow-md hover:shadow-primary/5 hover:border-primary/30 cursor-pointer transition-all duration-300"
       onClick={() => {
-        if (bid.task?.id) {
+        if (bid.task) {
           setSelectedTaskId(bid.task.id)
-          router.push(`/tasks/${bid.task.id}`)
+          router.push(getTaskPath(bid.task))
         }
       }}
     >
