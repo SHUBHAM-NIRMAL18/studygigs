@@ -5,8 +5,8 @@ import { getToken } from 'next-auth/jwt'
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
-  // Check if it's an API route
-  if (path.startsWith('/api')) {
+  // Check if it's an API route or static uploads route
+  if (path.startsWith('/api') || path.startsWith('/uploads')) {
     // Determine if this is a NextAuth framework route that needs local handling
     const isNextAuthFrameworkRoute =
       path.startsWith('/api/auth') &&
@@ -49,5 +49,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/api/:path*'],
+  matcher: ['/api/:path*', '/uploads/:path*'],
 }
