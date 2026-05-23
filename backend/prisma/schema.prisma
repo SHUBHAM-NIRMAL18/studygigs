@@ -50,6 +50,7 @@ model Task {
   acceptedBidId String?  @unique
   revisionCount Int      @default(0)
   platformFee   Float    @default(0.12)
+  attachments   String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -85,6 +86,7 @@ model Deliverable {
   content   String
   version   Int      @default(1)
   status    String   @default("SUBMITTED") // SUBMITTED, REVISION_REQUESTED, APPROVED, REJECTED
+  attachments String?
   createdAt DateTime @default(now())
 
   task      Task     @relation("TaskDeliverables", fields: [taskId], references: [id])
@@ -124,6 +126,7 @@ model Message {
   taskId    String
   senderId  String
   content   String
+  attachments String?
   createdAt DateTime @default(now())
 
   task      Task     @relation("TaskMessages", fields: [taskId], references: [id])
