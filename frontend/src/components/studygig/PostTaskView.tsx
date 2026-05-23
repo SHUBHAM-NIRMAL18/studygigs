@@ -10,13 +10,15 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
-import { ArrowLeft, DollarSign, Clock } from 'lucide-react'
+import { ArrowLeft, DollarSign, Clock, Paperclip, Trash2, Loader2 } from 'lucide-react'
 
 export function PostTaskView() {
   const { currentUser, setTasks } = useAppStore()
   const router = useRouter()
   const { toast } = useToast()
   const [submitting, setSubmitting] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [attachments, setAttachments] = useState<{ name: string; url: string }[]>([])
 
   const [form, setForm] = useState({
     title: '', description: '', category: '', academicLevel: '',
@@ -24,6 +26,38 @@ export function PostTaskView() {
   })
 
   const updateForm = (key: string, value: string) => setForm(prev => ({ ...prev, [key]: value }))
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await res.json();
+      setAttachments((prev) => [...prev, data]);
+      toast({ title: 'Success', description: `File "${file.name}" uploaded successfully` });
+    } catch {
+      toast({ title: 'Upload error', description: 'Failed to upload attachment', variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveAttachment = (index: number) => {
+    setAttachments((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async () => {
     if (!currentUser) {
@@ -44,7 +78,7 @@ export function PostTaskView() {
       const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, posterId: currentUser.id })
+        body: JSON.stringify({ ...form, posterId: currentUser.id, attachments })
       })
       if (!res.ok) throw new Error('Failed to create task')
       const task = await res.json()
@@ -142,6 +176,45 @@ export function PostTaskView() {
               <Clock className="h-3.5 w-3.5" /> Deadline *
             </Label>
             <Input type="datetime-local" value={form.deadline} onChange={(e) => updateForm('deadline', e.target.value)} />
+          </div>
+
+          {/* File Attachments */}
+          <div className="space-y-2">
+            <Label className="flex items-center gap-1.5">
+              <Paperclip className="h-3.5 w-3.5" /> Attachments
+            </Label>
+            <div className="flex items-center gap-3">
+              <Input id="file-upload" type="file" className="hidden" onChange={handleFileUpload} disabled={uploading} />
+              <Button type="button" variant="outline" size="sm" onClick={() => document.getElementById('file-upload')?.click()} disabled={uploading}>
+                {uploading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Uploading...
+                  </>
+                ) : (
+                  <>
+                    <Paperclip className="h-4 w-4 mr-2" />
+                    Attach Assignment File
+                  </>
+                )}
+              </Button>
+              <span className="text-[10px] text-muted-foreground">PDF, Word, Images, Zip (Max 10MB)</span>
+            </div>
+            {attachments.length > 0 && (
+              <div className="mt-2 space-y-1.5">
+                {attachments.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between text-xs p-2 rounded-lg border bg-background hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center gap-2 truncate">
+                      <Paperclip className="h-3.5 w-3.5 text-primary shrink-0" />
+                      <span className="truncate font-medium">{file.name}</span>
+                    </div>
+                    <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-md" onClick={() => handleRemoveAttachment(index)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Platform Fee Notice */}

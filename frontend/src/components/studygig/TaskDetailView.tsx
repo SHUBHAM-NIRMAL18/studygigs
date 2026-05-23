@@ -17,9 +17,19 @@ import { StatusBadge, CategoryBadge, LevelBadge } from './TaskCard'
 import { useToast } from '@/hooks/use-toast'
 import {
   ArrowLeft, DollarSign, Clock, Star, Users, MessageSquare,
-  Send, FileText, AlertTriangle, CheckCircle, XCircle, RotateCcw, Shield
+  Send, FileText, AlertTriangle, CheckCircle, XCircle, RotateCcw, Shield,
+  Paperclip, Trash2, Loader2, Lock
 } from 'lucide-react'
 import { formatDistanceToNow, format } from 'date-fns'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export function TaskDetailView() {
   const { selectedTaskId, currentUser, setSelectedTask } = useAppStore()
@@ -34,6 +44,17 @@ export function TaskDetailView() {
   const [reviewRating, setReviewRating] = useState('5')
   const [reviewComment, setReviewComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  // Acceptance & Escrow Modal states
+  const [isAcceptModalOpen, setIsAcceptModalOpen] = useState(false)
+  const [selectedBidForAccept, setSelectedBidForAccept] = useState<Bid | null>(null)
+  const [academicIntegrityChecked, setAcademicIntegrityChecked] = useState(false)
+
+  // Deliverables & Chat Attachments states
+  const [deliverableAttachments, setDeliverableAttachments] = useState<{ name: string; url: string }[]>([])
+  const [deliverableUploading, setDeliverableUploading] = useState(false)
+  const [messageAttachments, setMessageAttachments] = useState<{ name: string; url: string }[]>([])
+  const [messageUploading, setMessageUploading] = useState(false)
 
   useEffect(() => {
     if (!selectedTaskId) return
@@ -70,6 +91,7 @@ export function TaskDetailView() {
   const hasBid = task.bids?.some(b => b.solverId === currentUser?.id)
   const latestDeliverable = task.deliverables?.[0]
   const isSolver = acceptedBid?.solverId === currentUser?.id
+  const isAdmin = currentUser?.role === 'ADMIN'
 
   const handlePlaceBid = async () => {
     if (!currentUser || !bidForm.proposedPrice || !bidForm.deliveryDays || !bidForm.message) {
@@ -95,29 +117,90 @@ export function TaskDetailView() {
   const handleAcceptBid = async (bidId: string) => {
     setSubmitting(true)
     try {
-      await fetch(`/api/bids/${bidId}`, {
+      const res = await fetch(`/api/bids/${bidId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'ACCEPTED' })
       })
+      if (!res.ok) throw new Error('Failed to accept bid')
       toast({ title: 'Bid accepted!', description: 'The solver has been notified. Funds are in escrow.' })
+      setIsAcceptModalOpen(false)
+      setSelectedBidForAccept(null)
       refreshTask()
     } catch {
       toast({ title: 'Error', description: 'Failed to accept bid', variant: 'destructive' })
     } finally { setSubmitting(false) }
   }
 
+  const handleDeliverableFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setDeliverableUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await res.json();
+      setDeliverableAttachments((prev) => [...prev, data]);
+      toast({ title: 'Success', description: `File "${file.name}" uploaded successfully` });
+    } catch {
+      toast({ title: 'Upload error', description: 'Failed to upload attachment', variant: 'destructive' });
+    } finally {
+      setDeliverableUploading(false);
+    }
+  };
+
+  const handleMessageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setMessageUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await res.json();
+      setMessageAttachments((prev) => [...prev, data]);
+      toast({ title: 'Success', description: `File "${file.name}" uploaded successfully` });
+    } catch {
+      toast({ title: 'Upload error', description: 'Failed to upload attachment', variant: 'destructive' });
+    } finally {
+      setMessageUploading(false);
+    }
+  };
+
   const handleSubmitDeliverable = async () => {
     if (!currentUser || !deliverableContent) return
     setSubmitting(true)
     try {
-      await fetch('/api/deliverables', {
+      const res = await fetch('/api/deliverables', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ taskId: task.id, solverId: currentUser.id, content: deliverableContent })
+        body: JSON.stringify({ taskId: task.id, solverId: currentUser.id, content: deliverableContent, attachments: deliverableAttachments })
       })
+      if (!res.ok) throw new Error('Failed to submit deliverable')
       toast({ title: 'Deliverable submitted!', description: 'The poster will review your work' })
       setDeliverableContent('')
+      setDeliverableAttachments([])
       refreshTask()
     } catch {
       toast({ title: 'Error', description: 'Failed to submit deliverable', variant: 'destructive' })
@@ -143,14 +226,15 @@ export function TaskDetailView() {
   }
 
   const handleSendMessage = async () => {
-    if (!currentUser || !messageText) return
+    if (!currentUser || (!messageText && messageAttachments.length === 0)) return
     try {
       await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ taskId: task.id, senderId: currentUser.id, content: messageText })
+        body: JSON.stringify({ taskId: task.id, senderId: currentUser.id, content: messageText, attachments: messageAttachments })
       })
       setMessageText('')
+      setMessageAttachments([])
       refreshTask()
     } catch {
       toast({ title: 'Error', description: 'Failed to send message', variant: 'destructive' })
@@ -226,6 +310,9 @@ export function TaskDetailView() {
               <p className="text-xs md:text-sm whitespace-pre-wrap leading-relaxed font-medium text-slate-700 dark:text-slate-300">
                 {task.description}
               </p>
+              
+              {/* Task File Attachments display */}
+              <FileAttachmentsList attachmentsJson={task.attachments} />
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
@@ -307,9 +394,11 @@ export function TaskDetailView() {
           <TabsTrigger value="deliverables" className="gap-2 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm font-black text-[9px] uppercase tracking-widest">
             <FileText className="h-3 w-3" /> WORK ({task.deliverables?.length || 0})
           </TabsTrigger>
-          <TabsTrigger value="messages" className="gap-2 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm font-black text-[9px] uppercase tracking-widest">
-            <MessageSquare className="h-3 w-3" /> CHAT ({task.messages?.length || 0})
-          </TabsTrigger>
+          {(isPoster || isSolver || isAdmin) && (
+            <TabsTrigger value="messages" className="gap-2 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm font-black text-[9px] uppercase tracking-widest">
+              <MessageSquare className="h-3 w-3" /> CHAT ({task.messages?.length || 0})
+            </TabsTrigger>
+          )}
         </TabsList>
 
         {/* BIDS TAB */}
@@ -318,9 +407,19 @@ export function TaskDetailView() {
           {currentUser && currentUser.role !== 'ADMIN' && !isPoster && !hasBid && (task.status === 'OPEN' || task.status === 'BIDDING') && (
             <Card className="border-primary/20">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">Place Your Bid</CardTitle>
+                <CardTitle className="text-base flex items-center justify-between">
+                  <span>Place Your Bid</span>
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
+                {/* Confidentiality notice callout */}
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs flex items-start gap-2">
+                  <Lock className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <div className="text-slate-700 font-medium">
+                    <strong className="text-primary font-black">Confidential Proposal:</strong> Your proposal message, budget offer, and timeline are 100% private. Other tutors cannot view your bid, preventing undercutting.
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label className="text-xs">Your Price ($)</Label>
@@ -406,7 +505,11 @@ export function TaskDetailView() {
                             </div>
                           </div>
                           {isPoster && (task.status === 'OPEN' || task.status === 'BIDDING') && (
-                            <Button size="sm" className="rounded-lg font-bold text-[10px] h-9 px-4" onClick={() => handleAcceptBid(bid.id)} disabled={submitting}>
+                            <Button size="sm" className="rounded-lg font-bold text-[10px] h-9 px-4" onClick={() => {
+                              setSelectedBidForAccept(bid);
+                              setAcademicIntegrityChecked(false);
+                              setIsAcceptModalOpen(true);
+                            }} disabled={submitting}>
                               ACCEPT PROPOSAL
                             </Button>
                           )}
@@ -434,9 +537,49 @@ export function TaskDetailView() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Submit Deliverable</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Textarea placeholder="Paste your deliverable content here..." rows={6} value={deliverableContent} onChange={(e) => setDeliverableContent(e.target.value)} />
-                <Button onClick={handleSubmitDeliverable} disabled={submitting || !deliverableContent} size="sm">
+              <CardContent className="space-y-4">
+                <div className="space-y-1">
+                  <Label className="text-xs font-semibold">Deliverable Explanation</Label>
+                  <Textarea placeholder="Paste your deliverable explanations, code blocks, or links here..." rows={6} value={deliverableContent} onChange={(e) => setDeliverableContent(e.target.value)} />
+                </div>
+
+                {/* Deliverable File Upload */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-1.5 text-xs font-semibold">
+                    <Paperclip className="h-3.5 w-3.5" /> Attach Work Files
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Input id="del-file-upload" type="file" className="hidden" onChange={handleDeliverableFileUpload} disabled={deliverableUploading} />
+                    <Button type="button" variant="outline" size="sm" onClick={() => document.getElementById('del-file-upload')?.click()} disabled={deliverableUploading}>
+                      {deliverableUploading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Paperclip className="h-4 w-4 mr-2" />
+                          Upload File
+                        </>
+                      )}
+                    </Button>
+                    <span className="text-[10px] text-muted-foreground">PDF, Word, Code Zip (Max 10MB)</span>
+                  </div>
+                  {deliverableAttachments.length > 0 && (
+                    <div className="space-y-1 mt-1">
+                      {deliverableAttachments.map((file, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-xs p-1.5 rounded-lg border bg-background hover:bg-slate-50 transition-colors">
+                          <span className="truncate font-medium max-w-[240px]">{file.name}</span>
+                          <Button type="button" variant="ghost" size="icon" className="h-6 w-6 text-rose-500 hover:text-rose-700" onClick={() => setDeliverableAttachments(prev => prev.filter((_, i) => i !== idx))}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <Button onClick={handleSubmitDeliverable} disabled={submitting || !deliverableContent || deliverableUploading} size="sm">
                   <FileText className="h-4 w-4 mr-1" /> Submit for Review
                 </Button>
               </CardContent>
@@ -462,9 +605,13 @@ export function TaskDetailView() {
                     {formatDistanceToNow(new Date(del.createdAt), { addSuffix: true })}
                   </span>
                 </div>
-                <div className="text-sm whitespace-pre-wrap bg-muted/50 rounded-lg p-3 max-h-64 overflow-y-auto">
+                <div className="text-sm whitespace-pre-wrap bg-muted/50 rounded-lg p-3 max-h-64 overflow-y-auto font-medium">
                   {del.content}
                 </div>
+                
+                {/* Deliverable File attachments */}
+                <FileAttachmentsList attachmentsJson={del.attachments} />
+
                 {/* Poster actions */}
                 {isPoster && del.status === 'SUBMITTED' && task.status === 'REVIEW' && (
                   <div className="flex gap-2 pt-2">
@@ -501,6 +648,10 @@ export function TaskDetailView() {
                   <div className={`max-w-[70%] rounded-lg p-2.5 text-sm ${isOwn ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
                     <p className="text-xs font-medium mb-0.5">{msg.sender?.name}</p>
                     <p>{msg.content}</p>
+                    
+                    {/* Chat Attachments display */}
+                    <FileAttachmentsList attachmentsJson={msg.attachments} />
+
                     <p className={`text-[10px] mt-1 ${isOwn ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>
                       {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
                     </p>
@@ -515,11 +666,33 @@ export function TaskDetailView() {
 
           {/* Send message */}
           {currentUser && (isPoster || isSolver) && task.status !== 'COMPLETED' && task.status !== 'CANCELLED' && (
-            <div className="flex gap-2">
-              <Input placeholder="Type a message..." value={messageText} onChange={(e) => setMessageText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && messageText) handleSendMessage() }} />
-              <Button size="icon" onClick={handleSendMessage} disabled={!messageText}>
-                <Send className="h-4 w-4" />
-              </Button>
+            <div className="space-y-2">
+              {messageAttachments.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 p-1.5 bg-accent/30 rounded-lg border">
+                  {messageAttachments.map((file, idx) => (
+                    <div key={idx} className="flex items-center gap-1 text-[10px] bg-background border px-2 py-0.5 rounded-md">
+                      <span className="truncate max-w-[120px]">{file.name}</span>
+                      <button type="button" className="text-rose-500 hover:text-rose-700 font-bold" onClick={() => setMessageAttachments(prev => prev.filter((_, i) => i !== idx))}>
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Input id="chat-file-upload" type="file" className="hidden" onChange={handleMessageFileUpload} disabled={messageUploading} />
+                <Button type="button" variant="outline" size="icon" className="shrink-0 h-10 w-10" onClick={() => document.getElementById('chat-file-upload')?.click()} disabled={messageUploading}>
+                  {messageUploading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Paperclip className="h-4 w-4" />
+                  )}
+                </Button>
+                <Input placeholder="Type a message..." value={messageText} onChange={(e) => setMessageText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && (messageText || messageAttachments.length > 0)) handleSendMessage() }} />
+                <Button size="icon" className="h-10 w-10 shrink-0" onClick={handleSendMessage} disabled={(!messageText && messageAttachments.length === 0) || messageUploading}>
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           )}
         </TabsContent>
@@ -607,6 +780,106 @@ export function TaskDetailView() {
           </CardContent>
         </Card>
       ))}
+
+      {/* Radix UI Agreement and Escrow Dialog */}
+      <Dialog open={isAcceptModalOpen} onOpenChange={setIsAcceptModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-primary font-black">
+              <Shield className="h-5 w-5 text-primary" /> StudyGig Escrow Protection
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Confirm contract parameters and academic integrity guidelines before accepting this proposal.
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedBidForAccept && (
+            <div className="space-y-4 my-2">
+              <div className="rounded-xl border bg-slate-50 dark:bg-slate-900/50 p-3 space-y-2 text-xs">
+                <div className="flex justify-between font-medium">
+                  <span className="text-muted-foreground">Selected Tutor:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{selectedBidForAccept.solver?.name}</span>
+                </div>
+                <div className="flex justify-between font-medium">
+                  <span className="text-muted-foreground">Tutor Offer Price:</span>
+                  <span className="font-bold text-primary">${selectedBidForAccept.proposedPrice}</span>
+                </div>
+                <div className="flex justify-between font-medium">
+                  <span className="text-muted-foreground">Delivery Duration:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{selectedBidForAccept.deliveryDays} Days</span>
+                </div>
+              </div>
+
+              <div className="text-[11px] leading-relaxed text-muted-foreground space-y-2">
+                <p>
+                  <strong>🔒 Safe Bidding Escrow:</strong> Once you click accept, the total budget amount (${selectedBidForAccept.proposedPrice}) will be securely locked in StudyGig Escrow.
+                </p>
+                <p>
+                  <strong>💰 Release Schedule:</strong> Funds are only released to the tutor *after* you have received and approved the final deliverables. If the deliverable is not submitted or is unsatisfactory, you are protected by revision rounds and admin disputes.
+                </p>
+              </div>
+
+              {/* Academic Integrity Checkbox */}
+              <div className="flex items-start space-x-2 pt-2 border-t">
+                <Checkbox
+                  id="integrity-check"
+                  checked={academicIntegrityChecked}
+                  onCheckedChange={(checked) => setAcademicIntegrityChecked(!!checked)}
+                />
+                <label
+                  htmlFor="integrity-check"
+                  className="text-xs font-semibold leading-tight text-slate-700 dark:text-slate-300 cursor-pointer select-none"
+                >
+                  I confirm that this task complies with StudyGig's Academic Integrity Guidelines. I will use the deliverables strictly for tutoring and study assistance.
+                </label>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="flex sm:justify-end gap-2 pt-2">
+            <Button variant="outline" size="sm" onClick={() => setIsAcceptModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              disabled={!academicIntegrityChecked || submitting}
+              onClick={() => selectedBidForAccept && handleAcceptBid(selectedBidForAccept.id)}
+            >
+              {submitting ? 'Accepting...' : 'Confirm & Fund Escrow'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
+}
+
+// Reusable file attachments helper component
+function FileAttachmentsList({ attachmentsJson }: { attachmentsJson: any }) {
+  if (!attachmentsJson) return null;
+  let attachments: { name: string; url: string }[] = [];
+  try {
+    attachments = typeof attachmentsJson === 'string' ? JSON.parse(attachmentsJson) : attachmentsJson;
+  } catch {
+    return null;
+  }
+
+  if (!attachments || attachments.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-2 mt-2">
+      {attachments.map((file, i) => (
+        <a
+          key={i}
+          href={file.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 px-3 py-2 rounded-xl font-bold transition-all border border-slate-200 dark:border-slate-800 max-w-xs truncate shadow-sm"
+        >
+          <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
+          <span className="truncate text-slate-700 dark:text-slate-200">{file.name}</span>
+        </a>
+      ))}
+    </div>
+  );
 }
