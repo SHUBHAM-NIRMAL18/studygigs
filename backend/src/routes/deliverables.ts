@@ -1,15 +1,29 @@
 import { Router } from 'express';
 import { db } from '../db';
+import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
 // POST /api/deliverables
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { taskId, solverId, content } = req.body;
+    const { taskId, content } = req.body;
+    const solverId = req.user!.id;
 
-    if (!taskId || !solverId || !content) {
+    if (!taskId || !content) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Verify task exists and this solver is the assigned solver
+    const task = await db.task.findUnique({
+      where: { id: taskId },
+      include: { acceptedBid: true }
+    });
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    if (task.acceptedBid?.solverId !== solverId && req.user!.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Forbidden: You are not the assigned solver for this task' });
     }
 
     // Get current version count
@@ -39,18 +53,26 @@ router.post('/', async (req, res) => {
 });
 
 // PATCH /api/deliverables/:id
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { status } = req.body;
 
     if (!status || !['APPROVED', 'REVISION_REQUESTED', 'REJECTED'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
     }
 
-    const deliverable = await db.deliverable.findUnique({ where: { id } });
+    const deliverable = await db.deliverable.findUnique({
+      where: { id },
+      include: { task: true }
+    });
     if (!deliverable) {
       return res.status(404).json({ error: 'Deliverable not found' });
+    }
+
+    // Verify task owner permissions
+    if (deliverable.task.posterId !== req.user!.id && req.user!.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Forbidden: You do not own the task associated with this deliverable' });
     }
 
     const updateData: Record<string, any> = { status };
