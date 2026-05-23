@@ -27,9 +27,10 @@ const itemVariants: Variants = {
 
 interface HeroSectionProps {
   onSignUpClick: () => void
+  isAuthenticated?: boolean
 }
 
-export function HeroSection({ onSignUpClick }: HeroSectionProps) {
+export function HeroSection({ onSignUpClick, isAuthenticated }: HeroSectionProps) {
 
   return (
     <section className="relative pt-12 pb-12 lg:pt-20 lg:pb-16 overflow-hidden">
@@ -74,15 +75,19 @@ export function HeroSection({ onSignUpClick }: HeroSectionProps) {
             <Button 
               size="lg" 
               className="h-16 px-10 text-lg rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-[0_20px_40px_-12px_oklch(var(--primary)_/_0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all group"
-              onClick={onSignUpClick}
+              onClick={isAuthenticated ? () => window.location.href = '/dashboard' : onSignUpClick}
             >
-              Get Started Now 
+              {isAuthenticated ? 'Go to Dashboard' : 'Get Started Now'} 
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
               className="h-16 px-10 text-lg rounded-2xl glass hover:bg-accent/50 border-border/50 text-foreground font-bold transition-all"
+              onClick={() => {
+                const el = document.getElementById('how-it-works');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
               How it works
             </Button>

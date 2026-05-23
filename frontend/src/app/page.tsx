@@ -8,20 +8,6 @@ import { LandingPage } from '@/components/studygig/landing/LandingPage'
 export default function Home() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const [seeded, setSeeded] = useState(false)
-
-  useEffect(() => {
-    if (seeded) return
-    fetch('/api/seed', { method: 'POST' })
-      .then(() => setSeeded(true))
-      .catch(() => setSeeded(true))
-  }, [seeded])
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.replace('/dashboard')
-    }
-  }, [status, router])
 
   if (status === 'loading') {
     return (
@@ -34,16 +20,12 @@ export default function Home() {
     )
   }
 
-  if (status === 'unauthenticated') {
-    return (
-      <LandingPage 
-        onAuthClick={(mode) => {
-          if (mode === 'signup') router.push('/signup')
-          else router.push('/login')
-        }} 
-      />
-    )
-  }
-
-  return null
+  return (
+    <LandingPage 
+      onAuthClick={(mode) => {
+        if (mode === 'signup') router.push('/signup')
+        else router.push('/login')
+      }} 
+    />
+  )
 }

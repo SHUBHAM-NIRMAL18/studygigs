@@ -10,11 +10,16 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, Sparkles, GraduationCap } from 'lucide-react'
 import { MeshGradient } from '@/components/ui/mesh-gradient'
 
+import { useSession } from 'next-auth/react'
+
 interface LandingPageProps {
   onAuthClick: (mode: 'login' | 'signup') => void
 }
 
 export function LandingPage({ onAuthClick }: LandingPageProps) {
+  const { status } = useSession()
+  const isAuthenticated = status === 'authenticated'
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden selection:bg-primary/30">
       <MeshGradient />
@@ -22,12 +27,13 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
       <PublicHeader 
         onLoginClick={() => onAuthClick('login')} 
         onSignUpClick={() => onAuthClick('signup')} 
+        isAuthenticated={isAuthenticated}
       />
       
       <main>
         <section className="relative">
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none -z-10" />
-          <HeroSection onSignUpClick={() => onAuthClick('signup')} />
+          <HeroSection onSignUpClick={() => onAuthClick('signup')} isAuthenticated={isAuthenticated} />
         </section>
 
         <section className="bg-white border-y border-slate-100 relative z-10">
@@ -197,9 +203,9 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
                 <Button 
                   size="lg" 
                   className="h-20 px-12 text-xl rounded-[2rem] font-black shadow-2xl hover:scale-105 transition-all bg-primary text-primary-foreground hover:shadow-primary/30"
-                  onClick={() => onAuthClick('signup')}
+                  onClick={isAuthenticated ? () => window.location.href = '/dashboard' : () => onAuthClick('signup')}
                 >
-                  Get Started for Free <ArrowRight className="ml-3 h-6 w-6" />
+                  {isAuthenticated ? 'Go to Dashboard' : 'Get Started for Free'} <ArrowRight className="ml-3 h-6 w-6" />
                 </Button>
               </motion.div>
            </div>
