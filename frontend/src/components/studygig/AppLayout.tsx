@@ -144,7 +144,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </Sheet>
 
           <Link
-            href="/dashboard"
+            href="/"
             className="flex items-center gap-3 hover:opacity-80 transition-all group"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform">
