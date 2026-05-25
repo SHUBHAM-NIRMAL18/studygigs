@@ -132,9 +132,9 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-4">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 1 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">What is your primary field of study?</h2>
-          <p className="text-slate-500 text-sm">We'll use this to match you with experts in your major.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 1 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">What is your primary field of study?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">We'll use this to match you with experts in your major.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
           {fields.map((f) => (
@@ -143,12 +143,12 @@ export function OnboardingWizard() {
               onClick={() => updateAnswer('studyField', f.label)}
               className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${
                 answers.studyField === f.label
-                  ? 'border-purple-600 bg-purple-50/50 shadow-sm ring-1 ring-purple-600'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                  ? 'border-[#6B4226] bg-[#6B4226]/5 shadow-sm ring-1 ring-[#6B4226]'
+                  : 'border-[#D4A97A]/20 bg-white hover:border-[#D4A97A]/40 hover:bg-[#FAF7F0]/40'
               }`}
             >
               <span className="text-2xl">{f.icon}</span>
-              <span className="text-sm font-bold text-slate-800">{f.label}</span>
+              <span className="text-sm font-bold text-[#2C1810]">{f.label}</span>
             </button>
           ))}
         </div>
@@ -167,9 +167,9 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-4">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 2 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">What is your academic level?</h2>
-          <p className="text-slate-500 text-sm">Ensures solvers have the right credentials for your homework.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 2 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">What is your academic level?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">Ensures solvers have the right credentials for your homework.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 pt-4">
           {levels.map((l) => (
@@ -178,16 +178,16 @@ export function OnboardingWizard() {
               onClick={() => updateAnswer('academicLevel', l.id)}
               className={`flex items-center justify-between p-4 rounded-xl border text-left transition-all ${
                 answers.academicLevel === l.id
-                  ? 'border-purple-600 bg-purple-50/50 shadow-sm ring-1 ring-purple-600'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                  ? 'border-[#6B4226] bg-[#6B4226]/5 shadow-sm ring-1 ring-[#6B4226]'
+                  : 'border-[#D4A97A]/20 bg-white hover:border-[#D4A97A]/40 hover:bg-[#FAF7F0]/40'
               }`}
             >
               <div className="space-y-0.5">
-                <span className="text-sm font-bold text-slate-800">{l.label}</span>
-                <p className="text-xs text-slate-400 font-medium">{l.desc}</p>
+                <span className="text-sm font-bold text-[#2C1810]">{l.label}</span>
+                <p className="text-xs text-[#5C3D2A]/60 font-medium">{l.desc}</p>
               </div>
               <div className={`h-5 w-5 rounded-full border flex items-center justify-center transition-all ${
-                answers.academicLevel === l.id ? 'border-purple-600 bg-purple-600 text-white' : 'border-slate-300'
+                answers.academicLevel === l.id ? 'border-[#6B4226] bg-[#6B4226] text-[#FAF7F0]' : 'border-[#D4A97A]/40'
               }`}>
                 {answers.academicLevel === l.id && <Check className="h-3 w-3" />}
               </div>
@@ -204,9 +204,9 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-4">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 3 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Which subjects need help most?</h2>
-          <p className="text-slate-500 text-sm">Select all that apply. We'll customize your feed recommendations.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 3 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">Which subjects need help most?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">Select all that apply. We'll customize your feed recommendations.</p>
         </div>
         <div className="flex flex-wrap gap-2 justify-center pt-4 max-w-lg mx-auto">
           {subjects.map((subj) => {
@@ -218,8 +218,8 @@ export function OnboardingWizard() {
                 onClick={() => handleSubjectToggle(subj)}
                 className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all border ${
                   isSelected
-                    ? 'bg-purple-600 border-purple-600 text-white shadow-sm'
-                    : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                    ? 'bg-[#6B4226] border-[#6B4226] text-[#FAF7F0] shadow-sm'
+                    : 'bg-white border-[#D4A97A]/25 text-[#5C3D2A] hover:border-[#D4A97A]/50 hover:bg-[#FAF7F0]/40'
                 }`}
               >
                 {subj}
@@ -242,9 +242,9 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-4">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 4 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">How often do you need help?</h2>
-          <p className="text-slate-500 text-sm">Helps us recommend solvers matching your schedule needs.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 4 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">How often do you need help?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">Helps us recommend solvers matching your schedule needs.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 pt-4">
           {frequencies.map((f) => (
@@ -253,16 +253,16 @@ export function OnboardingWizard() {
               onClick={() => updateAnswer('frequency', f.id)}
               className={`flex items-center justify-between p-4 rounded-xl border text-left transition-all ${
                 answers.frequency === f.id
-                  ? 'border-purple-600 bg-purple-50/50 shadow-sm ring-1 ring-purple-600'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                  ? 'border-[#6B4226] bg-[#6B4226]/5 shadow-sm ring-1 ring-[#6B4226]'
+                  : 'border-[#D4A97A]/20 bg-white hover:border-[#D4A97A]/40 hover:bg-[#FAF7F0]/40'
               }`}
             >
               <div className="space-y-0.5">
-                <span className="text-sm font-bold text-slate-800">{f.label}</span>
-                <p className="text-xs text-slate-400 font-medium">{f.desc}</p>
+                <span className="text-sm font-bold text-[#2C1810]">{f.label}</span>
+                <p className="text-xs text-[#5C3D2A]/60 font-medium">{f.desc}</p>
               </div>
               <div className={`h-5 w-5 rounded-full border flex items-center justify-center transition-all ${
-                answers.frequency === f.id ? 'border-purple-600 bg-purple-600 text-white' : 'border-slate-300'
+                answers.frequency === f.id ? 'border-[#6B4226] bg-[#6B4226] text-[#FAF7F0]' : 'border-[#D4A97A]/40'
               }`}>
                 {answers.frequency === f.id && <Check className="h-3 w-3" />}
               </div>
@@ -278,15 +278,15 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-6">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 5 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">What's your typical task budget?</h2>
-          <p className="text-slate-500 text-sm">We'll show solvers whose prices align with your budget.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 5 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">What's your typical task budget?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">We'll show solvers whose prices align with your budget.</p>
         </div>
         
-        <div className="py-8 px-4 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto space-y-6">
+        <div className="py-8 px-4 bg-[#FAF7F0]/60 rounded-2xl border border-[#D4A97A]/15 max-w-sm mx-auto space-y-6">
           <div className="text-center space-y-1">
-            <span className="text-xs font-black tracking-wider text-slate-400 uppercase">Maximum Budget</span>
-            <div className="text-4xl font-black text-purple-600 flex items-center justify-center">
+            <span className="text-xs font-black tracking-wider text-[#5C3D2A]/60 uppercase">Maximum Budget</span>
+            <div className="text-4xl font-black text-[#6B4226] flex items-center justify-center">
               <DollarSign className="h-8 w-8 -mr-1" />
               {answers.budgetMax}
             </div>
@@ -297,16 +297,16 @@ export function OnboardingWizard() {
             step={10}
             value={[answers.budgetMax]}
             onValueChange={(val) => updateAnswer('budgetMax', val[0])}
-            className="[&_[role=slider]]:bg-purple-600 [&_[role=slider]]:border-purple-600"
+            className="[&_[role=slider]]:bg-[#6B4226] [&_[role=slider]]:border-[#6B4226]"
           />
-          <div className="flex justify-between text-[10px] font-black text-slate-400">
+          <div className="flex justify-between text-[10px] font-black text-[#5C3D2A]/60">
             <span>$10 MIN</span>
             <span>$500 MAX</span>
           </div>
         </div>
         
         <div className="text-center">
-          <p className="text-xs text-slate-400 max-w-xs mx-auto">
+          <p className="text-xs text-[#5C3D2A]/60 max-w-xs mx-auto">
             You can always propose custom budgets for individual tasks.
           </p>
         </div>
@@ -322,9 +322,9 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-4">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 1 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">What subjects can you expertly solve?</h2>
-          <p className="text-slate-500 text-sm">Pick subjects where you have solid academic or industry experience.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 1 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">What subjects can you expertly solve?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">Pick subjects where you have solid academic or industry experience.</p>
         </div>
         <div className="flex flex-wrap gap-2 justify-center pt-4 max-w-lg mx-auto">
           {subjects.map((subj) => {
@@ -336,8 +336,8 @@ export function OnboardingWizard() {
                 onClick={() => handleSubjectToggle(subj)}
                 className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all border ${
                   isSelected
-                    ? 'bg-purple-600 border-purple-600 text-white shadow-sm'
-                    : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                    ? 'bg-[#6B4226] border-[#6B4226] text-[#FAF7F0] shadow-sm'
+                    : 'bg-white border-[#D4A97A]/25 text-[#5C3D2A] hover:border-[#D4A97A]/50 hover:bg-[#FAF7F0]/40'
                 }`}
               >
                 {subj}
@@ -360,9 +360,9 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-4">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 2 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">What's your highest qualification?</h2>
-          <p className="text-slate-500 text-sm">This badge displays on your profile to win student trust.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 2 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">What's your highest qualification?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">This badge displays on your profile to win student trust.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 pt-4">
           {levels.map((l) => (
@@ -371,16 +371,16 @@ export function OnboardingWizard() {
               onClick={() => updateAnswer('qualification', l.id)}
               className={`flex items-center justify-between p-4 rounded-xl border text-left transition-all ${
                 answers.qualification === l.id
-                  ? 'border-purple-600 bg-purple-50/50 shadow-sm ring-1 ring-purple-600'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                  ? 'border-[#6B4226] bg-[#6B4226]/5 shadow-sm ring-1 ring-[#6B4226]'
+                  : 'border-[#D4A97A]/20 bg-white hover:border-[#D4A97A]/40 hover:bg-[#FAF7F0]/40'
               }`}
             >
               <div className="space-y-0.5">
-                <span className="text-sm font-bold text-slate-800">{l.label}</span>
-                <p className="text-xs text-slate-400 font-medium">{l.desc}</p>
+                <span className="text-sm font-bold text-[#2C1810]">{l.label}</span>
+                <p className="text-xs text-[#5C3D2A]/60 font-medium">{l.desc}</p>
               </div>
               <div className={`h-5 w-5 rounded-full border flex items-center justify-center transition-all ${
-                answers.qualification === l.id ? 'border-purple-600 bg-purple-600 text-white' : 'border-slate-300'
+                answers.qualification === l.id ? 'border-[#6B4226] bg-[#6B4226] text-[#FAF7F0]' : 'border-[#D4A97A]/40'
               }`}>
                 {answers.qualification === l.id && <Check className="h-3 w-3" />}
               </div>
@@ -402,9 +402,9 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-4">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 3 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">How long have you been tutoring?</h2>
-          <p className="text-slate-500 text-sm">Your experience helps students choose you for complex tasks.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 3 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">How long have you been tutoring?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">Your experience helps students choose you for complex tasks.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 pt-4">
           {experiences.map((exp) => (
@@ -413,16 +413,16 @@ export function OnboardingWizard() {
               onClick={() => updateAnswer('experience', exp.id)}
               className={`flex items-center justify-between p-4 rounded-xl border text-left transition-all ${
                 answers.experience === exp.id
-                  ? 'border-purple-600 bg-purple-50/50 shadow-sm ring-1 ring-purple-600'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                  ? 'border-[#6B4226] bg-[#6B4226]/5 shadow-sm ring-1 ring-[#6B4226]'
+                  : 'border-[#D4A97A]/20 bg-white hover:border-[#D4A97A]/40 hover:bg-[#FAF7F0]/40'
               }`}
             >
               <div className="space-y-0.5">
-                <span className="text-sm font-bold text-slate-800">{exp.label}</span>
-                <p className="text-xs text-slate-400 font-medium">{exp.desc}</p>
+                <span className="text-sm font-bold text-[#2C1810]">{exp.label}</span>
+                <p className="text-xs text-[#5C3D2A]/60 font-medium">{exp.desc}</p>
               </div>
               <div className={`h-5 w-5 rounded-full border flex items-center justify-center transition-all ${
-                answers.experience === exp.id ? 'border-purple-600 bg-purple-600 text-white' : 'border-slate-300'
+                answers.experience === exp.id ? 'border-[#6B4226] bg-[#6B4226] text-[#FAF7F0]' : 'border-[#D4A97A]/40'
               }`}>
                 {answers.experience === exp.id && <Check className="h-3 w-3" />}
               </div>
@@ -444,9 +444,9 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-4">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 4 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">What is your weekly availability?</h2>
-          <p className="text-slate-500 text-sm">Helps set matching client expectations on deliverable speeds.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 4 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">What is your weekly availability?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">Helps set matching client expectations on deliverable speeds.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 pt-4">
           {times.map((t) => (
@@ -455,16 +455,16 @@ export function OnboardingWizard() {
               onClick={() => updateAnswer('availability', t.id)}
               className={`flex items-center justify-between p-4 rounded-xl border text-left transition-all ${
                 answers.availability === t.id
-                  ? 'border-purple-600 bg-purple-50/50 shadow-sm ring-1 ring-purple-600'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                  ? 'border-[#6B4226] bg-[#6B4226]/5 shadow-sm ring-1 ring-[#6B4226]'
+                  : 'border-[#D4A97A]/20 bg-white hover:border-[#D4A97A]/40 hover:bg-[#FAF7F0]/40'
               }`}
             >
               <div className="space-y-0.5">
-                <span className="text-sm font-bold text-slate-800">{t.label}</span>
-                <p className="text-xs text-slate-400 font-medium">{t.desc}</p>
+                <span className="text-sm font-bold text-[#2C1810]">{t.label}</span>
+                <p className="text-xs text-[#5C3D2A]/60 font-medium">{t.desc}</p>
               </div>
               <div className={`h-5 w-5 rounded-full border flex items-center justify-center transition-all ${
-                answers.availability === t.id ? 'border-purple-600 bg-purple-600 text-white' : 'border-slate-300'
+                answers.availability === t.id ? 'border-[#6B4226] bg-[#6B4226] text-[#FAF7F0]' : 'border-[#D4A97A]/40'
               }`}>
                 {answers.availability === t.id && <Check className="h-3 w-3" />}
               </div>
@@ -480,18 +480,18 @@ export function OnboardingWizard() {
     return (
       <div className="space-y-6">
         <div className="text-center space-y-1">
-          <span className="text-xs font-black tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Step 5 of 5</span>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">What is your expected hourly rate?</h2>
-          <p className="text-slate-500 text-sm">This acts as a guide price when bidding on custom tasks.</p>
+          <span className="text-xs font-black tracking-widest text-[#6B4226] bg-[#6B4226]/10 px-2.5 py-1 rounded-full uppercase">Step 5 of 5</span>
+          <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">What is your expected hourly rate?</h2>
+          <p className="text-[#5C3D2A]/70 text-sm font-medium">This acts as a guide price when bidding on custom tasks.</p>
         </div>
         
-        <div className="py-8 px-4 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto space-y-6">
+        <div className="py-8 px-4 bg-[#FAF7F0]/60 rounded-2xl border border-[#D4A97A]/15 max-w-sm mx-auto space-y-6">
           <div className="text-center space-y-1">
-            <span className="text-xs font-black tracking-wider text-slate-400 uppercase">Target Hourly Rate</span>
-            <div className="text-4xl font-black text-purple-600 flex items-center justify-center">
+            <span className="text-xs font-black tracking-wider text-[#5C3D2A]/60 uppercase">Target Hourly Rate</span>
+            <div className="text-4xl font-black text-[#6B4226] flex items-center justify-center">
               <DollarSign className="h-8 w-8 -mr-1" />
               {answers.hourlyRate}
-              <span className="text-sm font-bold text-slate-400 ml-1">/ hr</span>
+              <span className="text-sm font-bold text-[#5C3D2A]/60 ml-1">/ hr</span>
             </div>
           </div>
           <Slider
@@ -500,16 +500,16 @@ export function OnboardingWizard() {
             step={5}
             value={[answers.hourlyRate]}
             onValueChange={(val) => updateAnswer('hourlyRate', val[0])}
-            className="[&_[role=slider]]:bg-purple-600 [&_[role=slider]]:border-purple-600"
+            className="[&_[role=slider]]:bg-[#6B4226] [&_[role=slider]]:border-[#6B4226]"
           />
-          <div className="flex justify-between text-[10px] font-black text-slate-400">
+          <div className="flex justify-between text-[10px] font-black text-[#5C3D2A]/60">
             <span>$15 MIN</span>
             <span>$150 MAX</span>
           </div>
         </div>
         
         <div className="text-center">
-          <p className="text-xs text-slate-400 max-w-xs mx-auto">
+          <p className="text-xs text-[#5C3D2A]/60 max-w-xs mx-auto">
             You can bid custom rates for tasks depending on complexity.
           </p>
         </div>
@@ -551,31 +551,31 @@ export function OnboardingWizard() {
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-slate-50 relative p-6 overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#FAF7F0] grain-texture relative p-6 overflow-hidden">
       {/* Decorative Gradients */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle_at_20%_20%,_rgba(147,51,234,0.15)_0%,_transparent_60%)]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle_at_80%_80%,_rgba(59,130,246,0.15)_0%,_transparent_60%)]" />
+      <div className="absolute inset-0 opacity-40 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle_at_20%_20%,_rgba(160,100,58,0.12)_0%,_transparent_60%)]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle_at_80%_80%,_rgba(196,135,79,0.15)_0%,_transparent_60%)]" />
       </div>
 
       <div className="w-full max-w-xl flex flex-col items-center gap-6 relative z-10">
         
         {/* Header Branding */}
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-purple-600 flex items-center justify-center shadow-lg">
-            <GraduationCap className="h-6 w-6 text-white" />
+          <div className="h-10 w-10 rounded-xl bg-[#6B4226] flex items-center justify-center shadow-lg">
+            <GraduationCap className="h-6 w-6 text-[#FAF7F0]" />
           </div>
-          <span className="text-xl font-black tracking-tight text-slate-900">StudyGig</span>
-          <span className="text-xs font-black text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md uppercase tracking-wider">
+          <span className="text-xl font-black tracking-tight text-[#2C1810]">StudyGig</span>
+          <span className="text-xs font-black text-[#6B4226] bg-[#6B4226]/10 px-2 py-0.5 rounded-md uppercase tracking-wider">
             {isStudent ? 'STUDENT' : 'SOLVER'}
           </span>
         </div>
 
         {/* Card and Progress Container */}
-        <Card className="w-full bg-white border-slate-200/60 shadow-2xl rounded-3xl overflow-hidden p-6 md:p-10 transition-all">
+        <Card className="w-full bg-white border-[#D4A97A]/25 shadow-2xl rounded-3xl overflow-hidden p-6 md:p-10 transition-all">
           <Progress 
             value={(step / TOTAL_STEPS) * 100} 
-            className="h-1 bg-slate-100 [&>div]:bg-purple-600 mb-8" 
+            className="h-1 bg-[#FAF7F0] [&>div]:bg-[#6B4226] mb-8" 
           />
           
           <AnimatePresence mode="wait">
@@ -592,13 +592,13 @@ export function OnboardingWizard() {
               </div>
 
               {/* Navigation buttons */}
-              <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
+              <div className="flex items-center justify-between mt-8 pt-6 border-t border-[#D4A97A]/10">
                 <Button
                   type="button"
                   variant="ghost"
                   onClick={handleBack}
                   disabled={step === 1 || loading}
-                  className="font-bold text-slate-400 hover:text-slate-800 h-11 px-4 gap-2 rounded-xl"
+                  className="font-bold text-[#5C3D2A]/60 hover:text-[#2C1810] h-11 px-4 gap-2 rounded-xl"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Back
@@ -610,7 +610,7 @@ export function OnboardingWizard() {
                     variant="ghost"
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="font-bold text-slate-400 hover:text-slate-800 h-11 px-4 rounded-xl"
+                    className="font-bold text-[#5C3D2A]/60 hover:text-[#2C1810] h-11 px-4 rounded-xl"
                   >
                     Skip
                   </Button>
@@ -618,7 +618,7 @@ export function OnboardingWizard() {
                     type="button"
                     onClick={handleNext}
                     disabled={isNextDisabled() || loading}
-                    className="bg-purple-600 hover:bg-purple-700 text-white font-black text-xs h-11 px-6 rounded-xl shadow-md gap-2"
+                    className="group inline-flex items-center gap-2 px-6 h-11 rounded-xl text-xs font-black text-[#FAF7F0] btn-brown"
                   >
                     {step === TOTAL_STEPS ? (
                       loading ? 'COMPLETING...' : 'FINISH'
@@ -637,8 +637,8 @@ export function OnboardingWizard() {
 
         {/* Footer text */}
         <div className="text-center">
-          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1.5 justify-center">
-            <Sparkles className="h-3 w-3 text-purple-600" />
+          <p className="text-[10px] text-[#5C3D2A]/60 font-bold uppercase tracking-widest flex items-center gap-1.5 justify-center">
+            <Sparkles className="h-3 w-3 text-[#6B4226]" />
             Tailoring your study space
           </p>
         </div>
