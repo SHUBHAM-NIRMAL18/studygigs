@@ -17,6 +17,7 @@ router.get('/', async (req, res) => {
         completedTasks: true,
         totalEarnings: true,
         onTimeRate: true,
+        onboardingCompleted: true,
         createdAt: true,
         _count: { select: { postedTasks: true, bids: true } }
       },

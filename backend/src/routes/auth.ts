@@ -34,6 +34,7 @@ router.post('/authorize', async (req, res) => {
       name: user.name,
       role: user.role,
       avatar: user.avatar,
+      onboardingCompleted: user.onboardingCompleted,
     });
   } catch (error) {
     console.error('Authorize error:', error);
@@ -84,6 +85,7 @@ router.post('/signup', async (req, res) => {
       email: user.email,
       name: user.name,
       role: user.role,
+      onboardingCompleted: false,
     });
   } catch (error) {
     console.error('Signup error:', error);

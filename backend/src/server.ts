@@ -17,6 +17,7 @@ import messagesRouter from './routes/messages';
 import reviewsRouter from './routes/reviews';
 import seedRouter from './routes/seed';
 import uploadRouter from './routes/upload';
+import onboardingRouter from './routes/onboarding';
 
 dotenv.config();
 
@@ -56,6 +57,7 @@ app.use('/api/seed', seedRouter);
 app.use('/api/upload', uploadRouter);
 
 // Authenticated routes
+app.use('/api/onboarding', onboardingRouter);
 app.use('/api/tasks', tasksRouter);
 app.use('/api/bids', bidsRouter);
 app.use('/api/deliverables', deliverablesRouter);
