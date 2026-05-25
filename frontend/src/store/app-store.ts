@@ -13,6 +13,7 @@ export interface User {
   completedTasks: number
   totalEarnings: number
   onTimeRate: number
+  onboardingCompleted: boolean
   createdAt: string
   _count?: { postedTasks: number; bids: number }
 }
