@@ -26,6 +26,8 @@ model User {
   updatedAt      DateTime @updatedAt
   resetToken     String?
   resetTokenExpiry DateTime?
+  onboardingCompleted Boolean @default(false)
+  onboardingData      Json?
 
   postedTasks    Task[]   @relation("PostedTasks")
   bids           Bid[]    @relation("SolverBids")
