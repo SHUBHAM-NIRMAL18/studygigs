@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { AppLayout } from '@/components/studygig/AppLayout'
 import { useAppStore } from '@/store/app-store'
+import { OnboardingWizard } from '@/components/studygig/OnboardingWizard'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const { setCurrentUser, setIsAuthenticated, isAuthenticated, setTasks, setIsLoading } = useAppStore()
+  const { currentUser, setCurrentUser, setIsAuthenticated, isAuthenticated, setTasks, setIsLoading } = useAppStore()
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -57,6 +58,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </div>
       </div>
     )
+  }
+
+  if (currentUser && !currentUser.onboardingCompleted) {
+    return <OnboardingWizard />
   }
 
   return <AppLayout>{children}</AppLayout>

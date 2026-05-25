@@ -13,12 +13,13 @@ import { MyBidsView } from '@/components/studygig/MyBidsView'
 import { AdminView } from '@/components/studygig/AdminView'
 import { ProfileView } from '@/components/studygig/ProfileView'
 import { MainDashboardView } from '@/components/studygig/MainDashboardView'
+import { OnboardingWizard } from '@/components/studygig/OnboardingWizard'
 
 import { LandingPage } from '@/components/studygig/landing/LandingPage'
 
 export function AppContent() {
   const { data: session, status } = useSession()
-  const { currentView, setCurrentUser, setTasks, isAuthenticated, setIsAuthenticated } = useAppStore()
+  const { currentView, currentUser, setCurrentUser, setTasks, isAuthenticated, setIsAuthenticated } = useAppStore()
   const [seeded, setSeeded] = useState(false)
   const [authMode, setAuthMode] = useState<'landing' | 'login' | 'signup'>('landing')
 
@@ -74,6 +75,21 @@ export function AppContent() {
       return <LandingPage onAuthClick={(mode) => setAuthMode(mode)} />
     }
     return <AuthView defaultTab={authMode === 'signup' ? 'signup' : 'login'} onBack={() => setAuthMode('landing')} />
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background" suppressHydrationWarning>
+        <div className="text-center space-y-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
+          <p className="text-sm text-muted-foreground">Setting up your profile...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!currentUser.onboardingCompleted) {
+    return <OnboardingWizard />
   }
 
   const renderView = () => {
