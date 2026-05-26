@@ -14,6 +14,7 @@ export interface User {
   totalEarnings: number
   onTimeRate: number
   onboardingCompleted: boolean
+  onboardingData?: any
   createdAt: string
   _count?: { postedTasks: number; bids: number }
 }
