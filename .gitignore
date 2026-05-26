@@ -84,3 +84,9 @@ local-*
 prompt
 test
 /skills/
+
+# ===========================
+# User uploads and documents
+# ===========================
+backend/uploads/
+*.pdf
