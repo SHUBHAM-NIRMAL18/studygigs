@@ -6,7 +6,8 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/app-store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { isImageUrl } from '@/lib/avatar-utils'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
@@ -227,8 +228,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-9 gap-2 pl-1 pr-3 rounded-lg hover:bg-accent/50 border border-transparent hover:border-border transition-all">
                   <Avatar className="h-7 w-7 rounded-md border border-border shadow-sm">
+                    {currentUser?.avatar && isImageUrl(currentUser.avatar) && (
+                      <AvatarImage src={currentUser.avatar} alt={currentUser.name} className="object-cover" />
+                    )}
                     <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-bold">
-                      {currentUser?.name?.charAt(0) || '?'}
+                      {currentUser?.avatar && !isImageUrl(currentUser.avatar) ? currentUser.avatar : (currentUser?.name?.charAt(0) || '?')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden lg:flex flex-col items-start text-left">
