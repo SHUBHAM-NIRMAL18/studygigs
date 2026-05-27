@@ -39,13 +39,19 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     if (!isAuthenticated) return
     setIsLoading(true)
     fetch('/api/tasks?limit=100')
-      .then(res => res.json())
+      .then(async res => {
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error || 'Failed to fetch tasks')
+        return data
+      })
       .then(data => {
         setTasks(data.tasks || [])
         setIsLoading(false)
       })
-      .catch(() => {
+      .catch((err) => {
+        setTasks([])
         setIsLoading(false)
+        console.error(err)
       })
   }, [isAuthenticated, setTasks, setIsLoading])
 
