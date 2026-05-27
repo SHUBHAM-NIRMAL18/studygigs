@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppStore, Bid } from '@/store/app-store'
-import { getTaskPath } from '@/lib/utils'
+import { getTaskPath, formatDistanceToNowSafe } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -13,7 +13,7 @@ import {
   Gavel, DollarSign, Clock, Eye, CheckCircle, XCircle,
   Hourglass, Star, TrendingUp, ChevronRight, Sparkles, Activity
 } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
+
 
 const bidStatusColors: Record<string, string> = {
   PENDING: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
@@ -83,7 +83,7 @@ export function MyBidsView() {
           </Badge>
           <span className="text-[10px] text-muted-foreground font-bold flex items-center gap-1 uppercase tracking-wider">
             <Clock className="h-3 w-3" />
-            {formatDistanceToNow(new Date(bid.createdAt), { addSuffix: true })}
+            {formatDistanceToNowSafe(bid.createdAt, { addSuffix: true })}
           </span>
         </div>
         
