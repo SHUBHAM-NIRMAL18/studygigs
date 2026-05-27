@@ -20,7 +20,7 @@ import {
   Send, FileText, AlertTriangle, CheckCircle, XCircle, RotateCcw, Shield,
   Paperclip, Trash2, Loader2, Lock
 } from 'lucide-react'
-import { formatDistanceToNow, format } from 'date-fns'
+import { formatSafe, formatDistanceToNowSafe } from '@/lib/utils'
 import {
   Dialog,
   DialogContent,
@@ -60,18 +60,30 @@ export function TaskDetailView() {
     if (!selectedTaskId) return
     setLoading(true)
     fetch(`/api/tasks/${selectedTaskId}`)
-      .then(res => res.json())
+      .then(async res => {
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error || 'Failed to load task')
+        return data
+      })
       .then(data => { setTask(data); setSelectedTask(data) })
-      .catch(() => toast({ title: 'Error', description: 'Failed to load task', variant: 'destructive' }))
+      .catch((err) => {
+        setTask(null)
+        toast({ title: 'Error', description: err.message || 'Failed to load task', variant: 'destructive' })
+      })
       .finally(() => setLoading(false))
   }, [selectedTaskId])
 
   const refreshTask = async () => {
     if (!selectedTaskId) return
-    const res = await fetch(`/api/tasks/${selectedTaskId}`)
-    const data = await res.json()
-    setTask(data)
-    setSelectedTask(data)
+    try {
+      const res = await fetch(`/api/tasks/${selectedTaskId}`)
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to refresh task')
+      setTask(data)
+      setSelectedTask(data)
+    } catch (err: any) {
+      toast({ title: 'Error', description: err.message || 'Failed to refresh task', variant: 'destructive' })
+    }
   }
 
   if (loading || !task) {
@@ -329,7 +341,7 @@ export function TaskDetailView() {
               <div className="space-y-1">
                 <p className="text-xs font-bold text-[#8B5E3C] uppercase tracking-widest">DEADLINE</p>
                 <p className="text-sm font-extrabold text-[#2C1810] flex items-center gap-1.5">
-                  <Clock className="h-4 w-4 text-[#6B4226]" /> {format(new Date(task.deadline), 'MMM d, yyyy')}
+                  <Clock className="h-4 w-4 text-[#6B4226]" /> {formatSafe(task.deadline, 'MMM d, yyyy')}
                 </p>
               </div>
               <div className="space-y-1">
@@ -373,7 +385,7 @@ export function TaskDetailView() {
               </div>
             </div>
             <p className="text-xs font-bold text-[#8B5E3C] uppercase tracking-wider">
-              {formatDistanceToNow(new Date(task.createdAt), { addSuffix: true })}
+              {formatDistanceToNowSafe(task.createdAt, { addSuffix: true })}
             </p>
           </div>
         </CardContent>
@@ -620,7 +632,7 @@ export function TaskDetailView() {
                     </Badge>
                   </div>
                   <span className="text-xs font-semibold text-[#8B5E3C]">
-                    {formatDistanceToNow(new Date(del.createdAt), { addSuffix: true })}
+                    {formatDistanceToNowSafe(del.createdAt, { addSuffix: true })}
                   </span>
                 </div>
                 <div className="text-sm whitespace-pre-wrap bg-[#FAF7F0] border border-[#A0643A]/10 rounded-xl p-4 max-h-64 overflow-y-auto font-medium text-[#4A3225] leading-relaxed">
@@ -671,7 +683,7 @@ export function TaskDetailView() {
                     <FileAttachmentsList attachmentsJson={msg.attachments} />
 
                     <p className={`text-[9px] mt-1.5 font-bold ${isOwn ? 'text-[#FAF7F0]/60' : 'text-[#8B5E3C]'}`}>
-                      {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
+                      {formatDistanceToNowSafe(msg.createdAt, { addSuffix: true })}
                     </p>
                   </div>
                 </div>
