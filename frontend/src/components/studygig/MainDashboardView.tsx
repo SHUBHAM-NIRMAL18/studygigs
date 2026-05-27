@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/app-store'
+import { isValidDate } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -308,7 +309,9 @@ export function MainDashboardView() {
                             <span>•</span>
                             <span className="flex items-center gap-1">
                               <Calendar className="h-2.5 w-2.5" />
-                              {new Date(task.deadline).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                              {isValidDate(task.deadline)
+                                ? new Date(task.deadline).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+                                : 'N/A'}
                             </span>
                           </div>
                         </div>
