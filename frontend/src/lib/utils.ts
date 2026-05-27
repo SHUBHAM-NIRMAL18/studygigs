@@ -20,3 +20,22 @@ export function slugify(text: string): string {
 export function getTaskPath(task: { id: string; title: string }): string {
   return `/tasks/${slugify(task.title || 'task')}-${task.id}`
 }
+
+import { format, formatDistanceToNow } from 'date-fns'
+
+export function isValidDate(date: any): boolean {
+  if (!date) return false
+  const parsed = new Date(date)
+  return !isNaN(parsed.getTime())
+}
+
+export function formatSafe(date: any, formatStr: string, fallback = 'N/A'): string {
+  if (!isValidDate(date)) return fallback
+  return format(new Date(date), formatStr)
+}
+
+export function formatDistanceToNowSafe(date: any, options?: Parameters<typeof formatDistanceToNow>[1], fallback = 'N/A'): string {
+  if (!isValidDate(date)) return fallback
+  return formatDistanceToNow(new Date(date), options)
+}
+
