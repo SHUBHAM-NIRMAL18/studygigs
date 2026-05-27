@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppStore, Task } from '@/store/app-store'
-import { getTaskPath } from '@/lib/utils'
+import { getTaskPath, formatSafe } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -14,7 +14,6 @@ import {
   ListTodo, Clock, DollarSign, FileText,
   CheckCircle, RotateCcw, Eye, ClipboardList, PlusCircle
 } from 'lucide-react'
-import { format } from 'date-fns'
 import { motion } from 'framer-motion'
 
 /* ─── Animation Variants ─────────────────────────── */
@@ -89,7 +88,7 @@ function TaskRow({ task }: { task: Task }) {
             </span>
             <span>•</span>
             <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />{format(new Date(task.deadline), 'MMM d, yyyy')}
+              <Clock className="h-3 w-3" />{formatSafe(task.deadline, 'MMM d, yyyy')}
             </span>
             <span>•</span>
             <span className="flex items-center gap-1">
