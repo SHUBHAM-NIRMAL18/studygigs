@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Clock, DollarSign, GraduationCap, ChevronRight, Sparkles } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNowSafe } from '@/lib/utils'
 import { motion } from 'framer-motion'
 
 const categoryColors: Record<string, string> = {
@@ -93,7 +93,7 @@ export function TaskCard({ task, onClick }: { task: Task; onClick: () => void })
               
               <div className="flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5" />
-                <span className="tracking-tighter">{formatDistanceToNow(new Date(task.deadline), { addSuffix: false })} LEFT</span>
+                <span className="tracking-tighter">{formatDistanceToNowSafe(task.deadline, { addSuffix: false })} LEFT</span>
               </div>
             </div>
             
@@ -109,10 +109,11 @@ export function TaskCard({ task, onClick }: { task: Task; onClick: () => void })
 
 export function StatusBadge({ status }: { status: string }) {
   const statusClass = statusColors[status] || 'bg-gray-100 text-gray-700'
+  const displayStatus = typeof status === 'string' ? status.replace(/_/g, ' ') : 'UNKNOWN'
   return (
     <Badge variant="secondary" className={`text-[10px] font-black uppercase tracking-widest rounded-full px-3 py-1 border border-transparent ${statusClass}`}>
       <div className="h-1.5 w-1.5 rounded-full bg-current mr-2 animate-pulse" />
-      {status.replace(/_/g, ' ')}
+      {displayStatus}
     </Badge>
   )
 }
