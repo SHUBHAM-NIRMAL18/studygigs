@@ -3,7 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
-import { requireGateway, requireAuth } from './middleware/auth';
+import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit';
+import { requireGateway } from './middleware/auth';
+import { validateEnv } from './utils/env';
+import { errorHandler } from './middleware/errors';
 
 // Import routes
 import authRouter from './routes/auth';
@@ -21,7 +25,18 @@ import onboardingRouter from './routes/onboarding';
 
 dotenv.config();
 
+// Run startup environment checks
+validateEnv();
+
 const app = express();
+
+// Trust proxy header from gateway / proxy (e.g. Next.js proxy)
+app.set('trust proxy', 1);
+
+// Set security headers via Helmet
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allow frontend to load static assets like uploads
+}));
 
 // Serve uploads folder statically
 const uploadDir = path.resolve(__dirname, '../uploads');
@@ -49,6 +64,27 @@ app.use((req, res, next) => {
 // Global API Gateway enforcement
 app.use(requireGateway);
 
+// Rate limiting setups
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300, // limit each IP to 300 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests from this IP, please try again later.' },
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60, // limit each IP to 60 auth requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many authentication attempts, please try again later.' },
+});
+
+// Apply rate limits
+app.use('/api/', globalLimiter);
+app.use('/api/auth/', authLimiter);
+
 // Register routes
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
@@ -70,6 +106,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
 });
 
+// Global Error Handler Middleware (MUST be registered after all route handlers)
+app.use(errorHandler);
+
 app.listen(PORT, () => {
   console.log(`[SERVER] Express backend running on http://localhost:${PORT}`);
 });
+
