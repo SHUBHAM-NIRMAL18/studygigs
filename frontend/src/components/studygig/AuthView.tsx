@@ -244,38 +244,42 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
               setError('')
               setSuccess('')
             }} 
-            className="w-full flex flex-col min-h-[460px]"
+            className="w-full flex flex-col"
           >
-            <TabsList className="grid w-full grid-cols-2 p-1 bg-slate-200/50 backdrop-blur-md rounded-xl mb-6 border border-slate-200">
+            <TabsList className="h-12 grid w-full grid-cols-2 p-1 bg-slate-200/50 backdrop-blur-md rounded-xl mb-6 border border-slate-200">
               <TabsTrigger 
                 value="login" 
-                className="rounded-lg py-2.5 text-xs font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary text-slate-600"
+                className="h-full rounded-lg py-2.5 text-xs font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary text-slate-600 cursor-pointer"
               >
                 SIGN IN
               </TabsTrigger>
               <TabsTrigger 
                 value="signup" 
-                className="rounded-lg py-2.5 text-xs font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary text-slate-600"
+                className="h-full rounded-lg py-2.5 text-xs font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary text-slate-600"
               >
                 JOIN NOW
               </TabsTrigger>
             </TabsList>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Card className="bg-white border-slate-200 shadow-2xl rounded-3xl overflow-hidden">
+ 
+            <motion.div 
+              layout 
+              transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+              className="bg-white border border-slate-200 shadow-2xl rounded-3xl overflow-hidden"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={activeTab + (activeTab === 'login' && isForgotPassword ? '-forgot' : '')}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.15 }}
+                >
                   <CardHeader className="pt-8 pb-4 text-center">
                     <CardTitle className="text-2xl font-black text-slate-950">
-                      {activeTab === 'login' ? 'Welcome Back' : 'Get Started'}
+                      {activeTab === 'login' ? (isForgotPassword ? 'Reset Password' : 'Welcome Back') : 'Get Started'}
                     </CardTitle>
                     <CardDescription className="text-slate-400 text-xs">
-                      {activeTab === 'login' ? 'Login to your account' : 'Join our expert community'}
+                      {activeTab === 'login' ? (isForgotPassword ? 'Reset link will be sent' : 'Login to your account') : 'Join our expert community'}
                     </CardDescription>
                   </CardHeader>
                   
@@ -459,12 +463,12 @@ export function AuthView({ defaultTab = 'login', onBack }: AuthViewProps) {
                       </form>
                     )}
                   </CardContent>
-                  <div className="py-4 bg-white/[0.02] border-t border-white/5 text-center">
-                     <p className="text-[8px] text-slate-300 uppercase tracking-[0.5em] font-black">Secure • Private • Academic</p>
+                  <div className="py-4 bg-slate-50 border-t border-slate-100 text-center">
+                     <p className="text-[8px] text-slate-400 uppercase tracking-[0.5em] font-black">Secure • Private • Academic</p>
                   </div>
-                </Card>
-              </motion.div>
-            </AnimatePresence>
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
           </Tabs>
         </motion.div>
       </div>
