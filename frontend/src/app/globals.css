@@ -2,24 +2,24 @@
 @import "tw-animate-css";
 
 :root {
-  /* === CREAM + BROWN THEME === */
-  --background: 0.972 0.018 80;        /* Warm Cream #FAF7F0 */
-  --foreground: 0.18 0.045 45;         /* Deep Espresso Brown */
+  /* === CLEAN WHITE + SLATE THEME (WITH WARM BROWN ACCENTS) === */
+  --background: 0.985 0.003 240;       /* Slate-50 equivalent / Off-white */
+  --foreground: 0.15 0.01 240;         /* Dark Charcoal / Slate-950 */
   
-  --card: 0.96 0.02 78;               /* Slightly darker cream */
-  --card-foreground: 0.18 0.045 45;
+  --card: 1.0 0 0;                     /* Pure White #FFFFFF */
+  --card-foreground: 0.15 0.01 240;
   
-  --popover: 0.97 0.018 78;
-  --popover-foreground: 0.18 0.045 45;
+  --popover: 1.0 0 0;
+  --popover-foreground: 0.15 0.01 240;
   
   --primary: 0.42 0.10 50;            /* Rich Walnut Brown */
-  --primary-foreground: 0.972 0.018 80;
+  --primary-foreground: 0.985 0.003 240;
   
-  --secondary: 0.88 0.03 70;          /* Warm Sand */
-  --secondary-foreground: 0.28 0.06 45;
+  --secondary: 0.95 0.005 240;         /* Slate-100 */
+  --secondary-foreground: 0.2 0.01 240;
   
-  --muted: 0.92 0.025 72;             /* Pale Sand */
-  --muted-foreground: 0.48 0.06 50;   /* Medium Brown */
+  --muted: 0.96 0.005 240;             /* Light Gray / Slate-100 */
+  --muted-foreground: 0.45 0.01 240;   /* Muted Slate / Slate-500 */
   
   --accent: 0.75 0.08 55;             /* Caramel Accent */
   --accent-foreground: 0.15 0.04 45;
@@ -27,8 +27,8 @@
   --destructive: 0.52 0.22 20;
   --destructive-foreground: 0.97 0.01 80;
   
-  --border: 0.86 0.03 68;             /* Warm Sand Border */
-  --input: 0.86 0.03 68;
+  --border: 0.91 0.005 240;            /* Very Light Gray Border / Slate-200 */
+  --input: 0.91 0.005 240;
   --ring: 0.42 0.10 50;
   
   --radius: 0.75rem;
