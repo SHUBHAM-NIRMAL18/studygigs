@@ -81,23 +81,80 @@ router.patch('/:id', requireAuth, async (req: AuthenticatedRequest, res) => {
       return res.status(403).json({ error: 'Forbidden: You do not own the task associated with this deliverable' });
     }
 
+    // Idempotency Guards:
+    if (status === 'APPROVED' && (deliverable.status === 'APPROVED' || deliverable.task.status === 'COMPLETED')) {
+      const updated = await db.deliverable.findUnique({
+        where: { id },
+        include: { solver: { select: { id: true, name: true, avatar: true } } }
+      });
+      return res.json(updated);
+    }
+    if (status === 'REJECTED' && (deliverable.status === 'REJECTED' || deliverable.task.status === 'CANCELLED')) {
+      const updated = await db.deliverable.findUnique({
+        where: { id },
+        include: { solver: { select: { id: true, name: true, avatar: true } } }
+      });
+      return res.json(updated);
+    }
+
     const updateData: Record<string, any> = { status };
 
     if (status === 'APPROVED') {
-      // Mark task as completed, increment solver's completedTasks
-      const acceptedBid = await db.bid.findFirst({
-        where: { taskId: deliverable.taskId, status: 'ACCEPTED' }
+      const escrowAmount = deliverable.task.escrowAmount;
+
+      await db.$transaction(async (tx) => {
+        // Mark task as completed and clear escrow
+        await tx.task.update({
+          where: { id: deliverable.taskId },
+          data: { status: 'COMPLETED', escrowAmount: 0 }
+        });
+
+        if (escrowAmount > 0) {
+          const platformFeePercent = deliverable.task.platformFee;
+          const fee = escrowAmount * platformFeePercent;
+          const payout = escrowAmount - fee;
+
+          // Increment solver balance and totalEarnings
+          await tx.user.update({
+            where: { id: deliverable.solverId },
+            data: {
+              completedTasks: { increment: 1 },
+              balance: { increment: payout },
+              totalEarnings: { increment: payout }
+            }
+          });
+
+          // Log transaction for Solver (escrow release)
+          await tx.transaction.create({
+            data: {
+              userId: deliverable.solverId,
+              taskId: deliverable.taskId,
+              type: 'ESCROW_RELEASE',
+              amount: payout,
+              status: 'COMPLETED'
+            }
+          });
+
+          // Log transaction for Platform Fee
+          await tx.transaction.create({
+            data: {
+              userId: deliverable.task.posterId,
+              taskId: deliverable.taskId,
+              type: 'PLATFORM_FEE',
+              amount: fee,
+              status: 'COMPLETED'
+            }
+          });
+        } else {
+          // If for some reason escrow is zero, just update task completions
+          await tx.user.update({
+            where: { id: deliverable.solverId },
+            data: {
+              completedTasks: { increment: 1 }
+            }
+          });
+        }
       });
-      await db.$transaction([
-        db.task.update({ where: { id: deliverable.taskId }, data: { status: 'COMPLETED' } }),
-        db.user.update({
-          where: { id: deliverable.solverId },
-          data: {
-            completedTasks: { increment: 1 },
-            totalEarnings: acceptedBid ? { increment: acceptedBid.proposedPrice } : { increment: 0 }
-          }
-        })
-      ]);
     }
 
     if (status === 'REVISION_REQUESTED') {
@@ -116,7 +173,34 @@ router.patch('/:id', requireAuth, async (req: AuthenticatedRequest, res) => {
     }
 
     if (status === 'REJECTED') {
-      await db.task.update({ where: { id: deliverable.taskId }, data: { status: 'CANCELLED' } });
+      const escrowAmount = deliverable.task.escrowAmount;
+
+      await db.$transaction(async (tx) => {
+        // Cancel task and clear escrow
+        await tx.task.update({
+          where: { id: deliverable.taskId },
+          data: { status: 'CANCELLED', escrowAmount: 0 }
+        });
+
+        if (escrowAmount > 0) {
+          // Refund student (poster)
+          await tx.user.update({
+            where: { id: deliverable.task.posterId },
+            data: { balance: { increment: escrowAmount } }
+          });
+
+          // Log refund transaction
+          await tx.transaction.create({
+            data: {
+              userId: deliverable.task.posterId,
+              taskId: deliverable.taskId,
+              type: 'ESCROW_REFUND',
+              amount: escrowAmount,
+              status: 'COMPLETED'
+            }
+          });
+        }
+      });
     }
 
     const updated = await db.deliverable.update({
