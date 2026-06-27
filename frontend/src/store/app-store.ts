@@ -12,6 +12,7 @@ export interface User {
   rating: number
   completedTasks: number
   totalEarnings: number
+  balance: number
   onTimeRate: number
   onboardingCompleted: boolean
   onboardingData?: any

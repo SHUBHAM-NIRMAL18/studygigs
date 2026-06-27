@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/use-toast'
 import {
   Home, Globe, FilePlus, ClipboardList, Gavel, Shield, User,
   Menu, ChevronDown, GraduationCap, LogOut, ChevronLeft, ChevronRight, Bell, Search, Sparkles,
-  FileText
+  FileText, Wallet
 } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -33,6 +33,7 @@ const navItems: { href: string; label: string; icon: React.ElementType; roles?: 
   { href: '/post-task', label: 'Post Task', icon: FilePlus, roles: ['STUDENT', 'ADMIN'] },
   { href: '/my-tasks', label: 'My Tasks', icon: ClipboardList, roles: ['STUDENT', 'ADMIN'] },
   { href: '/my-bids', label: 'My Bids', icon: Gavel, roles: ['SOLVER', 'ADMIN'] },
+  { href: '/wallet', label: 'Wallet', icon: Wallet },
   { href: '/admin', label: 'Admin Panel', icon: Shield, roles: ['ADMIN'] },
   { href: '/profile', label: 'Profile', icon: User },
 ]
