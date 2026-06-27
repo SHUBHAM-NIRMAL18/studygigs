@@ -78,18 +78,77 @@ router.patch('/:id', requireAuth, async (req: AuthenticatedRequest, res) => {
     }
 
     if (status === 'ACCEPTED') {
-      // Accept this bid and reject all others
-      await db.$transaction([
-        db.bid.update({ where: { id }, data: { status: 'ACCEPTED' } }),
-        db.bid.updateMany({
+      // Idempotency check:
+      if (bid.task.status === 'IN_PROGRESS' && bid.task.acceptedBidId === id) {
+        const updatedBid = await db.bid.findUnique({
+          where: { id },
+          include: {
+            solver: { select: { id: true, name: true, avatar: true } },
+            task: { select: { id: true, title: true, status: true } }
+          }
+        });
+        return res.json(updatedBid);
+      }
+
+      if (bid.task.status !== 'OPEN' && bid.task.status !== 'BIDDING') {
+        return res.status(400).json({ error: 'This task is already in progress or has been completed/cancelled' });
+      }
+
+      // Check poster balance
+      const poster = await db.user.findUnique({
+        where: { id: bid.task.posterId },
+        select: { balance: true }
+      });
+
+      if (!poster) {
+        return res.status(404).json({ error: 'Poster user not found' });
+      }
+
+      if (poster.balance < bid.proposedPrice) {
+        return res.status(400).json({ error: 'Insufficient balance. Fund your wallet to accept this proposal.' });
+      }
+
+      // Accept this bid and reject all others, deduct poster balance, set task escrow, and create transaction
+      await db.$transaction(async (tx) => {
+        // Deduct poster balance
+        await tx.user.update({
+          where: { id: bid.task.posterId },
+          data: { balance: { decrement: bid.proposedPrice } }
+        });
+
+        // Set task status, acceptedBidId and escrowAmount
+        await tx.task.update({
+          where: { id: bid.taskId },
+          data: {
+            status: 'IN_PROGRESS',
+            acceptedBidId: id,
+            escrowAmount: bid.proposedPrice
+          }
+        });
+
+        // Accept the bid
+        await tx.bid.update({
+          where: { id },
+          data: { status: 'ACCEPTED' }
+        });
+
+        // Reject other pending bids
+        await tx.bid.updateMany({
           where: { taskId: bid.taskId, status: 'PENDING', id: { not: id } },
           data: { status: 'REJECTED' }
-        }),
-        db.task.update({
-          where: { id: bid.taskId },
-          data: { status: 'IN_PROGRESS', acceptedBidId: id }
-        })
-      ]);
+        });
+
+        // Log transaction
+        await tx.transaction.create({
+          data: {
+            userId: bid.task.posterId,
+            taskId: bid.taskId,
+            type: 'ESCROW_LOCK',
+            amount: bid.proposedPrice,
+            status: 'COMPLETED'
+          }
+        });
+      });
     } else {
       await db.bid.update({ where: { id }, data: { status } });
     }
