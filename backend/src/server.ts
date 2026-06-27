@@ -22,6 +22,7 @@ import reviewsRouter from './routes/reviews';
 import seedRouter from './routes/seed';
 import uploadRouter from './routes/upload';
 import onboardingRouter from './routes/onboarding';
+import walletRouter from './routes/wallet';
 
 dotenv.config();
 
@@ -100,6 +101,7 @@ app.use('/api/deliverables', deliverablesRouter);
 app.use('/api/disputes', disputesRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/reviews', reviewsRouter);
+app.use('/api/wallet', walletRouter);
 
 // Health check
 app.get('/health', (req, res) => {
