@@ -28,6 +28,7 @@ model User {
   resetTokenExpiry DateTime?
   onboardingCompleted Boolean @default(false)
   onboardingData      Json?
+  balance             Float    @default(0)
 
   postedTasks    Task[]   @relation("PostedTasks")
   bids           Bid[]    @relation("SolverBids")
@@ -36,6 +37,7 @@ model User {
   givenReviews   Review[]  @relation("GivenReviews")
   receivedReviews Review[] @relation("ReceivedReviews")
   initiatedDisputes Dispute[] @relation("InitiatorDisputes")
+  transactions    Transaction[] @relation("UserTransactions")
 }
 
 model Task {
@@ -51,7 +53,8 @@ model Task {
   status        String   @default("OPEN") // OPEN, BIDDING, IN_PROGRESS, REVIEW, COMPLETED, CANCELLED, DISPUTED
   acceptedBidId String?  @unique
   revisionCount Int      @default(0)
-  platformFee   Float    @default(0.12)
+  platformFee   Float    @default(0.20)
+  escrowAmount  Float    @default(0)
   attachments   String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -63,6 +66,7 @@ model Task {
   reviews       Review[]  @relation("TaskReviews")
   disputes      Dispute[] @relation("TaskDisputes")
   messages      Message[] @relation("TaskMessages")
+  transactions  Transaction[] @relation("TaskTransactions")
 }
 
 model Bid {
@@ -133,4 +137,19 @@ model Message {
 
   task      Task     @relation("TaskMessages", fields: [taskId], references: [id])
   sender    User     @relation("SentMessages", fields: [senderId], references: [id])
+}
+
+model Transaction {
+  id             String   @id @default(cuid())
+  userId         String
+  taskId         String?
+  type           String   // DEPOSIT, WITHDRAW, ESCROW_LOCK, ESCROW_RELEASE, ESCROW_REFUND, PLATFORM_FEE
+  amount         Float
+  status         String   @default("COMPLETED") // COMPLETED, PENDING, FAILED
+  idempotencyKey String?  @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user           User     @relation("UserTransactions", fields: [userId], references: [id])
+  task           Task?    @relation("TaskTransactions", fields: [taskId], references: [id])
 }
