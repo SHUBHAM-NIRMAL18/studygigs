@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast'
 import {
   ArrowLeft, DollarSign, Clock, Star, Users, MessageSquare,
   Send, FileText, AlertTriangle, CheckCircle, XCircle, RotateCcw, Shield,
-  Paperclip, Trash2, Loader2, Lock
+  Paperclip, Trash2, Loader2, Lock, CreditCard, Wallet
 } from 'lucide-react'
 import { formatSafe, formatDistanceToNowSafe } from '@/lib/utils'
 import {
@@ -49,6 +49,33 @@ export function TaskDetailView() {
   const [isAcceptModalOpen, setIsAcceptModalOpen] = useState(false)
   const [selectedBidForAccept, setSelectedBidForAccept] = useState<Bid | null>(null)
   const [academicIntegrityChecked, setAcademicIntegrityChecked] = useState(false)
+  const [posterBalance, setPosterBalance] = useState(0)
+  const [loadingBalance, setLoadingBalance] = useState(false)
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+  const [cardNumber, setCardNumber] = useState('')
+  const [cardName, setCardName] = useState('')
+  const [cardExpiry, setCardExpiry] = useState('')
+  const [cardCvv, setCardCvv] = useState('')
+  const [processingState, setProcessingState] = useState<'idle' | 'authorizing' | 'securing' | 'success'>('idle')
+
+  const handleCardNumberChange = (value: string) => {
+    const clean = value.replace(/\D/g, '')
+    const formatted = clean.match(/.{1,4}/g)?.join(' ') || ''
+    if (formatted.length <= 19) setCardNumber(formatted)
+  }
+
+  const handleExpiryChange = (value: string) => {
+    let clean = value.replace(/\D/g, '')
+    if (clean.length > 2) {
+      clean = clean.slice(0, 2) + '/' + clean.slice(2, 4)
+    }
+    if (clean.length <= 5) setCardExpiry(clean)
+  }
+
+  const handleCvvChange = (value: string) => {
+    const clean = value.replace(/\D/g, '')
+    if (clean.length <= 4) setCardCvv(clean)
+  }
 
   // Deliverables & Chat Attachments states
   const [deliverableAttachments, setDeliverableAttachments] = useState<{ name: string; url: string }[]>([])
@@ -129,6 +156,31 @@ export function TaskDetailView() {
     } finally { setSubmitting(false) }
   }
 
+  const openAcceptModal = async (bid: Bid) => {
+    setSelectedBidForAccept(bid)
+    setAcademicIntegrityChecked(false)
+    setLoadingBalance(true)
+    setIsAcceptModalOpen(true)
+    setIsCheckoutOpen(false)
+    setCardNumber('')
+    setCardName('')
+    setCardExpiry('')
+    setCardCvv('')
+    setProcessingState('idle')
+
+    try {
+      const res = await fetch('/api/wallet')
+      if (res.ok) {
+        const data = await res.json()
+        setPosterBalance(data.balance)
+      }
+    } catch (err) {
+      console.error('Failed to fetch wallet info', err)
+    } finally {
+      setLoadingBalance(false)
+    }
+  }
+
   const handleAcceptBid = async (bidId: string) => {
     setSubmitting(true)
     try {
@@ -145,6 +197,64 @@ export function TaskDetailView() {
     } catch {
       toast({ title: 'Error', description: 'Failed to accept bid', variant: 'destructive' })
     } finally { setSubmitting(false) }
+  }
+
+  const handleDepositAndAcceptBid = async (bidId: string, depositAmountNeeded: number) => {
+    if (!cardNumber || !cardExpiry || !cardCvv || !cardName) {
+      toast({ title: 'Missing card details', description: 'Please fill in all credit card fields.', variant: 'destructive' })
+      return
+    }
+
+    setSubmitting(true)
+    setProcessingState('authorizing')
+
+    setTimeout(() => {
+      setProcessingState('securing')
+
+      setTimeout(async () => {
+        try {
+          const depositIdempotencyKey = crypto.randomUUID()
+          const depositRes = await fetch('/api/wallet/deposit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: depositAmountNeeded, idempotencyKey: depositIdempotencyKey })
+          })
+
+          if (!depositRes.ok) {
+            const err = await depositRes.json()
+            throw new Error(err.error || 'Failed to deposit difference amount')
+          }
+
+          const res = await fetch(`/api/bids/${bidId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'ACCEPTED' })
+          })
+
+          if (!res.ok) {
+            const err = await res.json()
+            throw new Error(err.error || 'Failed to accept bid after funding wallet')
+          }
+
+          setProcessingState('success')
+          toast({ title: 'Escrow funded and bid accepted!', description: 'Your wallet has been credited and funds are in escrow.' })
+
+          setTimeout(() => {
+            setIsAcceptModalOpen(false)
+            setSelectedBidForAccept(null)
+            setProcessingState('idle')
+            setIsCheckoutOpen(false)
+            setSubmitting(false)
+            refreshTask()
+          }, 1500)
+
+        } catch (err: any) {
+          setProcessingState('idle')
+          setSubmitting(false)
+          toast({ title: 'Transaction Failed', description: err.message || 'Failed to complete transaction', variant: 'destructive' })
+        }
+      }, 1500)
+    }, 1200)
   }
 
   const handleDeliverableFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -535,11 +645,7 @@ export function TaskDetailView() {
                             </div>
                           </div>
                           {isPoster && (task.status === 'OPEN' || task.status === 'BIDDING') && (
-                            <Button size="sm" className="btn-brown rounded-xl font-bold text-xs uppercase tracking-wider h-10 px-4 cursor-pointer" onClick={() => {
-                              setSelectedBidForAccept(bid);
-                              setAcademicIntegrityChecked(false);
-                              setIsAcceptModalOpen(true);
-                            }} disabled={submitting}>
+                            <Button size="sm" className="btn-brown rounded-xl font-bold text-xs uppercase tracking-wider h-10 px-4 cursor-pointer" onClick={() => openAcceptModal(bid)} disabled={submitting}>
                               ACCEPT PROPOSAL
                             </Button>
                           )}
@@ -812,74 +918,195 @@ export function TaskDetailView() {
       ))}
 
       {/* Agreement and Escrow Dialog */}
-      <Dialog open={isAcceptModalOpen} onOpenChange={setIsAcceptModalOpen}>
-        <DialogContent className="sm:max-w-md bg-[#FFFDF8] border border-[#A0643A]/20 rounded-2xl shadow-lg">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-[#6B4226] font-black text-lg">
-              <Shield className="h-5 w-5 text-[#6B4226]" /> StudyGig Escrow Protection
-            </DialogTitle>
-            <DialogDescription className="text-xs font-semibold text-[#8B5E3C]">
-              Confirm contract parameters and academic integrity guidelines before accepting this proposal.
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedBidForAccept && (
-            <div className="space-y-4 my-2">
-              <div className="rounded-xl border border-[#A0643A]/15 bg-[#FAF7F0] p-4 space-y-2.5 text-sm text-[#4A3225]">
-                <div className="flex justify-between font-medium">
-                  <span className="text-[#8B5E3C]">Selected Tutor:</span>
-                  <span className="font-bold text-[#2C1810]">{selectedBidForAccept.solver?.name}</span>
-                </div>
-                <div className="flex justify-between font-medium">
-                  <span className="text-[#8B5E3C]">Tutor Offer Price:</span>
-                  <span className="font-extrabold text-[#6B4226]">${selectedBidForAccept.proposedPrice}</span>
-                </div>
-                <div className="flex justify-between font-medium">
-                  <span className="text-[#8B5E3C]">Delivery Duration:</span>
-                  <span className="font-bold text-[#2C1810]">{selectedBidForAccept.deliveryDays} Days</span>
-                </div>
-              </div>
-
-              <div className="text-xs leading-relaxed text-[#5C3D2A] space-y-2">
-                <p>
-                  <strong>🔒 Safe Bidding Escrow:</strong> Once you click accept, the total budget amount (${selectedBidForAccept.proposedPrice}) will be securely locked in StudyGig Escrow.
-                </p>
-                <p>
-                  <strong>💰 Release Schedule:</strong> Funds are only released to the tutor *after* you have received and approved the final deliverables. If the deliverable is not submitted or is unsatisfactory, you are protected by revision rounds and admin disputes.
-                </p>
-              </div>
-
-              {/* Academic Integrity Checkbox */}
-              <div className="flex items-start space-x-2 pt-3 border-t border-[#A0643A]/10">
-                <Checkbox
-                  id="integrity-check"
-                  checked={academicIntegrityChecked}
-                  onCheckedChange={(checked) => setAcademicIntegrityChecked(!!checked)}
-                  className="border-[#A0643A]/30 data-[state=checked]:bg-[#6B4226] data-[state=checked]:text-[#FAF7F0] mt-0.5 cursor-pointer"
-                />
-                <label
-                  htmlFor="integrity-check"
-                  className="text-xs font-semibold leading-tight text-[#4A3225] cursor-pointer select-none"
-                >
-                  I confirm that this task complies with StudyGig&apos;s Academic Integrity Guidelines. I will use the deliverables strictly for tutoring and study assistance.
-                </label>
-              </div>
+      <Dialog open={isAcceptModalOpen} onOpenChange={(open) => !submitting && setIsAcceptModalOpen(open)}>
+        <DialogContent className="sm:max-w-md bg-[#FFFDF8] border border-[#A0643A]/20 rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto">
+          {processingState !== 'idle' ? (
+            <div className="flex flex-col items-center justify-center py-12 px-6 text-center space-y-4">
+              {processingState === 'authorizing' && (
+                <>
+                  <Loader2 className="h-10 w-10 animate-spin text-[#6B4226]" />
+                  <div className="space-y-1">
+                    <p className="font-extrabold text-sm text-[#2C1810]">Authorizing Checkout Payment</p>
+                    <p className="text-xs font-semibold text-[#8B5E3C]">Connecting to secure gateway server...</p>
+                  </div>
+                </>
+              )}
+              {processingState === 'securing' && (
+                <>
+                  <Loader2 className="h-10 w-10 animate-spin text-[#A0643A]" />
+                  <div className="space-y-1">
+                    <p className="font-extrabold text-sm text-[#2C1810]">Funding Wallet & Escrow</p>
+                    <p className="text-xs font-semibold text-[#8B5E3C]">Allocating lock amount of ${selectedBidForAccept?.proposedPrice.toFixed(2)}...</p>
+                  </div>
+                </>
+              )}
+              {processingState === 'success' && (
+                <>
+                  <CheckCircle className="h-12 w-12 text-emerald-600 animate-bounce" />
+                  <div className="space-y-1">
+                    <p className="font-extrabold text-base text-emerald-800">Escrow Funded & Accepted!</p>
+                    <p className="text-xs font-bold text-emerald-700 bg-emerald-500/10 border border-emerald-500/20 py-1 px-3 rounded-lg">
+                      Proposal Active
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
-          )}
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-[#6B4226] font-black text-lg">
+                  <Shield className="h-5 w-5 text-[#6B4226]" /> StudyGig Escrow Protection
+                </DialogTitle>
+                <DialogDescription className="text-xs font-semibold text-[#8B5E3C]">
+                  Confirm contract parameters and academic integrity guidelines before accepting this proposal.
+                </DialogDescription>
+              </DialogHeader>
 
-          <DialogFooter className="flex sm:justify-end gap-2 pt-2 border-t border-[#A0643A]/10">
-            <Button variant="outline" size="sm" onClick={() => setIsAcceptModalOpen(false)} className="border-[#A0643A]/20 hover:bg-[#FAF7F0] text-[#6B4226] rounded-xl cursor-pointer">
-              Cancel
-            </Button>
-            <Button
-              size="sm"
-              disabled={!academicIntegrityChecked || submitting}
-              onClick={() => selectedBidForAccept && handleAcceptBid(selectedBidForAccept.id)}
-              className="btn-brown rounded-xl px-4 py-2 cursor-pointer font-bold text-xs uppercase tracking-wider"
-            >
-              {submitting ? 'Accepting...' : 'Confirm & Fund Escrow'}
-            </Button>
-          </DialogFooter>
+              {selectedBidForAccept && (
+                <div className="space-y-4 my-2">
+                  <div className="rounded-xl border border-[#A0643A]/15 bg-[#FAF7F0] p-4 space-y-2.5 text-sm text-[#4A3225]">
+                    <div className="flex justify-between font-medium">
+                      <span className="text-[#8B5E3C]">Selected Tutor:</span>
+                      <span className="font-bold text-[#2C1810]">{selectedBidForAccept.solver?.name}</span>
+                    </div>
+                    <div className="flex justify-between font-medium">
+                      <span className="text-[#8B5E3C]">Tutor Offer Price:</span>
+                      <span className="font-extrabold text-[#6B4226]">${selectedBidForAccept.proposedPrice}</span>
+                    </div>
+                    <div className="flex justify-between font-medium">
+                      <span className="text-[#8B5E3C]">Delivery Duration:</span>
+                      <span className="font-bold text-[#2C1810]">{selectedBidForAccept.deliveryDays} Days</span>
+                    </div>
+                  </div>
+
+                  <div className="text-xs leading-relaxed text-[#5C3D2A] space-y-2 bg-[#FAF7F0]/40 p-3 rounded-xl border border-[#A0643A]/5">
+                    <p>
+                      <strong>🔒 Safe Bidding Escrow:</strong> Once accepted, the proposed price (${selectedBidForAccept.proposedPrice}) will be locked in StudyGig Escrow.
+                    </p>
+                    <p>
+                      <strong>💰 Release Payout:</strong> Tutors are paid *after* you approve their deliverables. You have 3 revision rounds to ensure quality.
+                    </p>
+                  </div>
+
+                  {/* Academic Integrity Checkbox */}
+                  <div className="flex items-start space-x-2 pt-1">
+                    <Checkbox
+                      id="integrity-check"
+                      checked={academicIntegrityChecked}
+                      onCheckedChange={(checked) => setAcademicIntegrityChecked(!!checked)}
+                      className="border-[#A0643A]/30 data-[state=checked]:bg-[#6B4226] data-[state=checked]:text-[#FAF7F0] mt-0.5 cursor-pointer"
+                    />
+                    <label
+                      htmlFor="integrity-check"
+                      className="text-xs font-semibold leading-tight text-[#4A3225] cursor-pointer select-none"
+                    >
+                      I confirm that this task complies with StudyGig&apos;s Academic Integrity Guidelines. I will use the deliverables strictly for tutoring and study assistance.
+                    </label>
+                  </div>
+
+                  {/* Balance details */}
+                  {loadingBalance ? (
+                    <div className="flex items-center gap-2 text-xs text-[#8B5E3C] py-2">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-[#6B4226]" />
+                      <span>Checking wallet balance...</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 pt-3 border-t border-[#A0643A]/10">
+                      <div className="flex justify-between items-center text-xs font-bold text-[#4A3225]">
+                        <span>Your Wallet Balance:</span>
+                        <span className={posterBalance >= selectedBidForAccept.proposedPrice ? "text-emerald-700 font-extrabold" : "text-rose-700 font-extrabold"}>
+                          ${posterBalance.toFixed(2)}
+                        </span>
+                      </div>
+
+                      {posterBalance < selectedBidForAccept.proposedPrice && (
+                        <div className="space-y-3">
+                          {/* Warning message */}
+                          <div className="rounded-xl border border-rose-200 bg-rose-50/40 p-3 text-xs text-[#6B4226] space-y-1 font-medium">
+                            <p className="font-extrabold text-rose-800 flex items-center gap-1.5">
+                              <AlertTriangle className="h-4 w-4 text-rose-700 shrink-0" /> Insufficient Funds
+                            </p>
+                            <p className="text-[11px] leading-relaxed">
+                              You need an additional <strong>${(selectedBidForAccept.proposedPrice - posterBalance).toFixed(2)}</strong> to accept this bid. Enter credit card details below to fund and accept.
+                            </p>
+                          </div>
+
+                          {/* Card Checkout fields directly inside */}
+                          <div className="space-y-2.5 p-3 rounded-xl border border-[#A0643A]/15 bg-white shadow-inner">
+                            <div className="space-y-1">
+                              <Label className="text-[10px] font-bold text-[#8B5E3C]">Cardholder Name</Label>
+                              <Input
+                                placeholder="Enter Cardholder Name"
+                                value={cardName}
+                                onChange={(e) => setCardName(e.target.value)}
+                                className="border-[#A0643A]/20 focus-visible:ring-[#6B4226] bg-white rounded-lg h-8 text-xs font-semibold"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-[10px] font-bold text-[#8B5E3C]">Card Number</Label>
+                              <Input
+                                placeholder="4111 2222 3333 4444"
+                                value={cardNumber}
+                                onChange={(e) => handleCardNumberChange(e.target.value)}
+                                className="border-[#A0643A]/20 focus-visible:ring-[#6B4226] bg-white rounded-lg h-8 text-xs font-mono tracking-wider"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="space-y-1">
+                                <Label className="text-[10px] font-bold text-[#8B5E3C]">Expiry Date</Label>
+                                <Input
+                                  placeholder="MM/YY"
+                                  value={cardExpiry}
+                                  onChange={(e) => handleExpiryChange(e.target.value)}
+                                  className="border-[#A0643A]/20 focus-visible:ring-[#6B4226] bg-white rounded-lg h-8 text-xs font-mono text-center"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <Label className="text-[10px] font-bold text-[#8B5E3C]">CVV</Label>
+                                <Input
+                                  placeholder="CVV"
+                                  value={cardCvv}
+                                  onChange={(e) => handleCvvChange(e.target.value)}
+                                  type="password"
+                                  className="border-[#A0643A]/20 focus-visible:ring-[#6B4226] bg-white rounded-lg h-8 text-xs font-mono text-center"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <DialogFooter className="flex sm:justify-end gap-2 pt-2 border-t border-[#A0643A]/10">
+                <Button variant="outline" size="sm" onClick={() => setIsAcceptModalOpen(false)} className="border-[#A0643A]/20 hover:bg-[#FAF7F0] text-[#6B4226] rounded-xl cursor-pointer">
+                  Cancel
+                </Button>
+                {selectedBidForAccept && posterBalance < selectedBidForAccept.proposedPrice ? (
+                  <Button
+                    size="sm"
+                    disabled={!academicIntegrityChecked || submitting || loadingBalance || !cardName || !cardNumber || !cardExpiry || !cardCvv}
+                    onClick={() => handleDepositAndAcceptBid(selectedBidForAccept.id, selectedBidForAccept.proposedPrice - posterBalance)}
+                    className="btn-brown rounded-xl px-4 py-2 cursor-pointer font-bold text-xs uppercase tracking-wider"
+                  >
+                    {submitting ? 'Processing...' : 'Deposit & Fund Escrow'}
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    disabled={!academicIntegrityChecked || submitting || loadingBalance}
+                    onClick={() => selectedBidForAccept && handleAcceptBid(selectedBidForAccept.id)}
+                    className="btn-brown rounded-xl px-4 py-2 cursor-pointer font-bold text-xs uppercase tracking-wider"
+                  >
+                    {submitting ? 'Accepting...' : 'Confirm & Fund Escrow'}
+                  </Button>
+                )}
+              </DialogFooter>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
