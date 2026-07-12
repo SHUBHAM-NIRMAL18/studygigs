@@ -34,6 +34,7 @@ const navItems: { href: string; label: string; icon: React.ElementType; roles?: 
   { href: '/my-tasks', label: 'My Tasks', icon: ClipboardList, roles: ['STUDENT', 'ADMIN'] },
   { href: '/my-bids', label: 'My Bids', icon: Gavel, roles: ['SOLVER', 'ADMIN'] },
   { href: '/wallet', label: 'Wallet', icon: Wallet },
+  { href: '/system-features', label: 'Features', icon: Sparkles },
   { href: '/admin', label: 'Admin Panel', icon: Shield, roles: ['ADMIN'] },
   { href: '/profile', label: 'Profile', icon: User },
 ]
