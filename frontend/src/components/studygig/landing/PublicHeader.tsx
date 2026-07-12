@@ -14,7 +14,7 @@ interface PublicHeaderProps {
 
 const navLinks = [
   { label: 'Explore Tasks', href: '/explore' },
-  { label: 'Features',      href: '/#features' },
+  { label: 'Features',      href: '/features' },
   { label: 'How it Works',  href: '/#how-it-works' },
   { label: 'Testimonials',  href: '/#testimonials' },
 ]
